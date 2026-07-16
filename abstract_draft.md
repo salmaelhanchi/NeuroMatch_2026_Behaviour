@@ -1,4 +1,4 @@
-# Project Abstract
+# Abstract Draft
 
 **Project Title:** Hierarchical Bayesian learning of prior confidence during perceptual estimation.
 
