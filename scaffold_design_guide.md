@@ -3,7 +3,7 @@
 Date: 2026-07-16
 
 Notebook:
-`bayseain modeling new path/hierarchical_observer_scaffold.ipynb`
+`hierarchical_observer_scaffold.ipynb`
 
 Purpose of this file:
 Explain the scaffold in simple terms so the work can be resumed, shared, or debugged in future sessions.
@@ -445,4 +445,3 @@ Basic Bayesian BLS
 Switching MAP
 hierarchical prior-confidence model
 ```
-

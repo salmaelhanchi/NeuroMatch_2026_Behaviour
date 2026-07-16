@@ -3,10 +3,29 @@
 Date: 2026-07-16
 
 Notebook:
-`bayseain modeling new path/hierarchical_observer_scaffold.ipynb`
+`hierarchical_observer_scaffold.ipynb`
 
 Purpose of this file:
 Keep a simple record of what changed in the scaffold so future sessions can quickly see the current state, what is stable, and what should be checked if something breaks.
+
+## Repository Layout Change
+
+Date: 2026-07-16
+
+The scaffold files were moved out of the old nested folder and into the repository root.
+
+Current tracked scaffold files:
+
+```text
+README.md
+hierarchical_observer_scaffold.ipynb
+scaffold_recent_changes.md
+scaffold_design_guide.md
+simple_simulation_checks_interpretation.md
+```
+
+Reason:
+The GitHub repository should show the main notebook and docs directly at the top level, not nested inside an extra project folder.
 
 ## Current Modeling Direction
 
@@ -394,13 +413,8 @@ Removed the root-detection helper and replaced it with simple local path setup:
 
 ```python
 CURRENT_DIR = Path.cwd()
-
-if CURRENT_DIR.name == "bayseain modeling new path":
-    RESEARCH_DIR = CURRENT_DIR
-    PROJECT_ROOT = CURRENT_DIR.parent
-else:
-    PROJECT_ROOT = CURRENT_DIR
-    RESEARCH_DIR = PROJECT_ROOT / "bayseain modeling new path"
+PROJECT_ROOT = CURRENT_DIR
+RESEARCH_DIR = PROJECT_ROOT
 ```
 
 The remote data-loading cell remains minimal.
