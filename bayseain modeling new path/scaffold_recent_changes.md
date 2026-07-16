@@ -255,6 +255,91 @@ k_motor
 lapse_rate
 ```
 
+## Checklist Implementation: HB Components And Confidence Update
+
+Date: 2026-07-16
+
+This update implements the current checklist items in the notebook scaffold.
+
+Implemented model components:
+
+```python
+build_trial_components(...)
+```
+
+This function now creates named one-trial model pieces:
+
+```text
+sensory_likelihood
+prior
+posterior
+readout_pdf
+estimate_pdf
+```
+
+Meaning:
+
+```text
+dataset condition columns
+-> sensory likelihood from motion direction/coherence
+-> prior from prior mean/width/confidence
+-> posterior from likelihood x prior
+-> readout distribution
+-> final estimate distribution after motor noise and lapse
+```
+
+Implemented confidence update:
+
+```python
+update_online_prior_state(previous_mean, previous_kappa, target_kappa, learning_rate)
+```
+
+Important behavior:
+
+```text
+prior_mean stays tied to the block prior_mean
+prior_kappa changes toward the current block target
+```
+
+So the update now affects prior precision/confidence, not just the prior mean.
+
+Preserved circular calculations:
+
+The scaffold still uses circular helpers for angle wrapping and circular probability calculations:
+
+```text
+wrap_signed_deg
+wrap_unsigned_deg
+vm_pdf_deg
+circular_mean_deg
+circular_convolve
+probability_at_observed_estimate
+```
+
+Added simple simulation test:
+
+```python
+simulate_prior_confidence_learning(...)
+```
+
+The simulation checks a toy block where confidence carries over from the previous prior width and learns toward the current prior width. It creates:
+
+```text
+sim_confidence_path
+confidence_update_check
+simulation_component_summary
+```
+
+The notebook now asserts:
+
+```text
+all component probability distributions sum to 1
+prior_mean is unchanged across the toy block
+prior_kappa changes across the toy block
+```
+
+This is a scaffold test only. It does not yet complete full model validation, parameter recovery, or model comparison.
+
 ## Validation Done
 
 The notebook JSON loads successfully.
@@ -262,8 +347,8 @@ The notebook JSON loads successfully.
 Syntax check:
 
 ```text
-29 cells
-16 code cells
+31 cells
+17 code cells
 0 syntax errors
 ```
 
@@ -296,6 +381,29 @@ The compiler also now checks for required derived columns and gives a clearer me
 ```text
 Re-run prepare_trials(raw), then model_df = make_model_frame(trials).
 ```
+
+## Cleanup: Removed Root Helper
+
+Date: 2026-07-16
+
+Issue:
+The CSV loading cell had been simplified, but the notebook still had a separate root-detection helper in the local path section.
+
+Fix:
+Removed the root-detection helper and replaced it with simple local path setup:
+
+```python
+CURRENT_DIR = Path.cwd()
+
+if CURRENT_DIR.name == "bayseain modeling new path":
+    RESEARCH_DIR = CURRENT_DIR
+    PROJECT_ROOT = CURRENT_DIR.parent
+else:
+    PROJECT_ROOT = CURRENT_DIR
+    RESEARCH_DIR = PROJECT_ROOT / "bayseain modeling new path"
+```
+
+The remote data-loading cell remains minimal.
 
 ## What To Check If Something Breaks
 
