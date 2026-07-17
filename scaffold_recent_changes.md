@@ -27,6 +27,45 @@ simple_simulation_checks_interpretation.md
 Reason:
 The GitHub repository should show the main notebook and docs directly at the top level, not nested inside an extra project folder.
 
+## Collaborator Readability Update
+
+Date: 2026-07-17
+
+Issue:
+The scaffold was hard to read for collaborators who are not from a technical background. The notebook had useful code, but it was not obvious what each cell did or how to track the model's progress.
+
+Fix:
+Added two plain-language root-level files:
+
+```text
+collaborator_guide.md
+notebook_cell_map.md
+```
+
+Also added a `# Cell purpose:` line to every code cell in:
+
+```text
+hierarchical_observer_scaffold.ipynb
+```
+
+What this changes:
+
+```text
+collaborators can read the project story without opening code
+each notebook cell states its purpose before the code begins
+the cell map shows inputs, outputs, and whether each cell is setup, data prep, model scaffold, sanity check, or future fitting
+the README now points non-technical collaborators to the right files first
+```
+
+What this does not change:
+
+```text
+model logic
+data loading URL
+simulation checks
+fitting status
+```
+
 ## Current Modeling Direction
 
 Working model idea:

@@ -20,6 +20,8 @@ The scaffold is intentionally modular. The goal is to keep the data path, equati
 
 | File | Purpose |
 |---|---|
+| [collaborator_guide.md](collaborator_guide.md) | Start here for a non-technical overview of the model, current status, and how to review changes. |
+| [notebook_cell_map.md](notebook_cell_map.md) | Plain-language map of every notebook cell, including input, output, and status. |
 | [hierarchical_observer_scaffold.ipynb](hierarchical_observer_scaffold.ipynb) | Main notebook. Loads the remote behavioral CSV, builds analysis tables, defines model components, and runs scaffold checks. |
 | [scaffold_recent_changes.md](scaffold_recent_changes.md) | Change-tracking file. Records what changed, what names are stable, and what to check if something breaks. |
 | [scaffold_design_guide.md](scaffold_design_guide.md) | Design guide. Explains the scaffold vision, stable functions, and how future model edits should be organized. |
@@ -28,6 +30,14 @@ The scaffold is intentionally modular. The goal is to keep the data path, equati
 | [tasks_draft.md](tasks_draft.md) | Draft task checklist for HB implementation, fitting, validation, switching observer, comparison, behavioral validation, and presentation. |
 
 The scaffold files are intentionally tracked at the repository root. They should not be nested under an extra folder in GitHub.
+
+For collaborators who do not want to inspect code first, read:
+
+```text
+collaborator_guide.md
+notebook_cell_map.md
+tasks_draft.md
+```
 
 ## Current Checklist Coverage
 
