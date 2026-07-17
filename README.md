@@ -24,6 +24,8 @@ The scaffold is intentionally modular. The goal is to keep the data path, equati
 | [notebook_cell_map.md](notebook_cell_map.md) | Plain-language map of every notebook cell, including input, output, and status. |
 | [hierarchical_observer_scaffold.ipynb](hierarchical_observer_scaffold.ipynb) | Main notebook. Loads the remote behavioral CSV, builds analysis tables, defines model components, and runs scaffold checks. |
 | [hb_verified_model_implementation.ipynb](hb_verified_model_implementation.ipynb) | Separate implementation copy. Verifies paper/data variables and fits a first per-subject HB prior-confidence model on a block-balanced smoke subset. |
+| [hb_parameter_recovery_smoke.ipynb](hb_parameter_recovery_smoke.ipynb) | Parameter recovery smoke test: simulate responses from fitted HB parameters, refit the model, and compare generating vs recovered parameters. |
+| [hb_smoke_fit_user_guide.ipynb](hb_smoke_fit_user_guide.ipynb) | Helper notebook for collaborators. Loads smoke-fit outputs and compares observed vs model-predicted response distributions. |
 | [model_variable_verification.md](model_variable_verification.md) | Paper-to-data variable verification, including the decision that the changing hyperprior-like quantity is prior confidence/precision, not prior mean. |
 | [scaffold_recent_changes.md](scaffold_recent_changes.md) | Change-tracking file. Records what changed, what names are stable, and what to check if something breaks. |
 | [scaffold_design_guide.md](scaffold_design_guide.md) | Design guide. Explains the scaffold vision, stable functions, and how future model edits should be organized. |

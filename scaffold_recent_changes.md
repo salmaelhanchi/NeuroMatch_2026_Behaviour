@@ -118,6 +118,51 @@ run full-trial per-subject fits
 compare against the Switching observer
 ```
 
+## Parameter Recovery And Smoke-Fit Guide Notebooks Added
+
+Date: 2026-07-17
+
+Added two follow-up notebooks:
+
+```text
+hb_parameter_recovery_smoke.ipynb
+hb_smoke_fit_user_guide.ipynb
+```
+
+Purpose:
+
+```text
+hb_parameter_recovery_smoke.ipynb
+-> simulate fake responses from fitted HB parameters
+-> refit the same model to the simulated responses
+-> compare generating parameters with recovered parameters
+
+hb_smoke_fit_user_guide.ipynb
+-> load the smoke-fit outputs
+-> explain the key result columns
+-> simulate model responses using fitted motor noise and lapse
+-> compare observed vs model-simulated error distributions
+```
+
+Generated outputs:
+
+```text
+outputs/hb_parameter_recovery_smoke_summary.csv
+outputs/hb_parameter_recovery_smoke_fit_results.csv
+outputs/hb_parameter_recovery_smoke_simulated_trials.csv
+outputs/hb_smoke_observed_predicted_distribution_comparison.csv
+outputs/hb_smoke_observed_predicted_distribution_summary.csv
+```
+
+Current interpretation:
+
+```text
+these notebooks are smoke validation, not final model validation
+motor/lapse recovery is more stable in the small test
+several confidence, sensory, and prior precision parameters are unstable in the small recovery run
+full validation still needs more trials, more restarts, and model comparison
+```
+
 ## Current Modeling Direction
 
 Working model idea:
