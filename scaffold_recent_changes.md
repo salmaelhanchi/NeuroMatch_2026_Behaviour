@@ -66,6 +66,58 @@ simulation checks
 fitting status
 ```
 
+## Verified HB Implementation Copy Added
+
+Date: 2026-07-17
+
+Reason:
+The scaffold notebook is useful as a reference, but it had become too heavy to use as the place for the first real fitted model implementation.
+
+Change:
+Created a separate notebook:
+
+```text
+hb_verified_model_implementation.ipynb
+```
+
+The original scaffold notebook was kept as the reference notebook.
+
+The new implementation notebook adds:
+
+```text
+paper-to-data variable verification
+explicit reminder that hyperprior-like learning is implemented as prior confidence/precision
+per-subject HB prior-confidence fitting functions
+block-balanced smoke fitting across all 12 subjects
+saved smoke-fit outputs under outputs/
+```
+
+Important modeling interpretation:
+
+```text
+prior_mean remains fixed by the task condition
+prior_kappa_t is the hidden confidence/precision state that changes over trials
+```
+
+Current fitting scope:
+
+```text
+first tractable per-subject fit
+MAP readout
+motor noise and lapse
+trial-by-trial confidence path
+block-balanced smoke subset, not the final full-data result
+```
+
+Next precision upgrade:
+
+```text
+replace the fast likelihood center approximation with the paper's measurement-marginalized likelihood
+add multiple random restarts
+run full-trial per-subject fits
+compare against the Switching observer
+```
+
 ## Current Modeling Direction
 
 Working model idea:
