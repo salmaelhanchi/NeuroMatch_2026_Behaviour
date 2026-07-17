@@ -48,7 +48,7 @@ The current outputs are **diagnostics**, not final proof that the model is corre
 | [hb_smoke_fit_user_guide.ipynb](hb_smoke_fit_user_guide.ipynb) | Helper guide for collaborators. Compares observed participant errors with model-simulated errors. |
 | [hb_parameter_recovery_smoke.ipynb](hb_parameter_recovery_smoke.ipynb) | Parameter recovery smoke test. Simulates data from fitted parameters, refits the model, and checks what recovers well or poorly. |
 | [Switching_Bayesian_Observer_starter.ipynb](Switching_Bayesian_Observer_starter.ipynb) | Starter notebook for the future switching observer implementation. |
-| [Data_Preperation_Notebook_.ipynb](Data_Preperation_Notebook_.ipynb) | Earlier data preparation notebook retained for reference. |
+| [data_preparation_and_hb_model.ipynb](data_preparation_and_hb_model.ipynb) | Earlier data preparation notebook retained for reference. |
 
 ## Markdown Guide Files
 
