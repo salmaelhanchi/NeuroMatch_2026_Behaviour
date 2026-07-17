@@ -29,11 +29,11 @@ Current status:
 
 | Area | Status |
 |---|---|
-| Data loading and trial preparation | Implemented from the remote behavioral CSV. |
+| Data loading and trial preparation |  |
 | HB model components | Implemented: prior, sensory likelihood, posterior, readout, motor noise, lapse. |
 | Trial-by-trial prior-confidence learning | Implemented as `prior_kappa_t`. |
 | Per-subject smoke fitting | Implemented on a block-balanced subset. |
-| Observed vs predicted distribution check | Implemented as a smoke-fit guide. |
+| Observed vs predicted distribution check |  |
 | Parameter recovery | Implemented as a smoke diagnostic, with result-oriented plots and summaries. |
 | Final model comparison | Not done yet. Switching observer and full HB comparison still need implementation. |
 
