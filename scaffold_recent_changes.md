@@ -27,6 +27,142 @@ simple_simulation_checks_interpretation.md
 Reason:
 The GitHub repository should show the main notebook and docs directly at the top level, not nested inside an extra project folder.
 
+## Collaborator Readability Update
+
+Date: 2026-07-17
+
+Issue:
+The scaffold was hard to read for collaborators who are not from a technical background. The notebook had useful code, but it was not obvious what each cell did or how to track the model's progress.
+
+Fix:
+Added two plain-language root-level files:
+
+```text
+collaborator_guide.md
+notebook_cell_map.md
+```
+
+Also added a `# Cell purpose:` line to every code cell in:
+
+```text
+hierarchical_observer_scaffold.ipynb
+```
+
+What this changes:
+
+```text
+collaborators can read the project story without opening code
+each notebook cell states its purpose before the code begins
+the cell map shows inputs, outputs, and whether each cell is setup, data prep, model scaffold, sanity check, or future fitting
+the README now points non-technical collaborators to the right files first
+```
+
+What this does not change:
+
+```text
+model logic
+data loading URL
+simulation checks
+fitting status
+```
+
+## Verified HB Implementation Copy Added
+
+Date: 2026-07-17
+
+Reason:
+The scaffold notebook is useful as a reference, but it had become too heavy to use as the place for the first real fitted model implementation.
+
+Change:
+Created a separate notebook:
+
+```text
+hb_verified_model_implementation.ipynb
+```
+
+The original scaffold notebook was kept as the reference notebook.
+
+The new implementation notebook adds:
+
+```text
+paper-to-data variable verification
+explicit reminder that hyperprior-like learning is implemented as prior confidence/precision
+per-subject HB prior-confidence fitting functions
+block-balanced smoke fitting across all 12 subjects
+saved smoke-fit outputs under outputs/
+```
+
+Important modeling interpretation:
+
+```text
+prior_mean remains fixed by the task condition
+prior_kappa_t is the hidden confidence/precision state that changes over trials
+```
+
+Current fitting scope:
+
+```text
+first tractable per-subject fit
+MAP readout
+motor noise and lapse
+trial-by-trial confidence path
+block-balanced smoke subset, not the final full-data result
+```
+
+Next precision upgrade:
+
+```text
+replace the fast likelihood center approximation with the paper's measurement-marginalized likelihood
+add multiple random restarts
+run full-trial per-subject fits
+compare against the Switching observer
+```
+
+## Parameter Recovery And Smoke-Fit Guide Notebooks Added
+
+Date: 2026-07-17
+
+Added two follow-up notebooks:
+
+```text
+hb_parameter_recovery_smoke.ipynb
+hb_smoke_fit_user_guide.ipynb
+```
+
+Purpose:
+
+```text
+hb_parameter_recovery_smoke.ipynb
+-> simulate fake responses from fitted HB parameters
+-> refit the same model to the simulated responses
+-> compare generating parameters with recovered parameters
+
+hb_smoke_fit_user_guide.ipynb
+-> load the smoke-fit outputs
+-> explain the key result columns
+-> simulate model responses using fitted motor noise and lapse
+-> compare observed vs model-simulated error distributions
+```
+
+Generated outputs:
+
+```text
+outputs/hb_parameter_recovery_smoke_summary.csv
+outputs/hb_parameter_recovery_smoke_fit_results.csv
+outputs/hb_parameter_recovery_smoke_simulated_trials.csv
+outputs/hb_smoke_observed_predicted_distribution_comparison.csv
+outputs/hb_smoke_observed_predicted_distribution_summary.csv
+```
+
+Current interpretation:
+
+```text
+these notebooks are smoke validation, not final model validation
+motor/lapse recovery is more stable in the small test
+several confidence, sensory, and prior precision parameters are unstable in the small recovery run
+full validation still needs more trials, more restarts, and model comparison
+```
+
 ## Current Modeling Direction
 
 Working model idea:

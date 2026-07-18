@@ -1,142 +1,103 @@
 # NeuroMatch 2026 Behaviour
 
-Current modeling scaffold root:
-[repository root](https://github.com/salmaelhanchi/NeuroMatch_2026_Behaviour)
+Repository root: [NeuroMatch_2026_Behaviour](https://github.com/salmaelhanchi/NeuroMatch_2026_Behaviour)
 
-This repository currently contains a scaffold for building and validating a hierarchical Bayesian observer model for perceptual estimation behavior.
+## Research Question
 
-The core modeling question is:
+Participants estimated motion direction after seeing motion stimuli with different sensory reliability and different prior widths. Their responses can show peaks near both the true motion direction and the prior mean.
+
+The project asks whether this behavior requires an explicit **Switching observer**, or whether it can emerge from a **Hierarchical Bayesian observer** that learns **prior confidence / prior precision** over trials.
+
+Current HB modeling path:
 
 ```text
 previous block context
 -> initial prior confidence at current block start
 -> within-block confidence learning
--> predicted estimate distribution
+-> posterior estimate prediction
+-> motor noise and lapse
+-> predicted response distribution
 ```
 
-The scaffold is intentionally modular. The goal is to keep the data path, equation path, and modeling path easy to inspect before moving into full model fitting and comparison.
+Important terminology: the changing hidden quantity is treated as **prior confidence / precision** (`prior_kappa_t`), not a changing prior mean.
 
-## Main Files
+## Where We Are Now
 
-| File | Purpose |
+This repository currently has a working HB modeling scaffold plus smoke-test notebooks. These are useful for checking whether the model code, variable mapping, and result diagnostics behave sensibly.
+
+Current status:
+
+| Area | Status |
 |---|---|
-| [hierarchical_observer_scaffold.ipynb](hierarchical_observer_scaffold.ipynb) | Main notebook. Loads the remote behavioral CSV, builds analysis tables, defines model components, and runs scaffold checks. |
-| [scaffold_recent_changes.md](scaffold_recent_changes.md) | Change-tracking file. Records what changed, what names are stable, and what to check if something breaks. |
-| [scaffold_design_guide.md](scaffold_design_guide.md) | Design guide. Explains the scaffold vision, stable functions, and how future model edits should be organized. |
-| [simple_simulation_checks_interpretation.md](simple_simulation_checks_interpretation.md) | Interpretation of the simple simulation cell. Explains why the output supports the precision-not-mean update check. |
+| Data loading and trial preparation |  |
+| HB model components | Implemented: prior, sensory likelihood, posterior, readout, motor noise, lapse. |
+| Trial-by-trial prior-confidence learning | Implemented as `prior_kappa_t`. |
+| Per-subject smoke fitting | Implemented on a block-balanced subset. |
+| Observed vs predicted distribution check |  |
+| Parameter recovery | Implemented as a smoke diagnostic, with result-oriented plots and summaries. |
+| Final model comparison | Not done yet. Switching observer and full HB comparison still need implementation. |
+
+The current outputs are **diagnostics**, not final proof that the model is correct.
+
+## Main Notebooks
+
+| Notebook | What it does |
+|---|---|
+| [hierarchical_observer_scaffold.ipynb](hierarchical_observer_scaffold.ipynb) | Main scaffold. Shows how raw data columns become model inputs and how the HB model pieces connect. |
+| [hb_verified_model_implementation.ipynb](hb_verified_model_implementation.ipynb) | Verified implementation copy. Fits a first per-subject HB prior-confidence model on a smoke subset. |
+| [hb_smoke_fit_user_guide.ipynb](hb_smoke_fit_user_guide.ipynb) | Helper guide for collaborators. Compares observed participant errors with model-simulated errors. |
+| [hb_parameter_recovery_smoke.ipynb](hb_parameter_recovery_smoke.ipynb) | Parameter recovery smoke test. Simulates data from fitted parameters, refits the model, and checks what recovers well or poorly. |
+| [Switching_Bayesian_Observer_starter.ipynb](Switching_Bayesian_Observer_starter.ipynb) | Starter notebook for the future switching observer implementation. |
+| [data_preparation_and_hb_model.ipynb](data_preparation_and_hb_model.ipynb) | Earlier data preparation notebook retained for reference. |
+
+## Markdown Guide Files
+
+| File | What it explains |
+|---|---|
 | [abstract_draft.md](abstract_draft.md) | Current project abstract draft. |
-| [tasks_draft.md](tasks_draft.md) | Draft task checklist for HB implementation, fitting, validation, switching observer, comparison, behavioral validation, and presentation. |
+| [tasks_draft.md](tasks_draft.md) | Draft project checklist from HB implementation through validation, model comparison, and presentation. |
+| [collaborator_guide.md](collaborator_guide.md) | Non-technical overview of the model, current status, and how collaborators should inspect progress. |
+| [notebook_cell_map.md](notebook_cell_map.md) | Plain-language map of the scaffold notebook cells. |
+| [model_variable_verification.md](model_variable_verification.md) | Paper-to-data variable mapping and the prior-confidence vs prior-mean clarification. |
+| [scaffold_recent_changes.md](scaffold_recent_changes.md) | Change-tracking file for scaffold edits, stable names, and debugging notes. |
+| [scaffold_design_guide.md](scaffold_design_guide.md) | Scaffold design logic: function groups, expected flow, and where future edits should go. |
+| [simple_simulation_checks_interpretation.md](simple_simulation_checks_interpretation.md) | Interpretation of the simple simulation showing that prior precision changes while prior mean stays fixed. |
+| [data01_direction4priors_column_map_and_exploration.md](data01_direction4priors_column_map_and_exploration.md) | Data column notes and exploratory mapping. |
+| [first_look_data_columns.md](first_look_data_columns.md) | First-pass description of available dataset columns. |
+| [explatory_data_discovery_observations_and_research_notes.md](explatory_data_discovery_observations_and_research_notes.md) | Exploratory observations about behavior and possible research directions. |
+| [varsha_by_idea_1.md](varsha_by_idea_1.md) | Extra idea notes kept for reference. |
 
-The scaffold files are intentionally tracked at the repository root. They should not be nested under an extra folder in GitHub.
+Conversation/archive files such as [gpt_conversation_markdown.md](gpt_conversation_markdown.md), [markdown_conversation.md](markdown_conversation.md), and [markdown_conversation_work_continuation.md](markdown_conversation_work_continuation.md) are not required to run the model.
 
-## Current Checklist Coverage
+## What You Need To Use The Model
 
-| Checklist item | Current implementation status | Primary notebook cells |
-|---|---|---|
-| **HB implementation** | Partially implemented as a scaffold. The notebook defines model pieces and fitting contracts, but does not yet perform full hierarchical inference. | Cells 22-30 |
-| **Build the hierarchical Bayesian model so that it learns prior confidence across trials and generates predicted perceptual estimates.** | Implemented at scaffold level. Prior confidence is represented trial-by-trial and used to generate one-trial predicted estimate distributions. Full parameter fitting is still future work. | Cells 12, 15, 17, 23, 25, 26, 28, 30 |
-| **Define prior, sensory likelihood, posterior, motor noise, and lapse components.** | Implemented through named circular model functions and `build_trial_components(...)`. | Cells 23, 26 |
-| **Implement trial-by-trial updating of prior confidence.** | Implemented through `add_prior_confidence_scaffold(...)` for data-derived proxy columns and `update_online_prior_state(...)` for the explicit online update. | Cells 12, 25, 28 |
-| **Preserve circular angle calculations.** | Implemented through angle wrapping, circular means, von Mises-like densities, circular convolution, and circular estimate probability lookup. | Cells 12, 23 |
-| **Test the model on simple simulated conditions.** | Implemented in the `Simple simulation checks` section using a toy transition from `prior_std = 10` to `prior_std = 80`. | Cells 27-28 |
-| **Confirm that the update affects prior precision, not only prior mean.** | Implemented with assertions showing `prior_mean_unchanged == True` and `prior_precision_changed == True`. | Cell 28 |
+Required:
 
-## Notebook Cell Map
+- Python notebook environment.
+- Python libraries: `numpy`, `pandas`, `matplotlib`, `scipy`, `nbformat`, `nbclient`.
+- Internet access for the remote CSV, unless `data01_direction4priors.csv` is already present locally.
 
-| Cell | Section or main action | Checklist connection |
-|---|---|---|
-| 1 | Notebook title and scaffold purpose | Provides context for the HB scaffold. |
-| 2 | Package availability check | Setup only. Not a modeling checklist item. |
-| 3 | Imports | Setup only. |
-| 4 | Simple local path setup heading | Setup only. |
-| 5 | Local path setup for PDFs and outputs | Keeps local paper paths available while data loads remotely. |
-| 6 | Scaffold contract heading | Defines the notebook contract. |
-| 7 | Input/output columns, predictor groups, and `EQUATION_MAP` | Maps paper steps to dataset columns and model functions. Supports HB implementation traceability. |
-| 8 | Load and inspect raw data heading | Data setup. |
-| 9 | Remote CSV loader | Loads the behavioral data from GitHub raw URL. |
-| 10 | Required-column checks and raw-data summary | Confirms the expected dataset columns exist before modeling. |
-| 11 | Feature builders heading | Starts data-to-model feature construction. |
-| 12 | Feature builder functions | Preserves circular angle calculations and creates prior-confidence proxy columns. |
-| 13 | Prepared-trial validation | Confirms derived columns exist after feature building. |
-| 14 | Analysis-facing tables heading | Starts model-ready table creation. |
-| 15 | `model_df` and hierarchical index construction | Defines the model table used for later fitting and hierarchical design. |
-| 16 | Carryover-to-estimate path heading | Focuses on between-block carryover. |
-| 17 | Block transition and confidence-flow previews | Shows previous block context -> current block confidence path. |
-| 18 | Descriptive checks before fitting heading | Data inspection before modeling. |
-| 19 | Descriptive summaries and plots | Helps inspect estimation error by condition before fitting. |
-| 20 | Experimental Distribution Compiler heading | Starts empirical target construction. |
-| 21 | Distribution compiler functions and outputs | Builds experimental distributions that later model predictions should match. |
-| 22 | Core circular model functions heading | Starts model equation implementation. |
-| 23 | Circular model functions | Defines prior, sensory likelihood, posterior, readout, motor noise, lapse, and circular probability lookup. |
-| 24 | Hierarchical and switching hooks heading | Starts model variants and learning hooks. |
-| 25 | `ObserverParams`, model registry, responsibility, and online update | Defines model parameters and implements confidence-only online updating through `update_online_prior_state(...)`. |
-| 26 | One-trial prediction path | Uses trial columns to build model components and generate probability of the observed estimate. |
-| 27 | Simple simulation checks heading | Starts the direct scaffold test section. |
-| 28 | Simple simulation code and assertions | Tests simulated conditions and confirms prior precision changes while prior mean stays fixed. |
-| 29 | Fitting interface placeholder heading | Marks where future fitting should be added. |
-| 30 | Balanced subset and fit contract | Describes what will be estimated first; this is not a fit result yet. |
-| 31 | Notebook editing guide | Explains which functions to change when testing new modeling theories. |
-
-## How To Interpret The Current State
-
-The scaffold has enough structure to show how the dataset connects to the proposed model:
-
-```text
-raw behavioral CSV
--> prepared trial table
--> block and transition context
--> prior confidence proxy path
--> circular model components
--> predicted estimate distribution
-```
-
-The notebook does not yet prove that the HB model fits the real data.
-
-Evidence of a real fitted model would require outputs such as:
-
-```text
-optimized or sampled parameters
-negative log-likelihood from fitted parameters
-AIC/BIC or cross-validation
-observed-vs-predicted estimate distributions
-parameter recovery
-convergence diagnostics
-```
-
-The current final fitting-contract cell should be interpreted as a plan for fitting, not as fit evidence.
-
-## Explanation Of Tracking Files
-
-`scaffold_recent_changes.md` is the change log for the scaffold. Use it to see what was recently added, what names should stay stable, and what to check first when cells fail.
-
-`scaffold_design_guide.md` explains the intended architecture. Use it when deciding where a new function should go or when transferring the project to a new session.
-
-`simple_simulation_checks_interpretation.md` explains the output of the simulation-check cell. It is specifically tied to these checklist items:
-
-```text
-Test the model on simple simulated conditions.
-Confirm that the update affects prior precision, not only prior mean.
-```
-
-## Stable Data Source
-
-The notebook loads data from:
+Data source used by the notebooks:
 
 ```text
 https://raw.githubusercontent.com/steevelaquitaine/projInference/refs/heads/gh-pages/data/csv/data01_direction4priors.csv
 ```
 
-The scaffold should continue to load from the remote CSV unless there is a clear reason to change the data source.
+Recommended run order:
 
-## Next Modeling Steps
+1. Open [hierarchical_observer_scaffold.ipynb](hierarchical_observer_scaffold.ipynb) to understand the data-to-model structure.
+2. Run [hb_verified_model_implementation.ipynb](hb_verified_model_implementation.ipynb) to produce smoke-fit parameter and prediction outputs.
+3. Run [hb_smoke_fit_user_guide.ipynb](hb_smoke_fit_user_guide.ipynb) to compare observed vs model-predicted response distributions.
+4. Run [hb_parameter_recovery_smoke.ipynb](hb_parameter_recovery_smoke.ipynb) to check parameter recovery and prior-confidence trajectories.
 
-The next substantial implementation step is to turn the scaffold into a real fitted model:
+Key output files are saved in [outputs](outputs/), including smoke-fit results, trial predictions, observed-vs-predicted summaries, and parameter-recovery diagnostics.
 
-```text
-fit basic Bayesian model
-fit switching observer model
-fit hierarchical prior-confidence model
-compare models using likelihood and predictive error
-run parameter recovery
-compare observed and predicted estimate distributions
-```
+## Next Steps
+
+The next work should move from smoke diagnostics to full model testing:
+
+1. Fit the HB model on the full trial-level dataset for each subject.
+2. Implement the Switching observer model.
+3. Compare HB vs Switching using NLL, AIC, BIC, and cross-validation.
+4. Run stronger parameter recovery with more trials, more subjects, and multiple optimizer restarts.
+5. Create condition-specific observed-vs-predicted plots around sensory and prior modes.
