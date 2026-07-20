@@ -1,0 +1,169 @@
+            The Hierarchical Observer, Step by Step
+           Every parameter, and how each one combines into the next
+
+
+
+
+                     Neuromatch Bayesian Modelling project
+
+
+The figure below is the whole model; each arrow carries the equation for that step. The
+two sections after it (a) define every parameter and (b) walk through the arrows one at
+a time, stating for each step its inputs → operation → output and the logic of how the
+quantities combine.
+
+
+
+
+Figure 1: Hierarchical observer with the hyper-prior and the online feedback loop. Each
+transition is labelled with the operation that combines its inputs.
+
+
+
+
+                                          1
+Parameter dictionary
+Grouped by role: the hyperparameters (learned slowly), the prior parameters they pro-
+duce, the per-trial quantities, and the fixed nuisance parameters.
+
+  Symbol                     What it is                  How it is set / its role
+  𝜂                          The hyper-prior variable    Belief about the prior
+                                                         itself; the top-level knob
+                                                         that produces (𝜋, 𝜇, 𝑘).
+  𝑝(𝜂)                       The hyper-prior             A distribution over 𝜂 — a
+                                                         prior over the parameters
+                                                         of the prior.
+  𝑓(𝜂)                       The link map                Turns 𝜂 into the concrete
+                                                         prior parameters (𝜋, 𝜇, 𝑘).
+  𝜋                          Mixing weight               𝑃 (𝑧 = peaked) ∈ [0, 1]:
+                                                         how much of the prior is
+                                                         the peaked component vs
+                                                         the uniform floor.
+  𝜇                          Prior mean/mode             The centre direction the
+                                                         prior favours — 225∘ in
+                                                         the task [1].
+  𝑘                          Prior concentration         Prior strength; larger 𝑘 =
+                                                         narrower √ prior
+                                                         (𝜎 ≈ 1/ 𝑘).
+  𝜃                          True direction              The stimulus direction on
+                                                         the trial; also shown as
+                                                         feedback afterward.
+  𝑚                          Measurement                 The noisy sensory reading
+                                                         of 𝜃.
+  𝑘𝑙𝑙ℎ                       Sensory reliability         Concentration of the
+                                                         measurement noise;
+                                                         grows with motion
+                                                         coherence.
+  𝐿(𝜃)                       Likelihood                  VM(𝜃; 𝑚, 𝑘𝑙𝑙ℎ ) — what the
+                                                         measurement says about
+                                                         direction.
+  𝐴(𝜃)                       Peaked prior component      VM(𝜃; 𝜇, 𝑘).
+  𝐵(𝜃)                       Uniform prior component     𝑈 = 1/360 (flat).
+  𝑍𝐴 , 𝑍 𝐵                   Model evidences             𝑍𝐴 = ∑𝜃 𝐿𝐴,
+                                                         𝑍𝐵 = ∑𝜃 𝐿𝐵 = 1/360:
+                                                         how well each cause
+                                                         predicts 𝑚.
+  𝑟                          Responsibility              𝑃 (𝑧 = peaked ∣ 𝑚): the
+                                                         trial-specific weight on
+                                                         the peaked cause.
+
+
+
+
+                                          2
+  Symbol                        What it is                    How it is set / its role
+
+  𝜃̂                            Estimate                      The reported response
+                                                              after readout, motor
+                                                              noise, and lapse.
+  𝑘𝑚𝑜𝑡𝑜𝑟                        Motor precision               Concentration of the
+                                                              response (motor) noise.
+  𝑝𝑟𝑎𝑛𝑑                         Lapse rate                    Probability of a random
+                                                              guess on a trial.
+  𝛼                             Learning rate                 Step size of the online
+                                                              update of 𝜇 (and,
+                                                              analogously, 𝑘, 𝜋 ).
+
+
+
+How the quantities combine, step by step
+Each step is one arrow in the figure.
+Step 1 — hyper-prior to prior parameters (𝜂 → 𝜋, 𝜇, 𝑘). Inputs: 𝜂 . Operation:
+(𝜋, 𝜇, 𝑘) = 𝑓(𝜂). Output: the three prior parameters. Logic: 𝜂 is your belief about
+what the prior looks like; 𝑓 reads off its current best values for the mixing weight, centre,
+and strength. If you are uncertain about 𝜂 , you instead carry the whole distribution 𝑝(𝜂)
+and average over it later (Step 2, predictive form).
+Step 2 — prior parameters to the prior (𝜋, 𝜇, 𝑘 → 𝑝(𝜃)). Inputs: 𝜋, 𝜇, 𝑘. Operation:
+                                                            1
+                            𝑝(𝜃) = 𝜋 VM(𝜃; 𝜇, 𝑘) + (1 − 𝜋) 360 .
+Output: the mixture prior over direction. How they combine: 𝜇 places the bump, 𝑘 sets its
+width, and 𝜋 mixes it with a uniform floor — 𝜋 is the height of the bump relative to the flat
+baseline. With uncertainty over 𝜂 , replace this by the predictive prior ∫ 𝑝(𝜃 ∣ 𝜂)𝑝(𝜂) 𝑑𝜂 ,
+which is wider and heavier-tailed [3].
+Step 3 — true direction to measurement (𝜃 → 𝑚). Inputs: 𝜃, 𝑘𝑙𝑙ℎ . Operation: 𝑚 ∼
+VM(𝜃, 𝑘𝑙𝑙ℎ ). Output: a noisy measurement. Logic: the sensory system corrupts the true
+direction; 𝑘𝑙𝑙ℎ (reliability) controls how tightly 𝑚 scatters around 𝜃.
+Step 4 — measurement to likelihood (𝑚 → 𝐿). Inputs: 𝑚, 𝑘𝑙𝑙ℎ . Operation: 𝐿(𝜃) =
+VM(𝜃; 𝑚, 𝑘𝑙𝑙ℎ ). Output: the likelihood over all directions. Logic: the same von Mises,
+now read as a function of the hypothesised direction 𝜃 given the observed 𝑚.
+Step 5 — prior × likelihood to the two sub-posteriors. Inputs: 𝐿, 𝐴 = VM(𝜇, 𝑘),
+𝐵 = 𝑈 . Operation:
+                                                                      1
+       sub𝐴 ∝ 𝐿 ⋅ 𝐴,      sub𝐵 ∝ 𝐿 ⋅ 𝐵,       𝑍𝐴 = ∑ 𝐿𝐴, 𝑍𝐵 = ∑ 𝐿𝐵 = 360 .
+                                                      𝜃                𝜃
+
+Output: two normalised sub-posteriors and their evidences. How they combine: because
+the prior is a sum of two parts and Bayes multiplies, the product splits — one poste-
+rior per component (multiplication distributes over addition). sub𝐴 is the prior-pulled
+
+
+                                             3
+estimate; sub𝐵 is just the likelihood. 𝑍𝐴 , 𝑍𝐵 measure how much total probability each
+component gives the data.
+Step 6 — evidences to responsibility (𝑍𝐴 , 𝑍𝐵 → 𝑟). Inputs: 𝜋, 𝑍𝐴 , 𝑍𝐵 . Operation:
+
+                                           𝜋𝑍𝐴
+                                 𝑟=                   .
+                                      𝜋𝑍𝐴 + (1 − 𝜋)𝑍𝐵
+Output: the responsibility 𝑟 ∈ [0, 1]. How they combine: this is Bayes one level up — the
+prior odds 𝜋/(1 − 𝜋) times the evidence ratio 𝑍𝐴 /𝑍𝐵 , renormalised. 𝑟 is large when the
+measurement lands where the peaked prior predicts it (near 𝜇), small when it lands far
+away.
+Step 7 — sub-posteriors and responsibility to the posterior. Inputs: sub𝐴 , sub𝐵 , 𝑟.
+Operation:
+                        𝑝(𝜃 ∣ 𝑚) = 𝑟 sub𝐴 + (1 − 𝑟) sub𝐵 .
+Output: the (generally bimodal) posterior. How they combine: a convex blend — 𝑟 slides
+mass between the prior-pulled mode and the likelihood mode. Equivalently, the sum rule
+𝑝(𝜃 ∣ 𝑚) = ∑𝑧 𝑝(𝑧 ∣ 𝑚) 𝑝(𝜃 ∣ 𝑚, 𝑧) [2].
+Step 8 — posterior to estimate (𝑝(𝜃 ∣ 𝑚) → 𝜃). ̂ Inputs: the posterior; 𝑘
+                                                                         𝑚𝑜𝑡𝑜𝑟 , 𝑝𝑟𝑎𝑛𝑑 .
+Operation: pick a readout 𝑔 ∈ {mean, argmax, sample}, then blur and lapse:
+
+              𝜃 ̂ = [(1 − 𝑝𝑟𝑎𝑛𝑑 ) 𝑔(𝑝(𝜃 ∣ 𝑚)) + 𝑝𝑟𝑎𝑛𝑑 𝑈 ] ⊛ VM(0, 𝑘𝑚𝑜𝑡𝑜𝑟 ).
+Output: the reported estimate. How they combine: the readout collapses the posterior to
+a value (averaging → one mode; argmax/sample → two modes); ⊛ is circular convolution
+with motor noise; 𝑝𝑟𝑎𝑛𝑑 mixes in a uniform guess.
+Step 9 — feedback to the prior parameters (𝜃𝑡𝑟𝑢𝑒 → 𝜋, 𝜇, 𝑘). Inputs: the fed-back
+true direction 𝜃𝑡𝑟𝑢𝑒 ; learning rate 𝛼. Operation (online form):
+
+        𝜇 ← 𝜇 + 𝛼(𝜃𝑡𝑟𝑢𝑒 − 𝜇),       𝑘, 𝜋 updated toward the observed statistics;
+                                                            𝑡𝑟𝑢𝑒
+the exact form is Bayes on the hyperparameters, 𝑝(𝜂 ∣ 𝜃1∶𝑡       ) ∝ 𝑝(𝜂) ∏𝑠 𝑝(𝜃𝑠𝑡𝑟𝑢𝑒 ∣ 𝜂).
+Output: updated (𝜋, 𝜇, 𝑘) (and a refined 𝑝(𝜂)) for the next trial. How they combine: the
+loop closes here — the true directions shown as feedback are samples of the prior, so
+learning the prior is estimating a distribution from those samples; the delta rule with
+rate 𝛼 is the online, point-estimate version [23, 24].
+
+
+References
+[1] Laquitaine, S. & Gardner, J.L. (2018). Neuron 97, 462–474. [2] Bishop, C.M. (2006).
+Pattern Recognition and Machine Learning, ch. 9. [3] Gelman, A. et al. (2013). Bayesian
+Data Analysis, 3rd ed., ch. 5. [23] Nassar, M.R. et al. (2010). J. Neurosci. 30, 12366–
+12378. [24] Wilson, R.C., Nassar, M.R. & Gold, J.I. (2013). PLoS Comput. Biol. 9,
+e1003150.
+
+
+
+
+                                            4
+
