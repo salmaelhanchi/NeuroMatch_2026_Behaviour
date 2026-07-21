@@ -31,6 +31,7 @@ from scipy.optimize import minimize
 from observers.models.hb_integration import HBIntegrationObserver
 from observers.helpers.dataset import load_subject_design, make_synthetic_design
 from observers.helpers.paths import DATA_CSV, HUMAN_FITS, AT_FITS, HB_FITS
+from observers.fitting.online_recovery import conv_info as _conv_info
 
 CSV = DATA_CSV
 COHS = [0.06, 0.12, 0.24]
@@ -82,6 +83,7 @@ def fit(data, x0=None, maxiter=400, mask=None):
                    options={"maxiter": maxiter, "xatol": 1e-2, "fatol": 1e-2})
     obs = unpack(res.x)
     nll = float(res.fun)
+    obs._fit_info = _conv_info(res, maxiter)   # convergence diagnostics
     return obs, nll, res.x
 
 

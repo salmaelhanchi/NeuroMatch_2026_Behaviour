@@ -38,7 +38,12 @@ import numpy as np
 from observers.helpers.circular import von_mises_std, DIRECTION_SPACE
 from observers.helpers.bayes_lookup import girshick_map_lookup
 from observers.models.hb_integration import (HBIntegrationObserver, mixture_map_lookup, PRIOR_MEAN)
-from observers.models.online_switching_observer import OnlineHierarchicalObserver
+try:
+    from observers.models.online_switching_observer import OnlineHierarchicalObserver
+except ImportError:
+    # Lives in the gitignored ``other models/`` folder — not part of the shared
+    # repo. The discriminator sub-test skips cleanly when it is unavailable.
+    OnlineHierarchicalObserver = None
 from observers.helpers.paths import DATA_CSV
 
 results = []
@@ -146,6 +151,12 @@ def test_discriminator():
     distance; the switch model's is roughly FLAT (its prior read-out is a delta
     at 225 with a direction-independent weight).
     """
+    if OnlineHierarchicalObserver is None:
+        print("    [skip discriminator — OnlineHierarchicalObserver not available "
+              "in this checkout (lives in the gitignored 'other models/'). The "
+              "switch vs integration property is covered by verify_switching.]")
+        return
+
     k_prior = 2.7          # prior SD ~40 deg
     coh = 0.24             # k_e = 8 -> fairly narrow evidence
     stim_dirs = [165, 145, 125, 105]     # distances 60,80,100,120 from 225

@@ -1,0 +1,136 @@
+{
+ "run_config": {
+  "subject_id": 7,
+  "heldout_final_sessions": 2,
+  "heldout_sessions": [
+   5,
+   6
+  ],
+  "maxiter": 400,
+  "bootstrap_draws": 5000,
+  "models": {
+   "switch": "switch",
+   "readout_average": "hb_rachel",
+   "hb_adaptive": "hb_adaptive",
+   "basic_bayes": "basic_bayes"
+  }
+ },
+ "data_audit": {
+  "trials": 5797,
+  "train_trials": 3639,
+  "heldout_trials": 2158,
+  "sessions": 6
+ },
+ "fits": {
+  "switch": {
+   "model": "switch",
+   "role": "switch",
+   "k": 9,
+   "train_nll": 17139.566496756175,
+   "heldout_nll": 10065.110834646728,
+   "heldout_trials": 2158,
+   "mean_log_score": -4.664092138390513,
+   "aic": 34297.13299351235,
+   "seconds": 19.4,
+   "elpd_diff_from_best": -6.887457995373552
+  },
+  "readout_average": {
+   "model": "readout_average",
+   "role": "hb_rachel",
+   "k": 7,
+   "train_nll": 17216.483388934248,
+   "heldout_nll": 10090.8783719228,
+   "heldout_trials": 2158,
+   "mean_log_score": -4.676032609788137,
+   "aic": 34446.966777868496,
+   "seconds": 35.5,
+   "elpd_diff_from_best": -32.65499527144493
+  },
+  "hb_adaptive": {
+   "model": "hb_adaptive",
+   "role": "hb_adaptive",
+   "k": 6,
+   "train_nll": 17192.527124162232,
+   "heldout_nll": 10068.983100616984,
+   "heldout_trials": 2158,
+   "mean_log_score": -4.665886515577842,
+   "aic": 34397.054248324464,
+   "seconds": 228.4,
+   "elpd_diff_from_best": -10.759723965629746
+  },
+  "basic_bayes": {
+   "model": "basic_bayes",
+   "role": "basic_bayes",
+   "k": 9,
+   "train_nll": 17142.235264224582,
+   "heldout_nll": 10058.223376651355,
+   "heldout_trials": 2158,
+   "mean_log_score": -4.660900545250859,
+   "aic": 34302.470528449165,
+   "seconds": 23.0,
+   "elpd_diff_from_best": -0.0
+  }
+ },
+ "ranking": [
+  "basic_bayes",
+  "switch",
+  "hb_adaptive",
+  "readout_average"
+ ],
+ "predictive_pairs": [
+  {
+   "first": "basic_bayes",
+   "second": "switch",
+   "mean_log_diff": 0.0031915931396539923,
+   "ci_lo": -0.022797246300698654,
+   "ci_hi": 0.03244290391115581,
+   "prob_first_better": 0.5764,
+   "supported": "inconclusive"
+  },
+  {
+   "first": "basic_bayes",
+   "second": "hb_adaptive",
+   "mean_log_diff": 0.004985970326983919,
+   "ci_lo": -0.031192969426546167,
+   "ci_hi": 0.0406080128046198,
+   "prob_first_better": 0.6108,
+   "supported": "inconclusive"
+  },
+  {
+   "first": "basic_bayes",
+   "second": "readout_average",
+   "mean_log_diff": 0.015132064537277395,
+   "ci_lo": -0.02520745951233751,
+   "ci_hi": 0.053052213910951,
+   "prob_first_better": 0.7838,
+   "supported": "inconclusive"
+  },
+  {
+   "first": "switch",
+   "second": "hb_adaptive",
+   "mean_log_diff": 0.001794377187329929,
+   "ci_lo": -0.024175536476056574,
+   "ci_hi": 0.02609081776926199,
+   "prob_first_better": 0.5664,
+   "supported": "inconclusive"
+  },
+  {
+   "first": "switch",
+   "second": "readout_average",
+   "mean_log_diff": 0.011940471397623406,
+   "ci_lo": -0.019176846060204023,
+   "ci_hi": 0.03985270129045825,
+   "prob_first_better": 0.7822,
+   "supported": "inconclusive"
+  },
+  {
+   "first": "hb_adaptive",
+   "second": "readout_average",
+   "mean_log_diff": 0.010146094210293475,
+   "ci_lo": 0.003883478657381615,
+   "ci_hi": 0.016021345345381813,
+   "prob_first_better": 0.9988,
+   "supported": "hb_adaptive"
+  }
+ ]
+}

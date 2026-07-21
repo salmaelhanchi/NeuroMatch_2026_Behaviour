@@ -1,0 +1,44 @@
+{
+  "model": "hb_adaptive",
+  "label": "HB-Adaptive",
+  "subject": 10,
+  "n_trials": 6045,
+  "k": 6,
+  "folds": 5,
+  "cv_nll": 31313.373257063085,
+  "cv_per_trial": 5.180045203815233,
+  "fold_detail": [
+    {
+      "fold": 1,
+      "n_test": 1281,
+      "held_out_nll": 7444.871156960185,
+      "per_trial": 5.811765149851823
+    },
+    {
+      "fold": 2,
+      "n_test": 1104,
+      "held_out_nll": 5883.628012644348,
+      "per_trial": 5.329373199859011
+    },
+    {
+      "fold": 3,
+      "n_test": 1074,
+      "held_out_nll": 5144.92341671241,
+      "per_trial": 4.790431486696844
+    },
+    {
+      "fold": 4,
+      "n_test": 1305,
+      "held_out_nll": 6587.152368028863,
+      "per_trial": 5.047626335654301
+    },
+    {
+      "fold": 5,
+      "n_test": 1281,
+      "held_out_nll": 6252.798302717281,
+      "per_trial": 4.881185248022859
+    }
+  ],
+  "maxiter": 400,
+  "seconds": 4846.6
+}

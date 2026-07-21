@@ -1,0 +1,39 @@
+{
+  "model": "switch",
+  "label": "Switch",
+  "subject": 11,
+  "n_trials": 6474,
+  "nll": 31297.166875168015,
+  "aic": 62612.33375033603,
+  "bic": 62673.313695246405,
+  "k": 9,
+  "learns": false,
+  "grid_deg": 360,
+  "start_spread": 104.73594896526629,
+  "params": {
+    "k_motor": 17.189814416855693,
+    "p_random": 0.024990582895050538,
+    "k_like": {
+      "0.06": 1.3950638888963658,
+      "0.12": 5.0098428669954265,
+      "0.24": 397.28717890959206
+    },
+    "k_prior": {
+      "80": 0.26192534156570946,
+      "40": 0.5000333469217859,
+      "20": 4.5777526541526035,
+      "10": 47.03982402779437
+    }
+  },
+  "theta": null,
+  "convergence": {
+    "converged": true,
+    "n_iter": 390,
+    "n_feval": 572,
+    "hit_maxiter": false,
+    "status": 0,
+    "message": "Optimization terminated successfully."
+  },
+  "maxiter": 400,
+  "seconds": 335.6
+}

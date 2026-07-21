@@ -78,7 +78,23 @@ def fit_online(data, x0=None, maxiter=400):
     aic = 2 * 6 + 2 * nll
     return unpack_online(res.x), nll, aic
 
-def fit_static(data, maxiter=500):
+def conv_info(res, maxiter):
+    """Extract Nelder-Mead convergence diagnostics from a scipy OptimizeResult
+    into a small JSON-serializable dict, for the fit record. ``converged`` is
+    False when the optimizer hit the iteration cap (the key thing a reviewer
+    asks). Robust to scipy versions that omit some fields."""
+    nit = int(getattr(res, "nit", -1))
+    return {
+        "converged": bool(getattr(res, "success", False)),
+        "n_iter": nit,
+        "n_feval": int(getattr(res, "nfev", -1)),
+        "hit_maxiter": bool(nit >= int(maxiter)),
+        "status": int(getattr(res, "status", -1)),
+        "message": str(getattr(res, "message", "")),
+    }
+
+
+def fit_static(data, maxiter=500, return_result=False, x0=None):
     d, c, e = data["motion_direction"], data["motion_coherence"], data["estimates"]
     sd = np.asarray(data["prior_std"], dtype=int)
     def kpp(k_prior_by_sd):
@@ -89,12 +105,15 @@ def fit_static(data, maxiter=500):
             return obs.negative_log_likelihood_fixedk(e, d, c, kpp(kp))
         except Exception:
             return 1e12
-    x0 = pack_static({0.06: 1.0, 0.12: 3.0, 0.24: 8.0},
-                     {80: 0.7, 40: 2.8, 20: 8.7, 10: 33.0}, 30.0, 0.05)
+    if x0 is None:
+        x0 = pack_static({0.06: 1.0, 0.12: 3.0, 0.24: 8.0},
+                         {80: 0.7, 40: 2.8, 20: 8.7, 10: 33.0}, 30.0, 0.05)
     res = minimize(obj, x0, method="Nelder-Mead",
                    options={"maxiter": maxiter, "xatol": 1e-2, "fatol": 1e-2})
     nll = res.fun
     aic = 2 * 9 + 2 * nll
+    if return_result:                       # optional 4th value; existing 3-tuple
+        return res.x, nll, aic, res          # unpackers are unaffected
     return res.x, nll, aic
 
 

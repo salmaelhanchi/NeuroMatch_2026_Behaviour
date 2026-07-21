@@ -25,7 +25,7 @@ import sys
 import numpy as np
 
 from observers.models.switching_observer import SwitchingObserver
-from observers.fitting.online_recovery import fit_static, unpack_static
+from observers.fitting.online_recovery import fit_static, unpack_static, conv_info as _conv_info
 from observers.helpers.dataset import load_subject_design
 from observers.helpers.paths import DATA_CSV
 
@@ -53,8 +53,9 @@ def fit(data, maxiter=500):
 
     Returns (observer, nll, aic, bic).
     """
-    theta, nll, aic = fit_static(data, maxiter=maxiter)
+    theta, nll, aic, res = fit_static(data, maxiter=maxiter, return_result=True)
     obs = observer_from_theta(theta)
+    obs._fit_info = _conv_info(res, maxiter)   # convergence diagnostics
     n = len(np.asarray(data["estimates"]))
     bic = N_PARAMS * np.log(n) + 2 * nll
     return obs, float(nll), float(aic), float(bic)
