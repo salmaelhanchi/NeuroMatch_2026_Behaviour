@@ -1,0 +1,101 @@
+{
+  "run_config": {
+    "smoke_test": false,
+    "participant_id": 1,
+    "n_angles": 72,
+    "angle_step_degrees": 5.0,
+    "kappa_support": [
+      0.0,
+      0.05,
+      0.11856868528308274,
+      0.2811706625951745,
+      0.6667607160816619,
+      1.5811388300841895,
+      3.7494710466622787,
+      8.891397050194612,
+      21.08482517142911,
+      50.0
+    ],
+    "n_starts": 2,
+    "max_evaluations_per_start": 60,
+    "prior_std_used": false,
+    "state_reset": "session boundary",
+    "state_carryover": "across blocks within a session"
+  },
+  "data_audit": {
+    "csv_path": "C:\\Users\\HP\\Desktop\\baysiean hyperprior\\hierarchical\\data\\data01_direction4priors.csv",
+    "subject_id": 1,
+    "trials": 8562,
+    "valid_responses": 8562,
+    "sessions": 8,
+    "runs": 40,
+    "coherences": [
+      0.06,
+      0.12,
+      0.24
+    ],
+    "prior_mean_degrees": 225.0,
+    "prior_std_used": false
+  },
+  "fits": {
+    "readout_average": {
+      "model": "readout_average",
+      "nll": 24927.02988015105,
+      "aic": 49868.0597603021,
+      "bic": 49917.445383909035,
+      "parameters": {
+        "alpha": 0.6,
+        "motor_kappa": 30.000000000000004,
+        "lapse": 0.020000000000000004,
+        "lambda": 0.05000000000000001,
+        "sensory_kappa_0.06": 2.7863723887799354,
+        "sensory_kappa_0.12": 13.37209177039126,
+        "sensory_kappa_0.24": 79.97145140923755
+      },
+      "elapsed_seconds": 22.802294499997515,
+      "evaluations": 120,
+      "best_start": 0,
+      "success": false,
+      "message": "Maximum number of function evaluations has been exceeded."
+    },
+    "reliability_mixture": {
+      "model": "reliability_mixture",
+      "nll": 28385.917778228228,
+      "aic": 56785.835556456455,
+      "bic": 56835.22118006339,
+      "parameters": {
+        "prior_kappa": 2.7,
+        "learning_rate": 0.10000000000000002,
+        "motor_kappa": 30.000000000000004,
+        "lapse": 0.020000000000000004,
+        "sensory_kappa_0.06": 8.28651435263702,
+        "sensory_kappa_0.12": 32.72035457811214,
+        "sensory_kappa_0.24": 79.96947408644414
+      },
+      "elapsed_seconds": 35.32121600001119,
+      "evaluations": 120,
+      "best_start": 0,
+      "success": false,
+      "message": "Maximum number of function evaluations has been exceeded."
+    },
+    "integrated_prior": {
+      "model": "integrated_prior",
+      "nll": 25138.84934097901,
+      "aic": 50289.69868195802,
+      "bic": 50332.02921647825,
+      "parameters": {
+        "rho": 0.8442527565808831,
+        "motor_kappa": 30.000000000000004,
+        "lapse": 0.020000000000000004,
+        "sensory_kappa_0.06": 2.7123736082806604,
+        "sensory_kappa_0.12": 12.042812340330581,
+        "sensory_kappa_0.24": 12.0
+      },
+      "elapsed_seconds": 659.0474841999821,
+      "evaluations": 120,
+      "best_start": 0,
+      "success": false,
+      "message": "Maximum number of function evaluations has been exceeded."
+    }
+  }
+}

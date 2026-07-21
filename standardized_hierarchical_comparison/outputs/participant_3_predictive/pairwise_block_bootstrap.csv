@@ -1,0 +1,7 @@
+first_model,second_model,mean_log_score_difference_first_minus_second,ci_2.5%,ci_97.5%,probability_first_better,run_blocks,supported_model_if_converged,comparison_valid
+switching_observer,readout_average,-0.04131389581915858,-0.08749315143554334,0.009307069127324633,0.0544,10,inconclusive,False
+switching_observer,reliability_mixture,-0.009304126678396023,-0.04414200765447087,0.026795543447846428,0.2992,10,inconclusive,False
+switching_observer,integrated_prior,-0.023528938974590945,-0.08021290773983848,0.035907103263448516,0.2126,10,inconclusive,False
+readout_average,reliability_mixture,0.03200976914076257,0.003595972523659057,0.055055037958293127,0.986,10,readout_average,False
+readout_average,integrated_prior,0.017784956844567643,0.0038233861921157892,0.031810781979269495,0.994,10,readout_average,False
+reliability_mixture,integrated_prior,-0.014224812296194924,-0.041604404640506985,0.01938201557902043,0.177,10,inconclusive,False

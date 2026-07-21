@@ -1,0 +1,9 @@
+numpy
+pandas
+scipy
+matplotlib
+jupyterlab
+nbformat
+nbclient
+pytest
+

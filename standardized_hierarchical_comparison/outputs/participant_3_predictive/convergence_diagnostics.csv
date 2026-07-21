@@ -1,0 +1,5 @@
+model,success,message,unchanged_raw_parameters,bound_hits
+switching_observer,True,Optimization terminated successfully.,none,log_sensory_kappa_0.24
+readout_average,True,Optimization terminated successfully.,none,log_sensory_kappa_0.24
+reliability_mixture,False,Maximum number of function evaluations has been exceeded.,none,log_sensory_kappa_0.24
+integrated_prior,True,Optimization terminated successfully.,none,log_sensory_kappa_0.24

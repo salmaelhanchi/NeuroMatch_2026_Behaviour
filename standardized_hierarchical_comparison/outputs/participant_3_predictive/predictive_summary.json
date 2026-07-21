@@ -1,0 +1,225 @@
+{
+  "run_config": {
+    "smoke_test": false,
+    "participant_id": 3,
+    "heldout_final_sessions": 2,
+    "n_angles": 72,
+    "angle_step_degrees": 5.0,
+    "n_starts": 2,
+    "max_evaluations_per_start": 250,
+    "bootstrap_draws": 5000,
+    "prior_std_used": false,
+    "split": "complete final sessions",
+    "heldout_state_policy": "reset at session start; causal feedback updates only"
+  },
+  "data_audit": {
+    "csv_path": "C:\\Users\\HP\\Desktop\\baysiean hyperprior\\hierarchical\\data\\data01_direction4priors.csv",
+    "subject_id": 3,
+    "trials": 9412,
+    "valid_responses": 9412,
+    "sessions": 9,
+    "runs": 44,
+    "coherences": [
+      0.06,
+      0.12,
+      0.24
+    ],
+    "prior_mean_degrees": 225.0,
+    "prior_std_used": false
+  },
+  "heldout_sessions": [
+    8,
+    9
+  ],
+  "comparison_valid": false,
+  "fits": {
+    "switching_observer": {
+      "model": "switching_observer",
+      "nll": 20923.6518062741,
+      "aic": 41859.3036125482,
+      "bic": 41900.63946246726,
+      "parameters": {
+        "prior_kappa": 3.2476760554961186,
+        "motor_kappa": 38.9586804661187,
+        "lapse": 0.02637470711998659,
+        "sensory_kappa_0.06": 4.037288533033151,
+        "sensory_kappa_0.12": 16.457137957052083,
+        "sensory_kappa_0.24": 79.95345280974584
+      },
+      "elapsed_seconds": 30.681130499986466,
+      "evaluations": 350,
+      "best_start": 0,
+      "success": true,
+      "message": "Optimization terminated successfully."
+    },
+    "readout_average": {
+      "model": "readout_average",
+      "nll": 20626.1543145744,
+      "aic": 41266.3086291488,
+      "bic": 41314.5337873877,
+      "parameters": {
+        "alpha": 0.6553258693085026,
+        "motor_kappa": 33.44228449050806,
+        "lapse": 0.013565927393388437,
+        "lambda": 0.23789573981819975,
+        "sensory_kappa_0.06": 2.577151282238499,
+        "sensory_kappa_0.12": 10.225269694409288,
+        "sensory_kappa_0.24": 79.95584904727076
+      },
+      "elapsed_seconds": 97.78924169996753,
+      "evaluations": 449,
+      "best_start": 0,
+      "success": true,
+      "message": "Optimization terminated successfully."
+    },
+    "reliability_mixture": {
+      "model": "reliability_mixture",
+      "nll": 20882.258624652473,
+      "aic": 41778.51724930495,
+      "bic": 41826.74240754385,
+      "parameters": {
+        "prior_kappa": 79.38847276821899,
+        "learning_rate": 0.06817433064611794,
+        "motor_kappa": 41.01913736481795,
+        "lapse": 0.014609507342118981,
+        "sensory_kappa_0.06": 2.8872994093336057,
+        "sensory_kappa_0.12": 16.44170947229788,
+        "sensory_kappa_0.24": 79.99977501684221
+      },
+      "elapsed_seconds": 151.92075039999327,
+      "evaluations": 500,
+      "best_start": 0,
+      "success": false,
+      "message": "Maximum number of function evaluations has been exceeded."
+    },
+    "integrated_prior": {
+      "model": "integrated_prior",
+      "nll": 20738.8892277123,
+      "aic": 41489.7784554246,
+      "bic": 41531.11430534366,
+      "parameters": {
+        "rho": 0.712822239312935,
+        "motor_kappa": 26.198032421664443,
+        "lapse": 0.019839123811874942,
+        "sensory_kappa_0.06": 2.6131187554219446,
+        "sensory_kappa_0.12": 9.921375689965437,
+        "sensory_kappa_0.24": 79.81102402906818
+      },
+      "elapsed_seconds": 2293.63912040001,
+      "evaluations": 415,
+      "best_start": 0,
+      "success": true,
+      "message": "Optimization terminated successfully."
+    }
+  },
+  "predictive_scores": [
+    {
+      "model": "readout_average",
+      "heldout_trials": 2158,
+      "heldout_elpd": -6310.136477652374,
+      "mean_log_score": -2.9240669497925738,
+      "bits_per_trial_over_uniform": 1.9513881137492488,
+      "heldout_nll": 6310.136477652374,
+      "elpd_difference_from_best": 0.0,
+      "comparison_valid": false
+    },
+    {
+      "model": "integrated_prior",
+      "heldout_trials": 2158,
+      "heldout_elpd": -6348.516414522951,
+      "mean_log_score": -2.941851906637141,
+      "bits_per_trial_over_uniform": 1.9257298447071671,
+      "heldout_nll": 6348.516414522951,
+      "elpd_difference_from_best": -38.379936870576785,
+      "comparison_valid": false
+    },
+    {
+      "model": "reliability_mixture",
+      "heldout_trials": 2158,
+      "heldout_elpd": -6379.21355945814,
+      "mean_log_score": -2.9560767189333363,
+      "bits_per_trial_over_uniform": 1.90520777854987,
+      "heldout_nll": 6379.21355945814,
+      "elpd_difference_from_best": -69.07708180576537,
+      "comparison_valid": false
+    },
+    {
+      "model": "switching_observer",
+      "heldout_trials": 2158,
+      "heldout_elpd": -6399.291864830118,
+      "mean_log_score": -2.9653808456117323,
+      "bits_per_trial_over_uniform": 1.8917847611311454,
+      "heldout_nll": 6399.291864830118,
+      "elpd_difference_from_best": -89.15538717774416,
+      "comparison_valid": false
+    }
+  ],
+  "pairwise_bootstrap": [
+    {
+      "first_model": "switching_observer",
+      "second_model": "readout_average",
+      "mean_log_score_difference_first_minus_second": -0.04131389581915858,
+      "ci_2.5%": -0.08749315143554334,
+      "ci_97.5%": 0.009307069127324633,
+      "probability_first_better": 0.0544,
+      "run_blocks": 10,
+      "supported_model_if_converged": "inconclusive",
+      "comparison_valid": false
+    },
+    {
+      "first_model": "switching_observer",
+      "second_model": "reliability_mixture",
+      "mean_log_score_difference_first_minus_second": -0.009304126678396023,
+      "ci_2.5%": -0.04414200765447087,
+      "ci_97.5%": 0.026795543447846428,
+      "probability_first_better": 0.2992,
+      "run_blocks": 10,
+      "supported_model_if_converged": "inconclusive",
+      "comparison_valid": false
+    },
+    {
+      "first_model": "switching_observer",
+      "second_model": "integrated_prior",
+      "mean_log_score_difference_first_minus_second": -0.023528938974590945,
+      "ci_2.5%": -0.08021290773983848,
+      "ci_97.5%": 0.035907103263448516,
+      "probability_first_better": 0.2126,
+      "run_blocks": 10,
+      "supported_model_if_converged": "inconclusive",
+      "comparison_valid": false
+    },
+    {
+      "first_model": "readout_average",
+      "second_model": "reliability_mixture",
+      "mean_log_score_difference_first_minus_second": 0.03200976914076257,
+      "ci_2.5%": 0.003595972523659057,
+      "ci_97.5%": 0.055055037958293127,
+      "probability_first_better": 0.986,
+      "run_blocks": 10,
+      "supported_model_if_converged": "readout_average",
+      "comparison_valid": false
+    },
+    {
+      "first_model": "readout_average",
+      "second_model": "integrated_prior",
+      "mean_log_score_difference_first_minus_second": 0.017784956844567643,
+      "ci_2.5%": 0.0038233861921157892,
+      "ci_97.5%": 0.031810781979269495,
+      "probability_first_better": 0.994,
+      "run_blocks": 10,
+      "supported_model_if_converged": "readout_average",
+      "comparison_valid": false
+    },
+    {
+      "first_model": "reliability_mixture",
+      "second_model": "integrated_prior",
+      "mean_log_score_difference_first_minus_second": -0.014224812296194924,
+      "ci_2.5%": -0.041604404640506985,
+      "ci_97.5%": 0.01938201557902043,
+      "probability_first_better": 0.177,
+      "run_blocks": 10,
+      "supported_model_if_converged": "inconclusive",
+      "comparison_valid": false
+    }
+  ]
+}
