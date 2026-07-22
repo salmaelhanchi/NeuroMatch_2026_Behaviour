@@ -1,7 +1,7 @@
 {
-  "timestamp_utc": "2026-07-22T07:27:06.007261+00:00",
+  "timestamp_utc": "2026-07-22T10:01:39.672446+00:00",
   "git": {
-    "commit": "398c21e7c5a5ce094b70d14beb3ab8bac8c5d69f",
+    "commit": "cea2ae4fdb62994667c067a719fbe569f92e8d0c",
     "dirty": true
   },
   "python": "3.11.15",
@@ -12,11 +12,9 @@
   },
   "config": {
     "fit_models": [
-      "hb_salma"
+      "hb_rachel"
     ],
-    "cv_models": [
-      "hb_salma"
-    ],
+    "cv_models": [],
     "subjects": [
       1,
       2,
@@ -34,7 +32,7 @@
     "maxiter": 400,
     "folds": 5,
     "workers": 4,
-    "force": false,
+    "force": true,
     "rec_nsim": 2,
     "rec_maxiter": 300,
     "example_subject": 9
