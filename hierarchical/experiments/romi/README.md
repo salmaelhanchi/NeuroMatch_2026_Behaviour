@@ -17,4 +17,4 @@ Each experiment's README carries a `Tags:` line with four facets. See [`experime
 
 ## Index
 
-- **[`01_prior_learning_dynamics/`](01_prior_learning_dynamics/)** — HB-Adaptive learned prior-width recovery per block, per-subject learning rate λ, learned confidence α, and prior learning across coherences (ANOVA)
+- **[`01_slide_notebook/`](01_slide_notebook/)** — HB-Adaptive learned prior-width recovery per block, per-subject learning rate λ, learned confidence α, and prior learning across coherences (ANOVA)
