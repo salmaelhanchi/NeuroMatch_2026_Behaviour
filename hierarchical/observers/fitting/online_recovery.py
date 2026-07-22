@@ -94,7 +94,11 @@ def conv_info(res, maxiter):
     }
 
 
-def fit_static(data, maxiter=500, return_result=False, x0=None):
+def fit_static(data, maxiter=500, return_result=False, x0=None, tol=1e-2):
+    # tol sets both xatol and fatol. Default 1e-2 is the house value (unchanged);
+    # the paper fit the ill-conditioned k=9 switch to 1e-4 ("very strict"). The
+    # switch registry path passes tol=SWITCH_FIT_TOL so a paper-standard refit
+    # can tighten it WITHOUT perturbing any other caller of fit_static.
     d, c, e = data["motion_direction"], data["motion_coherence"], data["estimates"]
     sd = np.asarray(data["prior_std"], dtype=int)
     def kpp(k_prior_by_sd):
@@ -109,12 +113,63 @@ def fit_static(data, maxiter=500, return_result=False, x0=None):
         x0 = pack_static({0.06: 1.0, 0.12: 3.0, 0.24: 8.0},
                          {80: 0.7, 40: 2.8, 20: 8.7, 10: 33.0}, 30.0, 0.05)
     res = minimize(obj, x0, method="Nelder-Mead",
-                   options={"maxiter": maxiter, "xatol": 1e-2, "fatol": 1e-2})
+                   options={"maxiter": maxiter, "xatol": tol, "fatol": tol})
     nll = res.fun
     aic = 2 * 9 + 2 * nll
     if return_result:                       # optional 4th value; existing 3-tuple
         return res.x, nll, aic, res          # unpackers are unaffected
     return res.x, nll, aic
+
+
+def fit_static_cmaes(data, x0=None, sigma0=0.5, maxfevals=20000, seed=0,
+                     return_result=False):
+    """CMA-ES fit of the static Switch model — the paper's SECOND optimizer.
+
+    Laquitaine & Gardner fit the nine-parameter Switch model with Nelder-Mead
+    AND, separately, with CMA-ES (Hansen & Kern 2004), reporting that CMA-ES
+    "produced similar results" — it is the robustness check for the "noisy and
+    ill-conditioned" k=9 surface, run as an independent fit, not a fallback.
+
+    Uses the IDENTICAL objective as ``fit_static`` (same ``negative_log_
+    likelihood_fixedk``, same log/logit-transformed unbounded coordinates), so
+    the two optimizers are directly comparable. Population-based, so it explores
+    the multimodal surface rather than descending from one point like NM.
+    """
+    import cma
+    d, c, e = data["motion_direction"], data["motion_coherence"], data["estimates"]
+    sd = np.asarray(data["prior_std"], dtype=int)
+    def kpp(k_prior_by_sd):
+        return np.array([k_prior_by_sd[s] for s in sd])
+    def obj(theta):
+        try:
+            obs, kp = unpack_static(np.asarray(theta))
+            return float(obs.negative_log_likelihood_fixedk(e, d, c, kpp(kp)))
+        except Exception:
+            return 1e12
+    if x0 is None:
+        x0 = pack_static({0.06: 1.0, 0.12: 3.0, 0.24: 8.0},
+                         {80: 0.7, 40: 2.8, 20: 8.7, 10: 33.0}, 30.0, 0.05)
+    es = cma.CMAEvolutionStrategy(
+        list(np.asarray(x0, dtype=float)), sigma0,
+        {"maxfevals": int(maxfevals), "seed": int(seed), "verbose": -9,
+         "tolfun": 1e-4, "tolx": 1e-4},   # match the paper's 1e-4 "very strict" tolerance
+    )
+    es.optimize(obj)
+    x_best = np.asarray(es.result.xbest, dtype=float)
+    nll = float(es.result.fbest)
+    aic = 2 * 9 + 2 * nll
+    if return_result:
+        info = {
+            "optimizer": "cma-es",
+            "converged": bool(es.result.evaluations < int(maxfevals)),
+            "n_feval": int(es.result.evaluations),
+            "n_iter": int(es.result.iterations),
+            "hit_maxfevals": bool(es.result.evaluations >= int(maxfevals)),
+            "sigma0": float(sigma0),
+            "stop": {str(k): str(v) for k, v in dict(es.stop()).items()},
+        }
+        return x_best, nll, aic, info
+    return x_best, nll, aic
 
 
 # ---------------------------------------------------------------------------

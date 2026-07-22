@@ -5,40 +5,40 @@
   "n_trials": 6474,
   "k": 9,
   "folds": 5,
-  "cv_nll": 32828.00779311763,
-  "cv_per_trial": 5.070745720283847,
+  "cv_nll": 32832.33627813034,
+  "cv_per_trial": 5.07141431543564,
   "fold_detail": [
     {
       "fold": 1,
       "n_test": 1531,
-      "held_out_nll": 8140.678431804527,
-      "per_trial": 5.317229543961154
+      "held_out_nll": 8140.471030066887,
+      "per_trial": 5.317094075811161
     },
     {
       "fold": 2,
       "n_test": 1485,
-      "held_out_nll": 7508.7419507076465,
-      "per_trial": 5.056391885998416
+      "held_out_nll": 7501.84145368366,
+      "per_trial": 5.0517450866556635
     },
     {
       "fold": 3,
       "n_test": 1526,
-      "held_out_nll": 7510.910818243723,
-      "per_trial": 4.921959907105978
+      "held_out_nll": 7523.805855116055,
+      "per_trial": 4.93041012786111
     },
     {
       "fold": 4,
       "n_test": 1057,
-      "held_out_nll": 5066.2266394691205,
-      "per_trial": 4.7930242568298205
+      "held_out_nll": 5064.920945421048,
+      "per_trial": 4.791788973908276
     },
     {
       "fold": 5,
       "n_test": 875,
-      "held_out_nll": 4601.449952892607,
-      "per_trial": 5.25879994616298
+      "held_out_nll": 4601.296993842689,
+      "per_trial": 5.258625135820216
     }
   ],
-  "maxiter": 400,
-  "seconds": 152.6
+  "maxiter": 800,
+  "seconds": 234.5
 }

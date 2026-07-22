@@ -52,3 +52,4 @@ Maps onto the abstract's two claims. Lead with the held-out result; use bimodali
 - **[`17_intersubject/`](17_intersubject/)** — Inter-subject mechanism: flat learned alpha, precision-driven differences
 - **[`18_recombined_vs_switch/`](18_recombined_vs_switch/)** — Recombined vs Switch head-to-head: figure + report
 - **[`19_holdout_replication/`](19_holdout_replication/)** — Held-out replication of Salma's protocol: harness, 12 JSONs, figure, report
+- **[`20_switch_paper_fitting/`](20_switch_paper_fitting/)** — Switch fit to the paper's exact protocol (NM 1e-4 + CMA-ES): optimizer-independence confirmed, subject-5 CV failure diagnosed as a fold artifact — write-up, comparison CSV, 12 CMA-ES fits

@@ -229,20 +229,52 @@ def _switch_spec() -> ModelSpec:
         return ll
 
     def _fit(data, maxiter, mask):
-        from observers.fitting.online_recovery import fit_static, pack_static, conv_info
+        import os
+        from observers.fitting.online_recovery import (
+            fit_static, fit_static_cmaes, pack_static, conv_info)
+        # Two paper-standard knobs for the ill-conditioned k=9 switch:
+        #  SWITCH_FIT_TOL   — Nelder-Mead tolerance. Default 1e-2 (house value);
+        #                     the paper used a "very strict" 1e-4.
+        #  SWITCH_OPTIMIZER — "nm" (default, Nelder-Mead) or "cmaes". The paper
+        #                     fit the Switch model with BOTH NM and CMA-ES
+        #                     (Hansen & Kern 2004) and reported they agree; CMA-ES
+        #                     is the robustness optimizer for the "noisy and
+        #                     ill-conditioned" surface with "many local maxima".
+        # Both default to the unchanged house behaviour, so the normal pipeline
+        # is bit-identical and no other fit_static caller is affected.
+        tol = float(os.environ.get("SWITCH_FIT_TOL", "1e-2"))
+        optimizer = os.environ.get("SWITCH_OPTIMIZER", "nm").lower()
         sub = (data if mask is None else
                {k: (np.asarray(v)[mask] if hasattr(v, "__len__") else v)
                 for k, v in data.items()})
 
-        def fit_one(x0):
-            theta, nll, aic, res = fit_static(sub, maxiter=maxiter,
-                                              return_result=True, x0=x0)
-            return F.observer_from_theta(theta), float(nll), theta, res
-
         base_x0 = pack_static({0.06: 1.0, 0.12: 3.0, 0.24: 8.0},
                               {80: 0.7, 40: 2.8, 20: 8.7, 10: 33.0}, 30.0, 0.05)
-        obs, nll, x, res, spread = multistart(fit_one, base_x0, n_starts=_starts_for(mask))
-        obs._fit_info = conv_info(res, maxiter)
+
+        if optimizer in ("cmaes", "cma", "cma-es"):
+            # CMA-ES is population-based: ONE run already explores the multimodal
+            # surface (its whole point), so it does not need NM's 10 restarts —
+            # doing so would run 10 full CMA-ES fits per subject for no gain. Use
+            # a few distinct seeds as a genuine multimodality diagnostic (spread
+            # across seeds), or 1 inside a CV fold. Each fit is ~150s.
+            n_cma = 1 if mask is not None else 3
+            def fit_one(x0, seed):
+                theta, nll, aic, info = fit_static_cmaes(
+                    sub, x0=x0, seed=seed, return_result=True)
+                return F.observer_from_theta(theta), float(nll), theta, info
+            results = [fit_one(base_x0, s) for s in range(n_cma)]
+            results.sort(key=lambda r: r[1])
+            obs, nll, x, res = results[0]
+            spread = float(results[-1][1] - results[0][1]) if n_cma > 1 else 0.0
+        else:
+            def fit_one(x0):
+                theta, nll, aic, res = fit_static(sub, maxiter=maxiter,
+                                                  return_result=True, x0=x0, tol=tol)
+                return F.observer_from_theta(theta), float(nll), theta, res
+            obs, nll, x, res, spread = multistart(fit_one, base_x0, n_starts=_starts_for(mask))
+        # conv_info expects a scipy OptimizeResult; CMA-ES returns its own info
+        # dict already in the right shape — pass it through, wrap NM's.
+        obs._fit_info = res if isinstance(res, dict) else conv_info(res, maxiter)
         return FitResult(obs, nll, None, F.N_PARAMS, spread)
 
     def _simulate(obs, design, seed):
