@@ -125,8 +125,7 @@ hierarchical/
 │   ├── fits/
 │   │   ├── comparison/<model>/subject<N>.json       point fits (one per model×subject)
 │   │   ├── comparison_cv/<model>/subject<N>_cv.json block-fold cross-validation
-│   │   ├── run_manifest.json                        provenance of the latest run
-│   │   └── manifests/                               immutable per-run archive
+│   │   └── manifests/                               immutable per-run archive (UTC-stamped)
 │   ├── figures/                  generated comparison figures
 │   └── logs/                     run logs (git-ignored; audit trail only)
 │
@@ -217,10 +216,11 @@ JSON already exists; delete a JSON or pass `--force` to refit):
 PYTHONPATH="$(pwd)" python -m observers.comparison.run_parallel --workers 3
 ```
 
-`run_parallel` writes an immutable manifest per run under `results/fits/manifests/`
-(git commit, library versions, config, grids) plus `run_manifest.json` as the
-"latest" pointer — so a Methods section or a reproducer can always read exactly
-what produced a given batch.
+Both `run_all` and `run_parallel` write an immutable manifest per run under
+`results/fits/manifests/` (git commit, library versions, config, grids), named
+with a UTC timestamp — so a Methods section or a reproducer can always read
+exactly what produced a given batch, and the most recent run is the
+latest-sorted filename.
 
 ---
 

@@ -61,6 +61,20 @@ The **numerics are the spec's, verbatim**; only the interface was adapted.
   verified numerically identical to the spec's own copies (max abs diff
   ~1.7e-15 on von Mises; convolution bit-identical). One source of truth, zero
   numerical change.
+- **Multi-start count: 4, by design (NOT the registry's `N_STARTS=10`).** The
+  spec's `_fit` calls this module's own `fit_multistart`, which loops the
+  coworker's 4 hand-picked `_SPEC_STARTS` and **deliberately ignores** the
+  registry-level `N_STARTS=10` constant. That constant drives the *generic*
+  `multistart()` helper used by the geometric/non-learning specs (`switch`,
+  `hb_rachel`, `hb_salma`, `basic_bayes`, `reliability_mixture` — all 10 starts);
+  the two learning models with bespoke fitters are the exceptions: `hb_adaptive`
+  (3 starts) and `hierarchical_online` (4). This is intentional — 4 is the
+  coworker's exact spec, so fits reproduce his run bit-for-bit, and per the
+  project's "do not alter his results" constraint we keep it. Caveat: on subjects
+  with a large `start_spread` (e.g. subj 2 ≈ 876, subj 5 ≈ 443 nats) best-of-4 is
+  not a guaranteed global optimum; judge those by `start_spread` + NLL stability,
+  not the `convergence` flag. Do not "fix" this to 10 without an explicit
+  decision — it would change his fitted params.
 - **Fitter packing (`packing=`).** Two options, **both optimising the identical
   negLL**:
   - `penalty` (**default**) — the spec's exact penalty-box Nelder-Mead with his
