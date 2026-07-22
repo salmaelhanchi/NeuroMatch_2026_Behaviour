@@ -157,7 +157,11 @@ def load_subject(sid: int) -> dict:
     return dict(motion_direction=d.motion_direction.values.astype(int),
                 motion_coherence=d.motion_coherence.values.astype(float),
                 prior_std=d.prior_std.values.astype(int),
-                estimates=d.estimate_dir.values.astype(int))
+                estimates=d.estimate_dir.values.astype(int),
+                # Additive: session_id lets learning models (hierarchical_online)
+                # reset their online belief at each session boundary. The other
+                # six models never read this key, so their inputs are unchanged.
+                session_id=d.session_id.values.astype(int))
 
 
 ALL_SUBJECTS: List[int] = list(range(1, 13))
@@ -284,17 +288,17 @@ def _switch_spec() -> ModelSpec:
 
 
 def _hb_rachel_spec() -> ModelSpec:
-    from observers.fitting import hb_integration_fit as F
+    from observers.fitting import hb_rachel_fit as F
 
     def _fit(data, maxiter, mask):
         obs, nll, x = F.fit(data, maxiter=maxiter, mask=mask)
         return FitResult(obs, nll, x, 7, 0.0)
 
     def _rebuild(params):
-        from observers.models.hb_integration import HBIntegrationObserver
+        from observers.models.hb_rachel import HBRachelObserver
         kl = params["k_like"]
         k_like = {0.06: kl["0.06"], 0.12: kl["0.12"], 0.24: kl["0.24"]}
-        return HBIntegrationObserver(
+        return HBRachelObserver(
             k_like=k_like, alpha=params["alpha"], k_motor=params["k_motor"],
             p_random=params["p_random"], lam=params["lam"])
 
@@ -314,7 +318,7 @@ def _recombined_spec() -> ModelSpec:
     """HB-Rachel's engine + Salma's integrate-BEFORE combination rule. Same 7
     params and pack/unpack transforms as HB-Rachel (it subclasses it); the only
     difference is the observer class built from theta."""
-    from observers.fitting import hb_integration_fit as F
+    from observers.fitting import hb_rachel_fit as F
     from observers.models.hb_integrate_before import HBIntegrateBeforeObserver
 
     def _unpack(theta):
@@ -535,27 +539,81 @@ def _basic_bayes_spec() -> ModelSpec:
         _rebuild=_rebuild, _predict=_predict)
 
 
+def _hierarchical_online_spec() -> ModelSpec:
+    """Hierarchical Online observer: mixture prior + resultant-vector online
+    learner (learns prior mean AND width). 8 params; readout='sample'.
+
+    Numerics are the coworker's build spec verbatim (via
+    observers.models.hierarchical_online); only the interface is adapted.
+    Default fitter packing is 'penalty' (his exact penalty-box search) so fits
+    reproduce his run bit-for-bit; 'house' (unconstrained) is available for a
+    registry-consistent search.
+    """
+    from observers.fitting import hierarchical_online_fit as F
+    from observers.models.hierarchical_online import HierarchicalOnlineObserver
+
+    READOUT = "sample"
+    PACKING = "penalty"
+
+    def _fit(data, maxiter, mask):
+        obs, nll, x, spread = F.fit_multistart(
+            data, maxiter=maxiter, mask=mask, readout=READOUT, packing=PACKING)
+        return FitResult(obs, nll, x, F.N_PARAMS, spread)
+
+    def _rebuild(params):
+        kl = params["k_llh"]
+        k_llh = {float(k): float(v) for k, v in kl.items()}
+        return HierarchicalOnlineObserver(
+            k_llh=k_llh, pi=params["pi"], p_rand=params["p_rand"],
+            k_motor=params["k_motor"], alpha=params["alpha"], R0=params["R0"],
+            mode_init=params.get("mode_init", 225.0),
+            readout=params.get("readout", READOUT))
+
+    def _predict(obs, data):
+        out = obs.filter(data["motion_direction"], data["motion_coherence"],
+                         feedback=data["motion_direction"],
+                         session_id=data.get("session_id"))
+        return np.array(out["dists"])
+
+    return ModelSpec(
+        name="hierarchical_online", label="Hier-Online", n_params=F.N_PARAMS,
+        color="#3a7d44", grid_deg=360, learns=True,
+        _fit=_fit, _trial_logliks=F._trial_logliks, _simulate=F._simulate,
+        _rebuild=_rebuild, _predict=_predict)
+
+
 # --------------------------------------------------------------------------- #
 #  THE REGISTRY — add a model by adding one line here
 # --------------------------------------------------------------------------- #
+# The registered-model builders — the SINGLE source of truth for "which models
+# exist". Adding a model is one entry here (and its _*_spec above); every stage
+# that iterates the registry (fits, CV, figure, table, observers.api) then picks
+# it up automatically. Insertion order is the canonical display order.
+_BUILDERS = {
+    "switch":      _switch_spec,        # paper's Switching observer (non-learning)
+    "basic_bayes": _basic_bayes_spec,   # paper baseline integrator (always-integrate, unimodal)
+    "hb_adaptive": _hb_adaptive_spec,   # the abstract's model (learns alpha AND kappa)
+    "hb_rachel":   _hb_rachel_spec,     # fixed-alpha integrator, integrate-after
+    "hb_salma":    _hb_salma_spec,      # geometric-forget, integrate-before, 72-bin (scored on 360)
+    "recombined":  _recombined_spec,    # Rachel engine + Salma's integrate-BEFORE rule
+    "hierarchical_online": _hierarchical_online_spec,  # mixture prior + online-learned mean & width
+}
+
+# Canonical list of every registered model key, derived from the builders so it
+# can never drift. Iterate this to support all models generically.
+ALL_MODELS: List[str] = list(_BUILDERS.keys())
+
+
 def build_registry(names: Optional[List[str]] = None) -> Dict[str, ModelSpec]:
     """Return the active registry. Pass ``names`` to select a subset;
     default is the two headline models (HB-Adaptive vs Switch)."""
-    builders = {
-        "hb_adaptive": _hb_adaptive_spec,   # the abstract's model (learns alpha AND kappa)
-        "switch":      _switch_spec,        # paper's Switching observer (non-learning)
-        "hb_rachel":   _hb_rachel_spec,     # fixed-alpha integrator, integrate-after
-        "recombined":  _recombined_spec,    # Rachel engine + Salma's integrate-BEFORE rule
-        "hb_salma":    _hb_salma_spec,      # geometric-forget, integrate-before, 72-bin (scored on 360)
-        "basic_bayes": _basic_bayes_spec,   # paper baseline integrator (always-integrate, unimodal)
-    }
     if names is None:
         names = ["hb_adaptive", "switch"]
     reg = {}
     for n in names:
-        if n not in builders:
-            raise KeyError(f"unknown model {n!r}; known: {sorted(builders)}")
-        reg[n] = builders[n]()
+        if n not in _BUILDERS:
+            raise KeyError(f"unknown model {n!r}; known: {sorted(_BUILDERS)}")
+        reg[n] = _BUILDERS[n]()
     return reg
 
 

@@ -3,19 +3,17 @@ fair_refit.py
 =============
 
 Give the switch models (online, static) the same multi-start treatment as the
-integration and AT models, so the four-model comparison is like-for-like. A
-single cold-start fit can settle in a local optimum and understate a model's
-fit; running several starts and keeping the best NLL puts every model on equal
-footing.
+integration model, so the comparison is like-for-like. A single cold-start fit
+can settle in a local optimum and understate a model's fit; running several
+starts and keeping the best NLL puts every model on equal footing.
 
 Starts per model:
-  static  : cold default; warm from the AT fit (AT nests static, so its per-block
-            asymptotes k_asym are natural k_prior seeds).
-  online  : cold default; warm from this subject's best static fit; warm from AT.
+  static  : cold default.
+  online  : cold default; warm from this subject's best static fit.
 
 Writes results/fits/fair_fit_results.json (best NLL/AIC/BIC per model), then
-`table` prints the four-model comparison, pulling the integration fit from
-hb_integration_results.json and the AT fit from at_fit_results.json.
+`table` prints the comparison, pulling the integration fit from
+hb_rachel_results.json.
 
 Usage:
   python fair_refit.py refit 1 3
@@ -30,7 +28,7 @@ from scipy.optimize import minimize
 
 from observers.fitting.online_recovery import (fit_online, pack_online, pack_static, unpack_static)
 from observers.helpers.dataset import load_subject_design
-from observers.helpers.paths import DATA_CSV, AT_FITS, HB_FITS, FAIR_FITS
+from observers.helpers.paths import DATA_CSV, HB_FITS, FAIR_FITS
 
 CSV = DATA_CSV
 FAIR = FAIR_FITS
@@ -67,34 +65,19 @@ def _fit_static_x0(data, x0, maxiter=400):
     return res.x, float(res.fun)
 
 
-def _static_starts(sid, at):
-    starts = [("cold", pack_static({0.06: 1.0, 0.12: 3.0, 0.24: 8.0},
-                                    {80: 0.7, 40: 2.8, 20: 8.7, 10: 33.0}, 30.0, 0.05))]
-    if str(sid) in at:
-        a = at[str(sid)]
-        kl = {0.06: _clamp(a["k_like"]["0.06"]), 0.12: _clamp(a["k_like"]["0.12"]),
-              0.24: _clamp(a["k_like"]["0.24"])}
-        kp = {80: _clamp(a["k_asym"]["80"]), 40: _clamp(a["k_asym"]["40"]),
-              20: _clamp(a["k_asym"]["20"]), 10: _clamp(a["k_asym"]["10"])}
-        starts.append(("warm_AT", pack_static(kl, kp, _clamp(a["k_motor"]),
-                                              min(max(a["p_random"], 1e-3), 0.2))))
-    return starts
+def _static_starts(sid):
+    return [("cold", pack_static({0.06: 1.0, 0.12: 3.0, 0.24: 8.0},
+                                 {80: 0.7, 40: 2.8, 20: 8.7, 10: 33.0}, 30.0, 0.05))]
 
 
 # ------------------------------ online -------------------------------------
-def _online_starts(sid, at, static_best_x):
+def _online_starts(sid, static_best_x):
     starts = [("cold", pack_online({0.06: 1.0, 0.12: 3.0, 0.24: 8.0}, 30.0, 0.05, 0.05))]
     if static_best_x is not None:
         obs_s, _ = unpack_static(static_best_x)
         starts.append(("warm_static", pack_online(
             {k: _clamp(v) for k, v in obs_s.k_like.items()},
             _clamp(obs_s.k_motor), min(max(obs_s.p_random, 1e-3), 0.2), 0.05)))
-    if str(sid) in at:
-        a = at[str(sid)]
-        kl = {0.06: _clamp(a["k_like"]["0.06"]), 0.12: _clamp(a["k_like"]["0.12"]),
-              0.24: _clamp(a["k_like"]["0.24"])}
-        starts.append(("warm_AT", pack_online(kl, _clamp(a["k_motor"]),
-                                              min(max(a["p_random"], 1e-3), 0.2), 0.05)))
     return starts
 
 
@@ -105,7 +88,6 @@ def _save(sid, upd):
 
 
 def refit(subject_ids):
-    at = json.load(open(AT_FITS)) if AT_FITS.exists() else {}
     for sid in subject_ids:
         sid = int(sid)
         data = _data(sid); n = data["estimates"].size
@@ -113,7 +95,7 @@ def refit(subject_ids):
 
         # STATIC
         best_x, best_nll = None, np.inf
-        for name, x0 in _static_starts(sid, at):
+        for name, x0 in _static_starts(sid):
             x, nll = _fit_static_x0(data, x0, maxiter=400)
             print(f"    static[{name}]: NLL={nll:.1f}{'  <-best' if nll < best_nll else ''}", flush=True)
             if nll < best_nll:
@@ -124,7 +106,7 @@ def refit(subject_ids):
 
         # ONLINE
         best_nll = np.inf
-        for name, x0 in _online_starts(sid, at, static_best_x):
+        for name, x0 in _online_starts(sid, static_best_x):
             _obs, nll, _aic = fit_online(data, x0=x0, maxiter=400)
             print(f"    online[{name}]: NLL={nll:.1f}{'  <-best' if nll < best_nll else ''}", flush=True)
             if nll < best_nll:
@@ -139,15 +121,13 @@ def refit(subject_ids):
 def table():
     fair = json.load(open(FAIR))
     integ = json.load(open(HB_FITS))
-    at = json.load(open(AT_FITS))
-    print(f"{'subj':>4} | {'integration':>11} {'online':>9} {'static':>9} {'AT':>9} | best (fair, all multi-started)")
+    print(f"{'subj':>4} | {'integration':>11} {'online':>9} {'static':>9} | best (fair, all multi-started)")
     for sid in sorted(fair, key=int):
         c = {"integration": integ[sid]["aic_integration"],
-             "online": fair[sid]["aic_online"], "static": fair[sid]["aic_static"],
-             "AT": at[sid]["aic_at"]}
+             "online": fair[sid]["aic_online"], "static": fair[sid]["aic_static"]}
         best = min(c, key=c.get)
         print(f"{sid:>4} | {c['integration']:>11.1f} {c['online']:>9.1f} "
-              f"{c['static']:>9.1f} {c['AT']:>9.1f} | {best}  (Δ2nd={sorted(c.values())[1]-sorted(c.values())[0]:.1f})")
+              f"{c['static']:>9.1f} | {best}  (Δ2nd={sorted(c.values())[1]-sorted(c.values())[0]:.1f})")
 
 
 if __name__ == "__main__":

@@ -7,7 +7,7 @@ House-style fitter for the HB-Adaptive-Confidence observer
 confidence alpha and the prior width kappa online, and so has only SIX fitted
 parameters (alpha and kappa are learned latents, not fitted).
 
-Mirrors ``hb_integration_fit.py`` exactly so the two plug into the comparison
+Mirrors ``hb_rachel_fit.py`` exactly so the two plug into the comparison
 registry through one interface. The only structural difference is the parameter
 vector: there is NO alpha to fit here (it is learned), so ``pack``/``unpack``
 carry six numbers instead of seven.
@@ -193,7 +193,7 @@ def cv(subject_ids, K=5):
     full ordered sequence, so sequential learning is preserved. Fit on train
     mask, score held-out predictive NLL per trial on the test mask.
 
-    Caveat (identical to hb_integration_fit.cv): feedback is available on every
+    Caveat (identical to hb_rachel_fit.cv): feedback is available on every
     trial regardless of mask, so the belief still 'sees' held-out feedback; this
     tests predictive fit of the RESPONSES with order intact, not a strictly
     causal forecast."""

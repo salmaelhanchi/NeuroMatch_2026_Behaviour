@@ -36,7 +36,7 @@ the swap of combination rule adds no parameters, so any AIC comparison against
 the switching observer stays clean.
 
 This module ADDS a class; it imports and subclasses the existing
-HBIntegrationObserver and touches none of its code.
+HBRachelObserver and touches none of its code.
 """
 from __future__ import annotations
 
@@ -49,8 +49,8 @@ from observers.helpers.circular import (
     von_mises_pdfs,
     circular_convolution,
 )
-from observers.models.hb_integration import (
-    HBIntegrationObserver,
+from observers.models.hb_rachel import (
+    HBRachelObserver,
     mixture_prior,
     _map_readout,
     _map_readout_col,
@@ -58,10 +58,10 @@ from observers.models.hb_integration import (
 
 
 @dataclass
-class HBIntegrateBeforeObserver(HBIntegrationObserver):
+class HBIntegrateBeforeObserver(HBRachelObserver):
     """Integrate-then-read-out recombination (see module docstring).
 
-    Same 7 free parameters and same fields as HBIntegrationObserver; only the
+    Same 7 free parameters and same fields as HBRachelObserver; only the
     combination rule changes. Overrides `_prepare` (cache the per-kappa prior
     BASES + the coherence-specific likelihood/measurement pdfs, instead of the
     per-kappa read-out STACK) and `estimate_distribution` (one effective prior,

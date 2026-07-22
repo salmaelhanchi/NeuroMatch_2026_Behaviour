@@ -62,8 +62,8 @@ def _make_generator(name):
         from observers.models.switching_observer import SwitchingObserver
         return SwitchingObserver(**TRUTHS[name])
     if name == "hb_rachel":
-        from observers.models.hb_integration import HBIntegrationObserver
-        return HBIntegrationObserver(**TRUTHS[name])
+        from observers.models.hb_rachel import HBRachelObserver
+        return HBRachelObserver(**TRUTHS[name])
     if name == "basic_bayes":
         from observers.models.basic_bayesian import BasicBayesianObserver
         return BasicBayesianObserver(**TRUTHS[name])

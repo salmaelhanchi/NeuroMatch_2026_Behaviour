@@ -27,13 +27,12 @@ from observers.helpers.circular import von_mises_std, deg2rad_signed
 from observers.helpers.dataset import SD_TO_K
 from observers.models.switching_observer import SwitchingObserver
 from observers.models.online_switching_observer import OnlineHierarchicalObserver
-from observers.models.asymptote_transient import AsymptoteTransientObserver
-from observers.models.hb_integration import HBIntegrationObserver
-from observers.helpers.paths import FIGURES_DIR, FAIR_FITS, HB_FITS, AT_FITS, BASIC_FITS
+from observers.models.hb_rachel import HBRachelObserver
+from observers.helpers.paths import FIGURES_DIR, FAIR_FITS, HB_FITS, BASIC_FITS
 
 # validated categorical palette; basic=grey baseline, integration=blue
 COL = {"basic": "#7a7a7a", "static": "#008300", "online": "#e87ba4",
-       "AT": "#eda100", "integration": "#2a78d6"}
+       "integration": "#2a78d6"}
 INK, MUTED, GRID = "#0b0b0b", "#52514e", "#d9d8d4"
 
 KLIKE = {0.06: 1.0, 0.12: 3.0, 0.24: 8.0}
@@ -41,7 +40,7 @@ KMOTOR, PRAND, LAM = 30.0, 0.02, 0.08
 
 # baseline first, then the four learning/switch models (only models present in
 # the loaded AICs are drawn, so this stays correct if `basic` is not yet fit)
-ORDER = ["basic", "static", "online", "AT", "integration"]
+ORDER = ["basic", "static", "online", "integration"]
 
 
 def load_comparison_aics():
@@ -50,21 +49,19 @@ def load_comparison_aics():
     This is the single source of truth for the comparison, so the figure never
     drifts from the fitted numbers:
       static, online  <- fair_fit_results.json  (equal multi-start refit)
-      AT              <- at_fit_results.json     (aic_at)
-      integration     <- hb_integration_results.json (aic_integration)
+      integration     <- hb_rachel_results.json (aic_integration)
       basic           <- basic_bayesian_results.json (aic_basic), if present
-    Subjects must be present in the fair/at/hb files; the basic-Bayesian
+    Subjects must be present in the fair/hb files; the basic-Bayesian
     baseline is added per-subject only where it has been fit (single-start —
     the switch family is multi-start, so read `basic` as a rough baseline).
     """
     fair = json.load(open(FAIR_FITS)) if FAIR_FITS.exists() else {}
-    at = json.load(open(AT_FITS)) if AT_FITS.exists() else {}
     hb = json.load(open(HB_FITS)) if HB_FITS.exists() else {}
     basic = json.load(open(BASIC_FITS)) if BASIC_FITS.exists() else {}
     aic = {}
-    for s in sorted(set(fair) & set(at) & set(hb), key=int):
+    for s in sorted(set(fair) & set(hb), key=int):
         aic[s] = {"static": fair[s]["aic_static"], "online": fair[s]["aic_online"],
-                  "AT": at[s]["aic_at"], "integration": hb[s]["aic_integration"]}
+                  "integration": hb[s]["aic_integration"]}
         if s in basic:
             aic[s]["basic"] = basic[s]["aic_basic"]
     return aic
@@ -131,16 +128,9 @@ def panel_B(ax):
     ax.step(np.arange(n), sd_seq, where="post", color=COL["static"], lw=2.2,
             label="static (fixed per block)", zorder=4)
 
-    # AT: per-block asymptote + within-block exponential transient (deterministic)
-    at = AsymptoteTransientObserver(
-        k_like=KLIKE, k_asym={s: SD_TO_K[s] for s in blocks}, k_motor=KMOTOR,
-        p_random=PRAND, tau_tighten=3.0, tau_loosen=18.0)
-    ax.plot(np.arange(n), [von_mises_std(k) for k in at.k_eff_sequence(sd_seq)],
-            color=COL["AT"], lw=2.6, label="AT (per-block transient)", zorder=5)
-
     # online + integration: single global belief -> average over 30 feedback draws
     on = OnlineHierarchicalObserver(k_like=KLIKE, k_motor=KMOTOR, p_random=PRAND, lam=LAM)
-    ig = HBIntegrationObserver(k_like=KLIKE, alpha=0.6, k_motor=KMOTOR, p_random=PRAND, lam=LAM)
+    ig = HBRachelObserver(k_like=KLIKE, alpha=0.6, k_motor=KMOTOR, p_random=PRAND, lam=LAM)
     on_paths, ig_paths = [], []
     for seed in range(80):
         rng = np.random.RandomState(seed)
@@ -169,14 +159,14 @@ def panel_C(ax):
     theta, coh, k40 = 85, 0.06, SD_TO_K[40]
     grid = np.arange(1, 361)
 
-    # switch family: static/online/AT share ONE read-out at a fixed prior k.
+    # switch family: static/online share ONE read-out at a fixed prior k.
     sw = SwitchingObserver(k_like=KLIKE, k_prior={"40": k40}, p_random=PRAND, k_motor=KMOTOR)
     d_sw = sw.estimate_distribution(theta, coh, "40")
     ax.fill_between(grid, d_sw, color=MUTED, alpha=0.18, zorder=1)
-    ax.plot(grid, d_sw, color=MUTED, lw=2, label="switch family (static/online/AT)", zorder=3)
+    ax.plot(grid, d_sw, color=MUTED, lw=2, label="switch family (static/online)", zorder=3)
 
     # integration: point-mass belief at the same k -> its own read-out
-    ig = HBIntegrationObserver(k_like=KLIKE, alpha=0.6, k_motor=KMOTOR, p_random=PRAND)
+    ig = HBRachelObserver(k_like=KLIKE, alpha=0.6, k_motor=KMOTOR, p_random=PRAND)
     ig._prepare(np.array([theta]), np.array([coh]))
     b = np.zeros(ig.k_grid.size); b[int(np.argmin(np.abs(ig.k_grid - k40)))] = 1.0
     d_ig = ig.estimate_distribution(coh, theta, b)

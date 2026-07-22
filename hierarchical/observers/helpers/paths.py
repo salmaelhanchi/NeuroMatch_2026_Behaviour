@@ -21,7 +21,6 @@ FIGURES_DIR = RESULTS_DIR / "figures"    # generated .png figures
 
 # The fitted-parameter files, shared across fitting/analysis scripts.
 HUMAN_FITS = FITS_DIR / "human_fit_results.json"          # static + online switching
-AT_FITS = FITS_DIR / "at_fit_results.json"                # asymptote + transient
-HB_FITS = FITS_DIR / "hb_integration_results.json"        # hierarchical integration
+HB_FITS = FITS_DIR / "hb_rachel_results.json"             # HB-Rachel (hierarchical integration)
 FAIR_FITS = FITS_DIR / "fair_fit_results.json"            # fair 4-model comparison
 BASIC_FITS = FITS_DIR / "basic_bayesian_results.json"     # basic Bayesian baseline

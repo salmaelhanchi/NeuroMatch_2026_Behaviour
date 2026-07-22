@@ -83,8 +83,8 @@ def _build_matched(spec):
                                  k_prior={"80": 0.5, "40": 1.4, "20": 2.7, "10": 8.7},
                                  k_motor=MATCHED["k_motor"], p_random=MATCHED["p_random"])
     if name == "hb_rachel":
-        from observers.models.hb_integration import HBIntegrationObserver
-        return HBIntegrationObserver(alpha=0.6, **MATCHED)
+        from observers.models.hb_rachel import HBRachelObserver
+        return HBRachelObserver(alpha=0.6, **MATCHED)
     if name == "recombined":
         from observers.models.hb_integrate_before import HBIntegrateBeforeObserver
         return HBIntegrateBeforeObserver(alpha=0.6, **MATCHED)

@@ -63,7 +63,7 @@ def fit(data, maxiter=500):
 
 def _load_subject(sid):
     """Load one subject as the dict the static fitter expects (mirrors the
-    convention in hb_integration_fit / fair_refit): estimate_dir -> 'estimates'.
+    convention in hb_rachel_fit / fair_refit): estimate_dir -> 'estimates'.
     """
     d = load_subject_design(str(DATA_CSV), int(sid))
     return dict(

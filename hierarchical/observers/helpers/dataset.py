@@ -26,9 +26,9 @@ import pandas as pd
 from observers.helpers.circular import von_mises_pdfs, DIRECTION_SPACE
 
 # PRIOR_MEAN is a fixed task constant (225 deg). ``OnlineHierarchicalObserver``
-# lives in the gitignored ``other models/`` folder and is only used by the
-# optional ``simulate()`` helper below — import it lazily so the core data
-# loader (used by the whole comparison pipeline) works in a clean checkout.
+# is only used by the optional ``simulate()`` helper below, so it is imported
+# lazily there — the core data loader (used by the whole comparison pipeline)
+# has no model dependency.
 PRIOR_MEAN = 225.0
 
 # prior SD label -> concentration k used to GENERATE that block's directions.
@@ -79,7 +79,7 @@ def load_subject_design(csv_path: str, subject_id: int):
     ang[ang == 0] = 360.0
     df["estimate_dir"] = np.round(ang).astype(int).clip(1, 360)
     keep = df[["motion_direction", "motion_coherence", "prior_std",
-               "estimate_dir"]].copy()
+               "estimate_dir", "session_id"]].copy()
     keep = keep.dropna(subset=["motion_direction", "motion_coherence"])
     keep["motion_direction"] = keep["motion_direction"].round().astype(int).clip(1, 360)
     return keep.reset_index(drop=True)
@@ -107,7 +107,7 @@ def simulate(observer, design, seed: int = 0):
 
 if __name__ == "__main__":
     # smoke test: simulate one dataset and show the belief learning the prior.
-    # Requires the optional OnlineHierarchicalObserver (gitignored 'other models/').
+    # Uses OnlineHierarchicalObserver (imported lazily — only this smoke test needs it).
     from observers.models.online_switching_observer import OnlineHierarchicalObserver
     obs = OnlineHierarchicalObserver(
         k_like={0.24: 8.0, 0.12: 3.0, 0.06: 1.0}, k_motor=40.0,

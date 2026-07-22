@@ -63,7 +63,7 @@ from observers.helpers.circular import (
     von_mises_std,
 )
 from observers.helpers.belief_grid import make_k_grid, forget, bayes_correct
-from observers.models.hb_integration import (
+from observers.models.hb_rachel import (
     mixture_prior, _map_readout, _map_readout_cols, PRIOR_MEAN)
 
 

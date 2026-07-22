@@ -21,7 +21,7 @@ import numpy as np
 
 from observers.helpers.circular import DIRECTION_SPACE
 from observers.models.basic_bayesian import BasicBayesianObserver, PRIOR_MEAN
-from observers.models.hb_integration import HBIntegrationObserver
+from observers.models.hb_rachel import HBRachelObserver
 
 results = []
 def check(name, ok, detail=""):
@@ -69,7 +69,7 @@ def test_matches_hb_alpha1():
     k_motor = 40.0
     coh, direction = 0.06, 85
 
-    hb = HBIntegrationObserver(k_like=k_like, alpha=1.0, lam=0.0,
+    hb = HBRachelObserver(k_like=k_like, alpha=1.0, lam=0.0,
                                k_motor=k_motor, p_random=0.0)
     hb._prepare(np.array([direction]), np.array([coh]))
     i = 8  # an interior grid point
