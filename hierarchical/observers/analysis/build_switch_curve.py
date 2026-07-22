@@ -55,6 +55,15 @@ def build(save=False):
     within-block position. Returns (fig, R) where R is the per-trial DataFrame.
     Set save=True to also write results/figures/switch_probability_curve.png.
     """
+    if not HUMAN_FITS.exists():
+        raise FileNotFoundError(
+            f"Switch-probability curve needs the online-model fits at {HUMAN_FITS}, "
+            "which carry the per-subject global-belief forgetting rate (lam). That "
+            "legacy flat file is not part of the reorganized per-model fit folders "
+            "(results/fits/comparison/<model>/), so this figure can't be built from "
+            "the current fits. Regenerate the online fits to that path, or skip this "
+            "panel — the main comparison (api.results_table / api.plot_model_comparison) "
+            "does not depend on it.")
     fits = json.load(open(HUMAN_FITS))
     subjects = sorted(int(s) for s in fits)
 

@@ -2,7 +2,7 @@
 plot_model_comparison.py
 ========================
 
-One figure comparing all four observers on two axes that together define them:
+One figure comparing the fitted observers on the axes that together define them:
 
   A  fit quality      — fair (all multi-started) ΔAIC per subject.
   B  temporal dynamics — effective prior width over trials: how each model SETS
@@ -28,7 +28,7 @@ from observers.helpers.dataset import SD_TO_K
 from observers.models.switching_observer import SwitchingObserver
 from observers.models.online_switching_observer import OnlineHierarchicalObserver
 from observers.models.hb_rachel import HBRachelObserver
-from observers.helpers.paths import FIGURES_DIR, FAIR_FITS, HB_FITS, BASIC_FITS
+from observers.helpers.paths import FIGURES_DIR
 
 # validated categorical palette; basic=grey baseline, integration=blue
 COL = {"basic": "#7a7a7a", "static": "#008300", "online": "#e87ba4",
@@ -43,27 +43,29 @@ KMOTOR, PRAND, LAM = 30.0, 0.02, 0.08
 ORDER = ["basic", "static", "online", "integration"]
 
 
-def load_comparison_aics():
-    """Assemble the fair four-model AIC per subject, read from results/fits/.
+def load_comparison_aics(models=None):
+    """Per-subject AIC for every fitted model, read from the per-model fit
+    folders (``results/fits/comparison/<model>/subject<N>.json``).
 
     This is the single source of truth for the comparison, so the figure never
-    drifts from the fitted numbers:
-      static, online  <- fair_fit_results.json  (equal multi-start refit)
-      integration     <- hb_rachel_results.json (aic_integration)
-      basic           <- basic_bayesian_results.json (aic_basic), if present
-    Subjects must be present in the fair/hb files; the basic-Bayesian
-    baseline is added per-subject only where it has been fit (single-start —
-    the switch family is multi-start, so read `basic` as a rough baseline).
+    drifts from the committed fits. Returns ``{subject: {model_key: aic}}`` for
+    whichever (model, subject) fits exist on disk — missing fits are simply
+    absent, so the figure honestly reflects what has been fit. Pass ``models``
+    to restrict to a subset of registry keys (default: all registered models).
     """
-    fair = json.load(open(FAIR_FITS)) if FAIR_FITS.exists() else {}
-    hb = json.load(open(HB_FITS)) if HB_FITS.exists() else {}
-    basic = json.load(open(BASIC_FITS)) if BASIC_FITS.exists() else {}
+    from observers.comparison.fit_batch import _result_path
+    from observers.comparison.registry import ALL_MODELS, ALL_SUBJECTS
+    keys = models or ALL_MODELS
     aic = {}
-    for s in sorted(set(fair) & set(hb), key=int):
-        aic[s] = {"static": fair[s]["aic_static"], "online": fair[s]["aic_online"],
-                  "integration": hb[s]["aic_integration"]}
-        if s in basic:
-            aic[s]["basic"] = basic[s]["aic_basic"]
+    for key in keys:
+        for sid in ALL_SUBJECTS:
+            p = _result_path(key, sid)
+            if not p.exists():
+                continue
+            d = json.load(open(p))
+            if d.get("aic") is None:
+                continue
+            aic.setdefault(sid, {})[key] = d["aic"]
     return aic
 
 
@@ -79,29 +81,37 @@ def _style(ax):
 
 # ---------------------------------------------------------------------------
 def panel_A(ax, aic):
+    from observers.comparison.registry import build_registry, ALL_MODELS
     subs = sorted(aic, key=int)
-    # only models present for every shown subject get a (consistent) bar slot
-    models = [m for m in ORDER if all(m in aic[s] for s in subs)]
+    # registry insertion order is the canonical display order; only models
+    # present for EVERY shown subject get a (consistent) bar slot
+    models = [m for m in ALL_MODELS if all(m in aic[s] for s in subs)]
+    reg = build_registry(models)
+    col = {m: getattr(reg[m], "color", None) or "#888888" for m in models}
+    lab = {m: getattr(reg[m], "label", m) for m in models}
     x = np.arange(len(subs)); w = 0.8 / max(len(models), 1)
     ymax = 0.0
     for i, m in enumerate(models):
         d = [aic[s][m] - min(aic[s].values()) for s in subs]
         ymax = max(ymax, max(d))
         bars = ax.bar(x + (i - (len(models) - 1) / 2) * w, d, w,
-                      color=COL[m], label=m, zorder=3)
+                      color=col[m], label=lab[m], zorder=3)
+        # mark the winner per subject with a dot at its (zero-height) base
         for b, v in zip(bars, d):
-            ax.text(b.get_x() + b.get_width() / 2, v + 12,
-                    "best" if v == 0 else f"+{v:.0f}", ha="center", va="bottom",
-                    fontsize=7.0, color=(COL[m] if v == 0 else MUTED),
-                    fontweight="bold" if v == 0 else "normal")
+            if v == 0:
+                ax.plot(b.get_x() + b.get_width() / 2, 0, marker="v",
+                        color=col[m], markersize=5, zorder=5, clip_on=False)
     _style(ax)
-    ax.set_xticks(x); ax.set_xticklabels([f"subject {s}" for s in subs], color=INK)
+    ax.set_xticks(x); ax.set_xticklabels([f"S{s}" for s in subs], color=INK)
+    ax.set_xlabel("subject", color=INK, fontsize=9)
     ax.set_ylabel("ΔAIC from best  (lower = better fit)", color=INK, fontsize=9)
     ax.set_title("A · Fair fit (ΔAIC)", color=INK, fontsize=10,
                  loc="left", fontweight="bold")
-    ax.set_ylim(0, ymax * 1.18 if ymax else 950)
-    ax.legend(frameon=False, fontsize=8.0, ncol=len(models), loc="upper center",
-              bbox_to_anchor=(0.5, 1.0), labelcolor=INK)
+    ax.set_ylim(0, ymax * 1.24 if ymax else 950)
+    ncol = 3 if len(models) > 4 else len(models)
+    ax.legend(frameon=False, fontsize=7.6, ncol=ncol, loc="upper right",
+              bbox_to_anchor=(1.0, 1.0), labelcolor=INK, columnspacing=1.0,
+              handlelength=1.2, handletextpad=0.4)
 
 
 # ---------------------------------------------------------------------------
@@ -189,12 +199,12 @@ def make_figure():
     """Build the three-panel comparison figure and return it (renders inline in
     a notebook). Panel A reads the fair AICs from results/fits/ via
     load_comparison_aics()."""
-    fig = plt.figure(figsize=(13, 5.2), facecolor="white")
-    gs = fig.add_gridspec(1, 3, width_ratios=[1, 1.25, 1], wspace=0.28)
+    fig = plt.figure(figsize=(15, 5.2), facecolor="white")
+    gs = fig.add_gridspec(1, 3, width_ratios=[1.4, 1.25, 1], wspace=0.28)
     panel_A(fig.add_subplot(gs[0]), load_comparison_aics())
     panel_B(fig.add_subplot(gs[1]))
     panel_C(fig.add_subplot(gs[2]))
-    fig.suptitle("Four observers of prior-guided motion estimation — fit · dynamics · read-out",
+    fig.suptitle("Observers of prior-guided motion estimation — fit · dynamics · read-out",
                  fontsize=12.5, fontweight="bold", color=INK, x=0.5, y=1.06)
     return fig
 

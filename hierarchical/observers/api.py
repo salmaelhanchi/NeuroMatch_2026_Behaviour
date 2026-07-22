@@ -104,11 +104,13 @@ def verify_all():
 #  Model comparison
 # --------------------------------------------------------------------------- #
 def comparison_table() -> pd.DataFrame:
-    """Fair AIC per subject per model as a tidy DataFrame.
+    """AIC per subject per model as a tidy DataFrame.
 
-    Read live from results/fits/ (fair_fit + at_fit + hb_integration), so it
-    never drifts from the committed fits. Columns: subject, model, AIC,
-    dAIC_from_best, is_best. Lower AIC is better.
+    Read live from the per-model fit folders
+    (results/fits/comparison/<model>/subject<N>.json) for every registered
+    model, so it never drifts from the committed fits. Columns: subject, model,
+    AIC, dAIC_from_best, is_best. Lower AIC is better. For a fuller table with
+    NLL/BIC/CV, use results_table().
     """
     from observers.analysis.plot_model_comparison import load_comparison_aics
     aic = load_comparison_aics()
