@@ -1,0 +1,44 @@
+{
+  "model": "hb_salma",
+  "label": "HB-Salma",
+  "subject": 4,
+  "n_trials": 4801,
+  "k": 6,
+  "folds": 5,
+  "cv_nll": 23366.041441162008,
+  "cv_per_trial": 4.86691136037534,
+  "fold_detail": [
+    {
+      "fold": 1,
+      "n_test": 1274,
+      "held_out_nll": 6601.891763694247,
+      "per_trial": 5.18201865282123
+    },
+    {
+      "fold": 2,
+      "n_test": 850,
+      "held_out_nll": 4118.877037910386,
+      "per_trial": 4.845737691659278
+    },
+    {
+      "fold": 3,
+      "n_test": 1071,
+      "held_out_nll": 4955.728706981303,
+      "per_trial": 4.62719767225145
+    },
+    {
+      "fold": 4,
+      "n_test": 852,
+      "held_out_nll": 3998.464230733988,
+      "per_trial": 4.693033134664305
+    },
+    {
+      "fold": 5,
+      "n_test": 754,
+      "held_out_nll": 3691.079701842081,
+      "per_trial": 4.895331169551831
+    }
+  ],
+  "maxiter": 400,
+  "seconds": 1693.5
+}
