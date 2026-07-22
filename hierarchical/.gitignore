@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+build/
+dist/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# OS / editor cruft
+.DS_Store
+
+# Pipeline run logs — stdout transcripts (progress chatter + false-start/killed runs).
+# Redundant with the real provenance: per-fit convergence/timing live in the fit JSONs
+# (results/fits/**, experiments/*/results/**) and environment/git SHA in run_manifest.json.
+# Kept locally for debugging; not version-controlled.
+results/logs/

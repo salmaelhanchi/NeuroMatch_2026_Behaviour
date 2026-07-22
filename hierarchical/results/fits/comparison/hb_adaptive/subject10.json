@@ -1,0 +1,41 @@
+{
+  "model": "hb_adaptive",
+  "label": "HB-Adaptive",
+  "subject": 10,
+  "n_trials": 6045,
+  "nll": 31057.198760697833,
+  "aic": 62126.397521395666,
+  "bic": 62166.63944197396,
+  "k": 6,
+  "learns": true,
+  "grid_deg": 360,
+  "start_spread": 2.439633787416824,
+  "params": {
+    "k_motor": 15.587324622622045,
+    "p_random": 0.19176128931001435,
+    "lam": 0.26751340150944136,
+    "k_like": {
+      "0.06": 1.1340045752745347,
+      "0.12": 3.0745925747480207,
+      "0.24": 17.62872436998529
+    }
+  },
+  "theta": [
+    0.12575523993104976,
+    1.1231723964632048,
+    2.8695296381473594,
+    2.746458059787899,
+    -1.4386061352470159,
+    -1.0072753809659685
+  ],
+  "convergence": {
+    "converged": false,
+    "n_iter": 400,
+    "n_feval": 609,
+    "hit_maxiter": true,
+    "status": 2,
+    "message": "Maximum number of iterations has been exceeded."
+  },
+  "maxiter": 400,
+  "seconds": 942.9
+}

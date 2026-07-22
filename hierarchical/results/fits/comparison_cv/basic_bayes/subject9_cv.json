@@ -1,0 +1,44 @@
+{
+  "model": "basic_bayes",
+  "label": "Basic-Bayes",
+  "subject": 9,
+  "n_trials": 8632,
+  "k": 9,
+  "folds": 5,
+  "cv_nll": 42396.764788619235,
+  "cv_per_trial": 4.911580721573127,
+  "fold_detail": [
+    {
+      "fold": 1,
+      "n_test": 1730,
+      "held_out_nll": 8440.795890132405,
+      "per_trial": 4.879072768862662
+    },
+    {
+      "fold": 2,
+      "n_test": 1709,
+      "held_out_nll": 8641.49996914298,
+      "per_trial": 5.056465751400222
+    },
+    {
+      "fold": 3,
+      "n_test": 1754,
+      "held_out_nll": 8566.983522685552,
+      "per_trial": 4.884255144062458
+    },
+    {
+      "fold": 4,
+      "n_test": 1954,
+      "held_out_nll": 9587.104694449135,
+      "per_trial": 4.906399536565576
+    },
+    {
+      "fold": 5,
+      "n_test": 1485,
+      "held_out_nll": 7160.380712209158,
+      "per_trial": 4.821805193406841
+    }
+  ],
+  "maxiter": 400,
+  "seconds": 217.6
+}

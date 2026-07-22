@@ -1,0 +1,272 @@
+{
+  "kind": "per_model_validation",
+  "model": "hb_rachel",
+  "timestamp_utc": "2026-07-22T12:11:59.677785+00:00",
+  "git": {
+    "commit": "1d7accf87ac82aed2a9bc5f51e183c34cb3c9253",
+    "dirty": true
+  },
+  "subjects": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "folds": 5,
+  "checks": {
+    "0_verify": {
+      "status": "PASS",
+      "detail": {
+        "passed": 12,
+        "total": 12
+      }
+    },
+    "1_fit_table": {
+      "n_subjects": 12,
+      "single_start_suspect": false,
+      "rows": [
+        {
+          "subject": 1,
+          "present": true,
+          "nll": 38456.4610778425,
+          "aic": 76926.922155685,
+          "bic": 76976.30777929194,
+          "k": 7,
+          "n_trials": 8562,
+          "start_spread": 416.18785818053584,
+          "maxiter": 400,
+          "seconds": 761.9,
+          "converged": false,
+          "hit_maxiter": true
+        },
+        {
+          "subject": 2,
+          "present": true,
+          "nll": 36083.800961122026,
+          "aic": 72181.60192224405,
+          "bic": 72230.40383904197,
+          "k": 7,
+          "n_trials": 7877,
+          "start_spread": 75.84454961778101,
+          "maxiter": 400,
+          "seconds": 684.9,
+          "converged": false,
+          "hit_maxiter": true
+        },
+        {
+          "subject": 3,
+          "present": true,
+          "nll": 41959.96351377024,
+          "aic": 83933.92702754049,
+          "bic": 83983.97521278942,
+          "k": 7,
+          "n_trials": 9412,
+          "start_spread": 342.2603836494818,
+          "maxiter": 400,
+          "seconds": 680.8,
+          "converged": true,
+          "hit_maxiter": false
+        },
+        {
+          "subject": 4,
+          "present": true,
+          "nll": 23111.630822109255,
+          "aic": 46237.26164421851,
+          "bic": 46282.59770077823,
+          "k": 7,
+          "n_trials": 4801,
+          "start_spread": 17.06700482481392,
+          "maxiter": 400,
+          "seconds": 415.9,
+          "converged": true,
+          "hit_maxiter": false
+        },
+        {
+          "subject": 5,
+          "present": true,
+          "nll": 31082.282891973104,
+          "aic": 62178.56578394621,
+          "bic": 62225.21178785476,
+          "k": 7,
+          "n_trials": 5789,
+          "start_spread": 683.9769807256853,
+          "maxiter": 400,
+          "seconds": 605.2,
+          "converged": true,
+          "hit_maxiter": false
+        },
+        {
+          "subject": 6,
+          "present": true,
+          "nll": 37829.86436379299,
+          "aic": 75673.72872758599,
+          "bic": 75722.23662838618,
+          "k": 7,
+          "n_trials": 7553,
+          "start_spread": 104.47000289696734,
+          "maxiter": 400,
+          "seconds": 729.4,
+          "converged": true,
+          "hit_maxiter": false
+        },
+        {
+          "subject": 7,
+          "present": true,
+          "nll": 27196.57387098812,
+          "aic": 54407.14774197624,
+          "bic": 54453.80341272562,
+          "k": 7,
+          "n_trials": 5797,
+          "start_spread": 128.64170962221397,
+          "maxiter": 400,
+          "seconds": 556.1,
+          "converged": true,
+          "hit_maxiter": false
+        },
+        {
+          "subject": 8,
+          "present": true,
+          "nll": 30965.680790294107,
+          "aic": 61945.361580588215,
+          "bic": 61992.017251337595,
+          "k": 7,
+          "n_trials": 5797,
+          "start_spread": 64.76408583892771,
+          "maxiter": 400,
+          "seconds": 556.0,
+          "converged": true,
+          "hit_maxiter": false
+        },
+        {
+          "subject": 9,
+          "present": true,
+          "nll": 42319.6555873278,
+          "aic": 84653.3111746556,
+          "bic": 84702.75379520416,
+          "k": 7,
+          "n_trials": 8632,
+          "start_spread": 124.21158498512523,
+          "maxiter": 400,
+          "seconds": 695.9,
+          "converged": true,
+          "hit_maxiter": false
+        },
+        {
+          "subject": 10,
+          "present": true,
+          "nll": 31110.12927862545,
+          "aic": 62234.2585572509,
+          "bic": 62281.20746459224,
+          "k": 7,
+          "n_trials": 6045,
+          "start_spread": 30.682301398446725,
+          "maxiter": 400,
+          "seconds": 531.8,
+          "converged": true,
+          "hit_maxiter": false
+        },
+        {
+          "subject": 11,
+          "present": true,
+          "nll": 31403.718024831032,
+          "aic": 62821.436049662065,
+          "bic": 62868.86489570347,
+          "k": 7,
+          "n_trials": 6474,
+          "start_spread": 171.09261757371132,
+          "maxiter": 400,
+          "seconds": 586.5,
+          "converged": true,
+          "hit_maxiter": false
+        },
+        {
+          "subject": 12,
+          "present": true,
+          "nll": 32750.010971351505,
+          "aic": 65514.02194270301,
+          "bic": 65561.45078874442,
+          "k": 7,
+          "n_trials": 6474,
+          "start_spread": 44.42842959417612,
+          "maxiter": 400,
+          "seconds": 555.4,
+          "converged": true,
+          "hit_maxiter": false
+        }
+      ]
+    },
+    "2_fit_convergence": {
+      "status": "PASS",
+      "detail": {
+        "hb_rachel": {
+          "k": 7,
+          "n_fits": 12,
+          "med_spread": 114.34,
+          "max_spread": 683.98,
+          "flagged_nonconv": 2,
+          "warn": false
+        }
+      },
+      "note": "start_spread/convergence are diagnostics; large spread on ill-conditioned high-k models is expected, reported as warn"
+    },
+    "3_aic_bic": {
+      "status": "PASS",
+      "detail": {
+        "n_checked": 12,
+        "mismatches": []
+      }
+    },
+    "5_shape": {
+      "status": "PASS",
+      "detail": {
+        "n_subjects": 12,
+        "subjects": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12"
+        ],
+        "note": "shape summary present; TV/far-band/valley metrics available for the figure"
+      }
+    },
+    "4_cv_validity": {
+      "status": "PASS",
+      "detail": {
+        "summary": {
+          "pass": 12,
+          "fail": 0,
+          "pending": 0
+        },
+        "failures": [],
+        "models_without_cv": [],
+        "uniform_per_trial": 5.886,
+        "gap_band": [
+          -0.05,
+          0.6
+        ]
+      }
+    }
+  },
+  "summary": {
+    "fail": 0,
+    "pass": 5,
+    "skip": 0,
+    "verdict": "PASS"
+  }
+}

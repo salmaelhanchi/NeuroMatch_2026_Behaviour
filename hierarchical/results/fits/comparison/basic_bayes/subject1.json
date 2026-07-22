@@ -1,0 +1,39 @@
+{
+  "model": "basic_bayes",
+  "label": "Basic-Bayes",
+  "subject": 1,
+  "n_trials": 8562,
+  "nll": 38428.07462936203,
+  "aic": 76874.14925872406,
+  "bic": 76937.64506050441,
+  "k": 9,
+  "learns": false,
+  "grid_deg": 360,
+  "start_spread": 508.3212656416363,
+  "params": {
+    "k_motor": 36.31634994958901,
+    "p_random": 0.018053255817495558,
+    "k_like": {
+      "0.06": 1.751593386272092,
+      "0.12": 10.910264365899447,
+      "0.24": 57.591603292381635
+    },
+    "k_prior": {
+      "80": 0.5361138966163573,
+      "40": 1.7266389112923417,
+      "20": 3.0490950447019824,
+      "10": 15.228408688814051
+    }
+  },
+  "theta": null,
+  "convergence": {
+    "converged": false,
+    "n_iter": 400,
+    "n_feval": 542,
+    "hit_maxiter": true,
+    "status": 2,
+    "message": "Maximum number of iterations has been exceeded."
+  },
+  "maxiter": 400,
+  "seconds": 1028.3
+}

@@ -1,0 +1,43 @@
+{
+  "model": "recombined",
+  "label": "Recombined",
+  "subject": 7,
+  "n_trials": 5797,
+  "nll": 27317.92984461459,
+  "aic": 54649.85968922918,
+  "bic": 54696.51535997856,
+  "k": 7,
+  "learns": true,
+  "grid_deg": 360,
+  "start_spread": 0.0,
+  "params": {
+    "k_motor": 17.125851783876293,
+    "p_random": 0.07084467670031716,
+    "lam": 0.024794699868708154,
+    "alpha": 0.9999999963731645,
+    "k_like": {
+      "0.06": 2.541652585516008,
+      "0.12": 9.908172795218134,
+      "0.24": 4.481835528508798e+65
+    }
+  },
+  "theta": [
+    0.9328144936851698,
+    2.2933599514445717,
+    151.1680637233141,
+    19.434905326474897,
+    2.840589122115791,
+    -2.5737860903911876,
+    -3.67201809771034
+  ],
+  "convergence": {
+    "converged": false,
+    "n_iter": 400,
+    "n_feval": 574,
+    "hit_maxiter": true,
+    "status": 2,
+    "message": "Maximum number of iterations has been exceeded."
+  },
+  "maxiter": 400,
+  "seconds": 2359.8
+}

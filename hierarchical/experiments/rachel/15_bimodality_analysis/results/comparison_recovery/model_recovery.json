@@ -1,0 +1,68 @@
+{
+  "names": [
+    "basic_bayes",
+    "switch"
+  ],
+  "confusion_aic": {
+    "basic_bayes": {
+      "basic_bayes": 1,
+      "switch": 0
+    },
+    "switch": {
+      "basic_bayes": 0,
+      "switch": 1
+    }
+  },
+  "confusion_bic": {
+    "basic_bayes": {
+      "basic_bayes": 1,
+      "switch": 0
+    },
+    "switch": {
+      "basic_bayes": 0,
+      "switch": 1
+    }
+  },
+  "detail": [
+    {
+      "generator": "basic_bayes",
+      "seed": 1,
+      "scores": {
+        "basic_bayes": {
+          "nll": 3312.869250537154,
+          "k": 9,
+          "aic": 6643.738501074308,
+          "bic": 6684.951761982399
+        },
+        "switch": {
+          "nll": 3377.8391955220713,
+          "k": 9,
+          "aic": 6773.678391044143,
+          "bic": 6814.891651952234
+        }
+      },
+      "win_aic": "basic_bayes",
+      "win_bic": "basic_bayes"
+    },
+    {
+      "generator": "switch",
+      "seed": 1,
+      "scores": {
+        "basic_bayes": {
+          "nll": 3480.7091418853206,
+          "k": 9,
+          "aic": 6979.418283770641,
+          "bic": 7020.631544678732
+        },
+        "switch": {
+          "nll": 3412.9107138268555,
+          "k": 9,
+          "aic": 6843.821427653711,
+          "bic": 6885.034688561802
+        }
+      },
+      "win_aic": "switch",
+      "win_bic": "switch"
+    }
+  ]
+}

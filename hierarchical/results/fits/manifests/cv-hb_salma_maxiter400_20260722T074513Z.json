@@ -1,0 +1,72 @@
+{
+  "timestamp_utc": "2026-07-22T07:45:13.065738+00:00",
+  "git": {
+    "commit": "6356bed29ec101fa58678d1fe4aaadc9b8af65f8",
+    "dirty": true
+  },
+  "python": "3.11.15",
+  "platform": "macOS-26.5.2-arm64-arm-64bit",
+  "packages": {
+    "numpy": "2.4.6",
+    "scipy": "1.17.1"
+  },
+  "config": {
+    "fit_models": [],
+    "cv_models": [
+      "hb_salma"
+    ],
+    "subjects": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "maxiter": 400,
+    "folds": 5,
+    "workers": 4,
+    "force": false,
+    "rec_nsim": 2,
+    "rec_maxiter": 300,
+    "example_subject": 9
+  },
+  "grid": {
+    "k_grid": [
+      0.01,
+      0.018615210280989555,
+      0.03465260538054592,
+      0.06450655359430123,
+      0.12008030596598399,
+      0.22353201461623565,
+      0.4161095456614457,
+      0.7745966692414836,
+      1.441927988088433,
+      2.684179270831038,
+      4.996656155839299,
+      9.301380504274945,
+      17.314715399057476,
+      32.23170681089429,
+      60.0
+    ],
+    "alpha_grid": [
+      0.0,
+      0.125,
+      0.25,
+      0.375,
+      0.5,
+      0.625,
+      0.75,
+      0.875,
+      1.0
+    ]
+  },
+  "prior_mean_deg": 225.0,
+  "notes": "Recombined is fit-only (excluded from CV/model-recovery): its integrate-before read-out is ~8s/eval, and its overfitting behaviour is characterised by its 7-param twin HB-Rachel."
+}
