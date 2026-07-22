@@ -582,6 +582,49 @@ def _hierarchical_online_spec() -> ModelSpec:
         _rebuild=_rebuild, _predict=_predict)
 
 
+def _reliability_mixture_spec() -> ModelSpec:
+    """Reliability-Mixture (Romi's ReliabilityMixtureObserver): the percept is a
+    genuine discrete either/or mixture between a prior-centered and a
+    likelihood-centered von Mises, with the mixture weight (prior_reliance)
+    learned trial-by-trial via a delta rule against a 5-trial feedback window
+    that resets at session boundaries. 10 params: 3 sensory kappa + 4 prior
+    kappa + reliance learning-rate + motor kappa + lapse. Learns; scored on the
+    native 360-grid so its NLL is directly comparable to the other models."""
+    from observers.fitting import reliability_mixture_fit as F
+    from observers.models.reliability_mixture import ReliabilityMixtureObserver
+
+    def _fit(data, maxiter, mask):
+        # Multi-start the reported point fit (mask is None), single start in CV
+        # folds — same policy as the other single-start models via multistart().
+        def fit_one(x0):
+            obs, nll, x = F.fit(data, x0=x0, maxiter=maxiter, mask=mask)
+            return obs, nll, x, getattr(obs, "_fit_info", None)
+
+        base_x0 = F.pack({0.06: 1.0, 0.12: 3.0, 0.24: 8.0},
+                         {80: 0.75, 40: 2.8, 20: 8.7, 10: 33.0}, 0.05, 30.0, 0.02)
+        obs, nll, x, info, spread = multistart(fit_one, base_x0, n_starts=_starts_for(mask))
+        return FitResult(obs, nll, x, F.N_PARAMS, spread)
+
+    def _rebuild(params):
+        kl = params["k_like"]; kp = params["k_prior"]
+        return ReliabilityMixtureObserver(
+            k_like={float(k): v for k, v in kl.items()},
+            k_prior={int(k): v for k, v in kp.items()},
+            alpha=params["alpha"], k_motor=params["k_motor"], lapse=params["lapse"])
+
+    def _predict(obs, data):
+        out = obs.filter(data["motion_direction"], data["motion_coherence"],
+                         data["prior_std"], session_id=data.get("session_id"),
+                         feedback=data["motion_direction"], sample=False)
+        return np.array(out["dists"])
+
+    return ModelSpec(
+        name="reliability_mixture", label="Reliability-Mixture", n_params=F.N_PARAMS,
+        color="#c17817", grid_deg=360, learns=True,
+        _fit=_fit, _trial_logliks=F._trial_logliks, _simulate=F._simulate,
+        _rebuild=_rebuild, _predict=_predict)
+
+
 # --------------------------------------------------------------------------- #
 #  THE REGISTRY — add a model by adding one line here
 # --------------------------------------------------------------------------- #
@@ -597,6 +640,7 @@ _BUILDERS = {
     "hb_salma":    _hb_salma_spec,      # geometric-forget, integrate-before, 72-bin (scored on 360)
     "recombined":  _recombined_spec,    # Rachel engine + Salma's integrate-BEFORE rule
     "hierarchical_online": _hierarchical_online_spec,  # mixture prior + online-learned mean & width
+    "reliability_mixture": _reliability_mixture_spec,  # Romi's discrete-mixture, learned reliance weight
 }
 
 # Canonical list of every registered model key, derived from the builders so it
