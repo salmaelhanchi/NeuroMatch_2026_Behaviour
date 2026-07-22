@@ -561,8 +561,22 @@ def _hierarchical_online_spec() -> ModelSpec:
         return FitResult(obs, nll, x, F.N_PARAMS, spread)
 
     def _rebuild(params):
-        kl = params["k_llh"]
-        k_llh = {float(k): float(v) for k, v in kl.items()}
+        # Robust to an incomplete named-params dict: the shared driver's
+        # _observer_params extractor uses a fixed attribute list keyed to the
+        # other models' names (p_random/k_like) and does not know this model's
+        # pi/R0 or its p_rand/k_llh naming, so the saved "params" block can be
+        # partial. The full 8-vector is always preserved in "theta"; when the
+        # named keys are missing, reconstruct from theta via the fitter's
+        # unpack(). This keeps rebuild() total and identical either way.
+        needed = ("k_llh", "pi", "p_rand", "k_motor", "alpha", "R0")
+        if not all(k in params for k in needed):
+            theta = params.get("theta")
+            if theta is None:
+                raise KeyError(
+                    "hierarchical_online rebuild: params incomplete and no "
+                    f"'theta' fallback present (have keys {sorted(params)})")
+            params = F.unpack(np.asarray(theta, float))
+        k_llh = {float(k): float(v) for k, v in params["k_llh"].items()}
         return HierarchicalOnlineObserver(
             k_llh=k_llh, pi=params["pi"], p_rand=params["p_rand"],
             k_motor=params["k_motor"], alpha=params["alpha"], R0=params["R0"],
