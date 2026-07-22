@@ -1,7 +1,7 @@
 {
-  "timestamp_utc": "2026-07-21T18:30:40.844631+00:00",
+  "timestamp_utc": "2026-07-22T03:27:33.254462+00:00",
   "git": {
-    "commit": "376a3c61caafea14905e20dab60faf2503259357",
+    "commit": "1fab57057662deec9ee13391b945c4c3cc66a98e",
     "dirty": true
   },
   "python": "3.11.15",
@@ -12,9 +12,11 @@
   },
   "config": {
     "fit_models": [
-      "recombined"
+      "hb_rachel"
     ],
-    "cv_models": [],
+    "cv_models": [
+      "hb_rachel"
+    ],
     "subjects": [
       1,
       2,
@@ -31,11 +33,11 @@
     ],
     "maxiter": 400,
     "folds": 5,
-    "workers": 4,
+    "workers": 3,
     "force": false,
     "rec_nsim": 2,
     "rec_maxiter": 300,
-    "example_subject": 2
+    "example_subject": 9
   },
   "grid": {
     "k_grid": [

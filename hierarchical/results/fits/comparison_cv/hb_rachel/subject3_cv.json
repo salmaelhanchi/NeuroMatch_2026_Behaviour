@@ -1,0 +1,44 @@
+{
+  "model": "hb_rachel",
+  "label": "HB-Rachel",
+  "subject": 3,
+  "n_trials": 9412,
+  "k": 7,
+  "folds": 5,
+  "cv_nll": 42357.4819982889,
+  "cv_per_trial": 4.500369953069369,
+  "fold_detail": [
+    {
+      "fold": 1,
+      "n_test": 1708,
+      "held_out_nll": 7517.455944001775,
+      "per_trial": 4.401320810305489
+    },
+    {
+      "fold": 2,
+      "n_test": 2122,
+      "held_out_nll": 9281.607010664951,
+      "per_trial": 4.3739901087016735
+    },
+    {
+      "fold": 3,
+      "n_test": 2130,
+      "held_out_nll": 9558.004417315979,
+      "per_trial": 4.487326017519239
+    },
+    {
+      "fold": 4,
+      "n_test": 1515,
+      "held_out_nll": 6966.097576236411,
+      "per_trial": 4.598084208736905
+    },
+    {
+      "fold": 5,
+      "n_test": 1937,
+      "held_out_nll": 9034.31705006979,
+      "per_trial": 4.664076948926066
+    }
+  ],
+  "maxiter": 400,
+  "seconds": 280.0
+}

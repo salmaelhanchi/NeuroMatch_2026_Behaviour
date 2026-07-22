@@ -1,0 +1,41 @@
+{
+  "model": "hb_salma",
+  "label": "HB-Salma",
+  "subject": 11,
+  "n_trials": 6474,
+  "nll": 31728.618258196195,
+  "aic": 63469.23651639239,
+  "bic": 63509.8898129993,
+  "k": 6,
+  "learns": true,
+  "grid_deg": 360,
+  "start_spread": 1084.864381261821,
+  "params": {
+    "rho": 0.2593940592275634,
+    "motor_kappa": 14.086963820976065,
+    "lapse": 0.08090508249036318,
+    "sensory_kappas": [
+      2.4378052775892933,
+      6.212344224931364,
+      1128.4810976076687
+    ]
+  },
+  "theta": [
+    -1.0491203203696062,
+    0.891098158135645,
+    1.8265383166506495,
+    7.02862784610195,
+    2.645249818018754,
+    -2.430112754046467
+  ],
+  "convergence": {
+    "converged": true,
+    "n_iter": 236,
+    "n_feval": 431,
+    "hit_maxiter": false,
+    "status": 0,
+    "message": "Optimization terminated successfully."
+  },
+  "maxiter": 400,
+  "seconds": 3987.5
+}
