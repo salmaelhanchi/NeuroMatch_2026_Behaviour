@@ -37,11 +37,12 @@ cross-validation failure.
 
 The canonical Switch fits the API reads (`results/fits/comparison/switch/`) are now the NM 1e-4
 fits (ΣNLL 403052.2; subject-5 AIC 61747.7). `api.results_table()` and the comparison
-plots/tables already reflect these. CMA-ES fits are kept SEPARATE at
-`results/fits/comparison_cmaes/switch/` as the confirmation run — the API does not read them.
+plots/tables already reflect these. The CMA-ES fits are NOT in the shared results tree — they
+are the confirmation run only, archived here in `cmaes_fits/`. The pipeline/API never reads them.
 
 ## Reproduce
 
 Committed NM 1e-4 fits: `results/fits/comparison/switch/` (env `SWITCH_FIT_TOL=1e-4`).
-CMA-ES fits: `results/fits/comparison_cmaes/switch/` (env `SWITCH_OPTIMIZER=cmaes`). Both knobs
-default to the unchanged house behaviour; only the Switch fit path reads them.
+CMA-ES fits were produced with env `SWITCH_OPTIMIZER=cmaes` and are archived here in
+`cmaes_fits/` (re-run writes to `results/fits/comparison_cmaes/switch/`, which is not tracked).
+Both knobs default to the unchanged house behaviour; only the Switch fit path reads them.

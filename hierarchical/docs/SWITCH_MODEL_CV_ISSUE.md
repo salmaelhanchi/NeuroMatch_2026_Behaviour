@@ -142,12 +142,13 @@ Note the two metrics point different ways for subject 5, and both are correct:
 ## 4c. Full paper replication: CMA-ES as the second optimizer
 
 Laquitaine & Gardner fit the Switch model with Nelder–Mead **and, separately, with CMA-ES**
-(covariance matrix adaptation evolution strategy; Hansen & Kern 2004), reporting the two
-"produced similar results." CMA-ES is population-based, so it explores the "noisy and
-ill-conditioned" k=9 surface with "many local maxima" rather than descending from fixed starting
-points — their robustness insurance against Nelder–Mead landing in a local trap. We replicated
+(covariance matrix adaptation evolution strategy; Hansen & Kern 2004), reporting that the model's
+results hold under CMA-ES, which can fit the data better than Nelder–Mead when the objective
+surface is "noisy and ill-conditioned" with "many local maxima" (their words). CMA-ES is
+population-based, so it explores that surface rather than descending from fixed starting points —
+their robustness insurance against Nelder–Mead landing in a local trap. We replicated
 this: a CMA-ES fit path (`fit_static_cmaes`, identical objective, tolerance 1e-4) run on all 12
-subjects, output kept separate at `results/fits/comparison_cmaes/switch/`.
+subjects, output archived in the experiment folder (`experiments/rachel/20_switch_paper_fitting/cmaes_fits/`).
 
 **The two optimizers agree — the paper's result, reproduced.**
 
@@ -207,7 +208,8 @@ paper), not *fix* subject 5. It is a methods-section robustness item, not a resc
   specifically *needs* it (§4b). Trade-off: at 1e-4 all 12 read `hit_maxiter=True` — a cosmetic
   flag on this ill-conditioned surface (§4a), not a fit-quality concern.
 - **Added the CMA-ES second optimizer** (`fit_static_cmaes`, gated by `SWITCH_OPTIMIZER=cmaes`;
-  default `nm` = unchanged). Ran all 12 Switch subjects; results in `results/fits/comparison_cmaes/`
+  default `nm` = unchanged). Ran all 12 Switch subjects; the CMA-ES fits are archived in the
+  experiment folder (`experiments/rachel/20_switch_paper_fitting/cmaes_fits/`) and
   confirm optimizer-independence (§4c). This completes the paper's full fitting protocol
   (NM 10-start 1e-4 + CMA-ES).
 - **Not yet done:** stratified folds (the CV-specific fix for subject 5, §6). Flagged for a decision.

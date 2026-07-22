@@ -17,3 +17,4 @@ dist/
 # (results/fits/**, experiments/*/results/**) and environment/git SHA in run_manifest.json.
 # Kept locally for debugging; not version-controlled.
 results/logs/
+results/fits/comparison_cmaes/

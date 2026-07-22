@@ -148,7 +148,7 @@ surface is "noisy and ill-conditioned" with "many local maxima" (their words). C
 population-based, so it explores that surface rather than descending from fixed starting points —
 their robustness insurance against Nelder–Mead landing in a local trap. We replicated
 this: a CMA-ES fit path (`fit_static_cmaes`, identical objective, tolerance 1e-4) run on all 12
-subjects, output kept separate at `results/fits/comparison_cmaes/switch/`.
+subjects, output archived in the experiment folder (`experiments/rachel/20_switch_paper_fitting/cmaes_fits/`).
 
 **The two optimizers agree — the paper's result, reproduced.**
 
@@ -208,7 +208,8 @@ paper), not *fix* subject 5. It is a methods-section robustness item, not a resc
   specifically *needs* it (§4b). Trade-off: at 1e-4 all 12 read `hit_maxiter=True` — a cosmetic
   flag on this ill-conditioned surface (§4a), not a fit-quality concern.
 - **Added the CMA-ES second optimizer** (`fit_static_cmaes`, gated by `SWITCH_OPTIMIZER=cmaes`;
-  default `nm` = unchanged). Ran all 12 Switch subjects; results in `results/fits/comparison_cmaes/`
+  default `nm` = unchanged). Ran all 12 Switch subjects; the CMA-ES fits are archived in the
+  experiment folder (`experiments/rachel/20_switch_paper_fitting/cmaes_fits/`) and
   confirm optimizer-independence (§4c). This completes the paper's full fitting protocol
   (NM 10-start 1e-4 + CMA-ES).
 - **Not yet done:** stratified folds (the CV-specific fix for subject 5, §6). Flagged for a decision.
