@@ -1,0 +1,37 @@
+{
+  "model": "hierarchical_online",
+  "label": "Hier-Online",
+  "subject": 4,
+  "n_trials": 4801,
+  "nll": 23266.537317777023,
+  "aic": 46549.07463555405,
+  "bic": 46600.8872716223,
+  "k": 8,
+  "learns": true,
+  "grid_deg": 360,
+  "start_spread": 123.3262038996836,
+  "params": {
+    "k_motor": 34.898007860719915,
+    "alpha": 0.10267713504265613
+  },
+  "theta": [
+    1.132730660276954,
+    3.2277058310298146,
+    11.680499104993167,
+    0.9812418942622515,
+    0.018704403189453978,
+    34.898007860719915,
+    0.10267713504265613,
+    0.30998228220517166
+  ],
+  "convergence": {
+    "converged": true,
+    "n_iter": 143,
+    "n_feval": 280,
+    "hit_maxiter": false,
+    "status": 0,
+    "message": "Optimization terminated successfully."
+  },
+  "maxiter": 400,
+  "seconds": 5118.8
+}
