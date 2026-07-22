@@ -176,7 +176,10 @@ def t4_reliance_learning():
            f"reliance {down[0]:.3f} -> {down[-1]:.3f}")
 
 
-def main():
+def run():
+    """House verifier contract: run every check, return (passed, total).
+    Safe to call repeatedly; used by observers.api.verify_all()."""
+    results.clear()
     print("=== verify Reliability-Mixture (Romi's model) ===")
     t_eval = t1_fidelity()
     t2_proper()
@@ -184,9 +187,16 @@ def main():
     t4_reliance_learning()
     print(f"\n[INFO] T5 cost: one NLL eval ≈ {t_eval:.2f}s on a real subject "
           f"(~9.4k trials) — batch-viable.")
-    n_ok = sum(results)
-    print(f"\n{n_ok}/{len(results)} checks passed.")
-    return all(results)
+    passed, total = sum(results), len(results)
+    print(f"\n{passed}/{total} checks passed"
+          + ("  ✅ ALL PASS" if passed == total else "  ❌ FAILURES PRESENT"))
+    return passed, total
+
+
+def main():
+    """CLI wrapper — returns True iff all checks passed (for the exit code)."""
+    passed, total = run()
+    return passed == total
 
 
 if __name__ == "__main__":

@@ -36,6 +36,10 @@ from scipy.optimize import minimize
 
 from observers.models.hierarchical_online import (
     HierarchicalOnlineObserver, replay_dists)
+# Shared scipy-convergence extractor, identical to the other fitters, so this
+# model's JSON records the same "convergence" schema (converged / n_iter /
+# n_feval / hit_maxiter / status / message) as the other six.
+from observers.fitting.online_recovery import conv_info
 
 N_PARAMS = 8
 COHS = [0.06, 0.12, 0.24]
@@ -255,6 +259,10 @@ def fit(data, x0=None, maxiter=1500, mask=None, readout='sample', packing='penal
         raise ValueError("packing must be 'penalty' or 'house'")
 
     obs = observer_from_params(p, readout=readout)
+    # Attach scipy convergence diagnostics for the winning start, matching the
+    # other fitters' contract (the driver reads obs._fit_info -> JSON
+    # "convergence"). Reads best.* only; changes no numerics.
+    obs._fit_info = conv_info(best, maxiter)
     return obs, float(best.fun), x_raw
 
 

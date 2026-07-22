@@ -291,8 +291,20 @@ def _hb_rachel_spec() -> ModelSpec:
     from observers.fitting import hb_rachel_fit as F
 
     def _fit(data, maxiter, mask):
-        obs, nll, x = F.fit(data, maxiter=maxiter, mask=mask)
-        return FitResult(obs, nll, x, 7, 0.0)
+        # Multi-start on the reported point fit (N_STARTS), single start inside
+        # a CV fold, identical to every other learning model. F.fit() is
+        # single-start from one fixed x0, so calling it directly left the
+        # reported fits under-converged (start_spread was hardcoded 0.0); route
+        # it through the shared multistart() helper instead.
+        base_x0 = F.pack({0.06: 1.0, 0.12: 3.0, 0.24: 8.0}, 0.6, 30.0, 0.05, 0.05)
+
+        def fit_one(x0):
+            obs, nll, x = F.fit(data, x0=x0, maxiter=maxiter, mask=mask)
+            return obs, float(nll), x, getattr(obs, "_fit_info", None)
+
+        obs, nll, x, res, spread = multistart(
+            fit_one, base_x0, n_starts=_starts_for(mask))
+        return FitResult(obs, nll, x, 7, spread)
 
     def _rebuild(params):
         from observers.models.hb_rachel import HBRachelObserver

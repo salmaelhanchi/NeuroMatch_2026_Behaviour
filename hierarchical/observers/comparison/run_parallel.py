@@ -47,63 +47,29 @@ def _git_sha():
 
 
 def write_manifest(args, subjects, out_dir):
-    """Provenance manifest for the run — the one place a Methods section and a
-    reproducer can read WHAT was run, WITH WHICH code and library versions, on
-    WHICH config. Written at launch (before any fit) so it exists even if the
-    run is interrupted. Grid definitions are read from the live model modules,
-    not hardcoded, so they cannot drift from what actually ran."""
-    import numpy, scipy
-    grid = {}
-    try:
-        from observers.helpers.belief_grid import make_k_grid
-        from observers.models.hb_adaptive_confidence import make_alpha_grid
-        grid["k_grid"] = [float(x) for x in make_k_grid(n=15)]
-        grid["alpha_grid"] = [float(x) for x in make_alpha_grid(9)]
-    except Exception as e:
-        grid["error"] = str(e)
-    man = {
-        "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-        "git": _git_sha(),
-        "python": sys.version.split()[0],
-        "platform": platform.platform(),
-        "packages": {"numpy": numpy.__version__, "scipy": scipy.__version__},
-        "config": {
-            "fit_models": args.fit_models, "cv_models": args.cv_models,
-            "subjects": subjects, "maxiter": args.maxiter, "folds": args.folds,
+    """Provenance manifest for the run. Thin wrapper over the shared
+    ``comparison.manifest.write_manifest`` so run_all and run_parallel emit
+    IDENTICAL manifests; this just maps run_parallel's argparse flags onto the
+    shared signature. Written at launch (before any fit) so it survives an
+    interruption."""
+    from observers.comparison.manifest import write_manifest as _write
+    return _write(
+        out_dir,
+        driver="run_parallel",
+        fit_models=args.fit_models,
+        cv_models=args.cv_models,
+        subjects=subjects,
+        maxiter=args.maxiter,
+        folds=args.folds,
+        extra_config={
             "workers": args.workers, "force": args.force,
             "rec_nsim": args.rec_nsim, "rec_maxiter": args.rec_maxiter,
             "example_subject": args.example_subject,
         },
-        "grid": grid,
-        "prior_mean_deg": 225.0,
-        "notes": "Recombined is fit-only (excluded from CV/model-recovery): its "
-                 "integrate-before read-out is ~8s/eval, and its overfitting "
-                 "behaviour is characterised by its 7-param twin HB-Rachel.",
-    }
-    out_dir = Path(out_dir); out_dir.mkdir(parents=True, exist_ok=True)
-    payload = json.dumps(man, indent=2)
-
-    # Archive: one immutable manifest per run, never overwritten. The filename
-    # carries the identifying fields (which models, what budget, when) so the
-    # run is recognisable without opening the file. A CV-only run (empty
-    # fit_models) is named by its cv_models instead.
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-    run_models = args.fit_models or args.cv_models or ["none"]
-    models_slug = "-".join(run_models)
-    archive_dir = out_dir / "manifests"
-    archive_dir.mkdir(parents=True, exist_ok=True)
-    archive_path = archive_dir / f"fit_{models_slug}_maxiter{args.maxiter}_{stamp}.json"
-    archive_path.write_text(payload)
-
-    # Latest pointer: refresh the canonical name so anything that reads the
-    # fixed path still works. This is the ONLY manifest that is overwritten,
-    # and it is always a copy of the newest archive entry.
-    latest_path = out_dir / "run_manifest.json"
-    latest_path.write_text(payload)
-
-    print(f"[run_parallel] manifest -> {archive_path}", flush=True)
-    print(f"[run_parallel] latest   -> {latest_path}", flush=True)
-    return man
+        notes="Recombined is fit-only (excluded from CV/model-recovery): its "
+              "integrate-before read-out is ~8s/eval, and its overfitting "
+              "behaviour is characterised by its 7-param twin HB-Rachel.",
+    )
 
 
 def _cmd(stage, subject, models, maxiter, folds=None, force=False):
@@ -122,7 +88,8 @@ def _build_jobs(subjects, fit_models, cv_models, maxiter, folds, force=False):
     jobs (each stage is itself resumable and idempotent)."""
     jobs = []
     for s in subjects:
-        jobs.append((f"fit[s{s}]", _cmd("fit_batch", s, fit_models, maxiter, force=force)))
+        if fit_models:   # empty fit-models => CV-only run, schedule no fit jobs
+            jobs.append((f"fit[s{s}]", _cmd("fit_batch", s, fit_models, maxiter, force=force)))
     for s in subjects:
         if cv_models:
             jobs.append((f"cv[s{s}]", _cmd("cross_validate", s, cv_models, maxiter, folds, force=force)))
@@ -194,8 +161,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--subjects", nargs="+", type=int, default=None)
-    ap.add_argument("--fit-models", nargs="+",
-                    default=["basic_bayes", "switch", "hb_adaptive", "hb_salma", "recombined"])
+    ap.add_argument("--fit-models", nargs="*",
+                    default=["basic_bayes", "switch", "hb_adaptive", "hb_salma", "recombined"],
+                    help="models to point-fit; pass with no values (--fit-models) "
+                         "to skip fitting entirely (e.g. a CV-only run on models "
+                         "already fit)")
     ap.add_argument("--cv-models", nargs="*",
                     default=["basic_bayes", "switch", "hb_adaptive", "hb_salma"],
                     help="models to cross-validate; pass with no values "
@@ -238,14 +208,18 @@ def main():
           f"Running shared stages...", flush=True)
 
     # ---- shared stages (fast; run once, in-process) ----
-    from observers.comparison import shape_analysis, recovery, make_figure, make_table
+    from observers.comparison import shape_analysis, recovery, make_figure
     shape_analysis.run(models=a.fit_models, subjects=subjects)
     # recovery on the affordable models only (Recombined excluded — 8s/eval makes
     # its model-recovery fan-out prohibitive; it is characterised by HB-Rachel's twin)
     recovery.run(models=a.cv_models, n_sim=a.rec_nsim, maxiter=a.rec_maxiter)
     make_figure.run(models=a.fit_models, subjects=subjects,
                     example_subject=a.example_subject)
-    make_table.run(models=a.fit_models, subjects=subjects)
+    # The pooled model_comparison_table is retired: it hid incomplete/broken
+    # models (absent row, not flagged) and printed metrics for models with no CV.
+    # Per-model results/fits/comparison/<model>/validation.{md,json} (validate_model)
+    # carry the honest per-model health instead. Regenerate the pooled table
+    # explicitly with: python -m observers.comparison.run_all --with-table --skip-fit --skip-cv
 
     print(f"[run_parallel] ALL DONE ({(time.time()-t0)/60:.1f} min total)", flush=True)
 

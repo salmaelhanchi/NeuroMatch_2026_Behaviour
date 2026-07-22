@@ -58,13 +58,38 @@ def main():
     ap.add_argument("--skip-shape", action="store_true")
     ap.add_argument("--skip-recovery", action="store_true")
     ap.add_argument("--skip-figure", action="store_true")
-    ap.add_argument("--skip-table", action="store_true")
+    ap.add_argument("--with-table", action="store_true",
+                    help="regenerate the pooled model_comparison_table (retired by "
+                         "default; per-model validation.{md,json} records supersede it)")
     ap.add_argument("--force", action="store_true")
     a = ap.parse_args()
 
     models = a.models or DEFAULT_MODELS
     subjects = a.subjects or ALL_SUBJECTS
     print(f"=== pipeline: models={models} subjects={subjects} ===\n", flush=True)
+
+    # Provenance manifest (written at launch, before any fit, so it survives an
+    # interruption). Same shared writer as run_parallel, so serial and parallel
+    # runs leave identical provenance. run_all fits AND cross-validates the same
+    # model set, so both stage lists are `models` (minus whichever stage is
+    # skipped) — an honest record of what this invocation actually ran.
+    from observers.helpers.paths import FITS_DIR
+    from observers.comparison.manifest import write_manifest
+    write_manifest(
+        FITS_DIR,
+        driver="run_all",
+        fit_models=[] if a.skip_fit else list(models),
+        cv_models=[] if a.skip_cv else list(models),
+        subjects=list(subjects),
+        maxiter=a.maxiter,
+        folds=a.folds,
+        extra_config={
+            "force": a.force, "rec_nsim": a.rec_nsim, "rec_maxiter": a.rec_maxiter,
+            "example_subject": a.example_subject, "with_table": a.with_table,
+            "skip": {k: getattr(a, f"skip_{k}") for k in
+                     ("fit", "cv", "shape", "recovery", "figure")},
+        },
+    )
 
     def stage(name, fn):
         t0 = time.time()
@@ -88,7 +113,13 @@ def main():
     if not a.skip_figure:
         stage("5. results figure",
               lambda: make_figure.run(models, subjects, example_subject=a.example_subject))
-    if not a.skip_table:
+    # The pooled model_comparison_table is retired by default: it silently
+    # excluded incomplete/broken models (missing = absent row, not flagged) and
+    # printed metrics for models with no CV, so it read as "complete" when it
+    # wasn't. The per-model results/fits/comparison/<model>/validation.{md,json}
+    # records (validate_model) carry the honest per-model fit/CV/convergence
+    # health instead. Pass --with-table to regenerate the pooled table anyway.
+    if a.with_table:
         stage("6. table + supplementary",
               lambda: make_table.run(models, subjects))
 

@@ -86,6 +86,30 @@ def verify_basic_bayesian():
     return m.run()
 
 
+def verify_hb_adaptive():
+    """Run the HB-Adaptive-Confidence checks (learns α AND κ). Returns (passed, total)."""
+    from observers.verification import verify_hb_adaptive as m
+    return m.run()
+
+
+def verify_recombined():
+    """Run the Recombined (integrate-before) checks. Returns (passed, total)."""
+    from observers.verification import verify_recombined as m
+    return m.run()
+
+
+def verify_hb_salma():
+    """Run the HB-Salma (72-bin, geometric-forget) checks. Returns (passed, total)."""
+    from observers.verification import verify_hb_salma as m
+    return m.run()
+
+
+def verify_reliability_mixture():
+    """Run the Reliability-Mixture checks. Returns (passed, total)."""
+    from observers.verification import verify_reliability_mixture as m
+    return m.run()
+
+
 def verify_all():
     """Run every model verification suite. Returns {name: (passed, total)}."""
     out = {
@@ -93,6 +117,10 @@ def verify_all():
         "basic_bayesian": verify_basic_bayesian(),
         "online": verify_online(),
         "hb_rachel": verify_hb_rachel(),
+        "hb_adaptive": verify_hb_adaptive(),
+        "recombined": verify_recombined(),
+        "hb_salma": verify_hb_salma(),
+        "reliability_mixture": verify_reliability_mixture(),
     }
     passed = sum(p for p, _ in out.values())
     total = sum(t for _, t in out.values())
