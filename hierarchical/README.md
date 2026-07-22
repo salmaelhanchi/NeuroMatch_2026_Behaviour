@@ -1,22 +1,41 @@
-# Hierarchical Bayesian learning of prior confidence during perceptual estimation
+# Hierarchical Bayesian Learning as a Mechanism for Perceptual Switching
 
-Code for the NMA group project of the same name (Bhattacharya, Elhanchi, Wise,
-Ruamkonthong, Kolchina). We model how people estimate the direction of briefly
-presented random-dot motion when a learned *prior* over directions competes with
-noisy *sensory evidence* — and ask what mechanism produces the **bimodal**
-responses seen in the data (peaks near both the prior mean and the true
-direction).
+**Team Posterior Motives** — Bhattacharya, Elhanchi, Wise, Ruamkonthong, Kolchina
+(NeuroMatch Academy group project)
 
-The full scientific abstract is in [`docs/project_abstract.md`](docs/project_abstract.md);
-the per-task breakdown in [`docs/project_tasks.md`](docs/project_tasks.md). This
-README is the map: what each model *is*, how they contrast, and how they bear on
-the abstract's question. The empirical verdicts (which model wins on which
-subject) live in the model docs under `docs/`, because they are still contested
-and depend on fitting choices.
+We model how people estimate the direction of briefly presented random-dot
+motion when a learned *prior* over directions competes with noisy *sensory
+evidence*, and ask what mechanism produces the **bimodal** responses seen in the
+data — peaks near both the prior mean (225°) and the true direction.
+
+The submitted abstract is in [`docs/project_abstract.md`](docs/project_abstract.md).
+The empirical verdicts (which model wins on which subject) live in the
+`experiments/` record, because they depend on fitting choices and are still being
+finalised. **This README is the map:** the question, the models in the
+comparison, how to reproduce the fits, and where everything lives.
 
 ---
 
-## The question the project asks
+## TL;DR for teammates
+
+- **Code you import** lives in [`observers/`](observers/) — one installable
+  package. Notebooks and scripts call it; they never redefine model logic.
+- **The model comparison** (fit → cross-validate → table → figures) is the
+  [`observers/comparison/`](observers/comparison/) sub-package. One command
+  reruns it end-to-end: `python -m observers.comparison.run_parallel`.
+- **Fitted results** are the shared database under
+  [`results/fits/`](results/fits/) — one JSON per model × subject, expensive to
+  regenerate, so committed and kept in one place.
+- **Each person's exploratory work** is a self-contained numbered folder under
+  [`experiments/rachel/`](experiments/rachel/) (see its
+  [README](experiments/rachel/README.md) for the index).
+- **To add a model:** write its `observers/models/` file + fitter, then add one
+  `ModelSpec` entry to `observers/comparison/registry.py`. Every pipeline stage
+  (fits, CV, table, figures, `observers.api`) picks it up automatically.
+
+---
+
+## The question
 
 Laquitaine & Gardner (2018) explained the bimodality with a **Switching
 observer**: on each trial the observer *selects* either the prior mean or the
@@ -25,138 +44,65 @@ fixed, already-learned quantity and never models how the prior is acquired.
 
 Our abstract asks the opposite:
 
-> Does switching-like bimodal behaviour **require** an explicit selection
-> mechanism, or can it **emerge** from adaptive hierarchical Bayesian inference
-> once the observer is allowed to learn its prior online?
+> Can a Bayesian observer that **learns how much to trust its prior, trial by
+> trial**, reproduce the bimodal estimates previously attributed to an explicit
+> prior-versus-likelihood switch?
 
-To answer that cleanly, the code implements four observer models, plus the
-classical **Basic Bayesian** baseline they are all measured against. Two
-questions are being separated, and each of the four is one cell in that 2×2:
+The model the abstract proposes holds two priors at once as a mixed hyper-prior
+(a peaked von Mises at 225° plus a uniform floor) and adds a hyperparameter,
+updated over trials, for how much confidence to place in the informed vs. the
+naive component. Bimodality then falls out of ordinary Bayesian integration — no
+hand-coded switch — and the switch is reframed as *graded* integration.
 
-1. **Is the prior strength fixed, or learned online from trial-to-trial feedback?**
-2. **Is the cause-level read-out a *selection* (commit to prior *or* evidence) or
-   an *integration* (one blended posterior)?**
+Two design axes separate the models, and the comparison is built to attribute
+any difference to the right one:
+
+1. **Is the prior strength fixed, or learned online from feedback?**
+2. **Is the read-out a *selection* (commit to prior *or* evidence) or an
+   *integration* (one blended posterior)?** For the integrators, a further
+   distinction matters — whether the confidence belief is folded in
+   *before* the Bayesian read-out (**integrate-before**) or the posterior is
+   read out first and combined *after* (**integrate-after**).
 
 ---
 
-## The models at a glance
+## The models in the comparison
 
-The Basic Bayesian is the paper's baseline — likelihood × prior into one
-posterior, MAP read-out, no switch and no learning; it's what the Switching
-observer was built to beat. The other four are the switch-vs-integration /
-fixed-vs-learned contrast above.
+These are the models the pipeline actually fits and scores — the registry in
+[`observers/comparison/registry.py`](observers/comparison/registry.py) is the
+single source of truth, and its insertion order is the canonical display order.
 
-| Model | File (`observers/models/`) | Prior strength | Read-out | Free params | Spec doc |
+| Key | Label | Learns prior? | Read-out | Params | Role in the story |
 |---|---|---|---|---|---|
-| **Basic Bayesian** (baseline) | [`basic_bayesian.py`](observers/models/basic_bayesian.py) | fixed, fitted per block (4 values) | **integration** (no switch) | 9 | Laquitaine & Gardner (2018), [`docs/`](docs/Laquitaine_Gardner_2018_switching_observer.pdf) |
-| **Switching observer** (the paper) | [`switching_observer.py`](observers/models/switching_observer.py) | fixed, fitted per block (4 values) | **selection** (switch) | 9 | Laquitaine & Gardner (2018), [`docs/`](docs/Laquitaine_Gardner_2018_switching_observer.pdf) |
-| **Online switching observer** | [`online_switching_observer.py`](observers/models/online_switching_observer.py) | **learned online** (belief over strength) | **selection** (switch) | 6 | [`docs/generative-model.md`](docs/generative-model.md) |
-| **Asymptote + transient** | [`asymptote_transient.py`](observers/models/asymptote_transient.py) | per-block levels **+ within-block transient** | **selection** (switch) | 11 | [`docs/asymptote_transient.md`](docs/asymptote_transient.md) |
-| **Hierarchical Bayesian integration** | [`hb_integration.py`](observers/models/hb_integration.py) | **learned online** (belief over strength) | **integration** (no switch) | 7 | [`docs/hb_integration.md`](docs/hb_integration.md) |
+| `switch` | Switch | no (fixed per block) | **selection** | 9 | Laquitaine & Gardner's incumbent; the model to beat |
+| `basic_bayes` | Basic-Bayes | no (fixed per block) | integration (always) | 9 | Paper baseline; unimodal, no switch |
+| `hb_adaptive` | HB-Adaptive | **yes — α and κ** | integration (integrate-after) | 6 | Joint α+κ online learning, integrate-after |
+| `hb_rachel` | HB-Rachel | yes — κ (α fixed) | integration (integrate-after) | 7 | Fixed-confidence integrator (was `hb_integration`) |
+| `hb_salma` | HB-Salma | yes — geometric forget | integration (integrate-before) | 6 | 72-bin belief, scored on the 360° grid |
+| `recombined` | Recombined | yes | integration (integrate-before) | 7 | Rachel's engine + Salma's integrate-before read-out |
+| `hierarchical_online` | Hier-Online | yes — mean **and** width | integration (mixture prior) | 8 | Mixture prior with online-learned mean *and* width |
 
-Each model file is self-contained source logic for one observer; shared math
-(circular statistics, the Girshick posterior look-up, the belief-grid update)
-lives in [`observers/helpers/`](observers/helpers/) so the model files stay
-focused on the mechanism.
+Placed on the 2×2 of *learning* × *read-out*:
 
----
+|                          | **Selection (switch)** | **Integration (no switch)** |
+|--------------------------|------------------------|-----------------------------|
+| **Prior fixed per block**| Switch                 | Basic-Bayes                 |
+| **Prior learned online** | *(none currently)*     | HB-Adaptive · HB-Rachel · HB-Salma · Recombined · Hier-Online |
 
-## What each model does
+The point of carrying several integrators is that they all produce bimodality,
+so a raw bimodality count cannot separate switch from integration. The abstract's
+comparison rests on a learning Bayesian observer accounting for **inter-subject
+variability**, and specifically predicts it will (i) **reproduce both unimodal
+and bimodal** estimate distributions, and (ii) **recover the block-specific prior
+widths** that change through learning across blocks — a principled account of how
+confidence in the prior evolves, reframing the switch's discrete strategy as
+graded integration. A useful mechanistic discriminator: under integration +
+online learning each *trial* is unimodal and bimodality emerges only when trials
+are **pooled across a block's learning transient**, whereas a switch lands at
+prior-or-evidence within individual trials.
 
-### 1. Switching observer — the incumbent
-
-The Laquitaine & Gardner (2018) model. On each trial the observer draws a noisy
-sensory measurement, then **commits to one cause**: with a probability set by the
-reliability ratio `k_prior / (k_prior + k_e)` it reports the prior mean (225°),
-otherwise it reports the sensory estimate. It never averages the two. Add a lapse
-rate and von Mises motor noise and you get the response distribution.
-
-Because the observer *selects*, the two outcomes land in two places, so response
-distributions are **bimodal within a single condition**. The prior strength
-`k_prior` is a fixed fitted parameter — one per block width (SD 10/20/40/80°), so
-four of them — and how the observer *came to know* the prior is not modelled.
-
-### 2. Online switching observer — same switch, learned prior
-
-Keeps the switch of model 1 but replaces the four fitted `k_prior` values with a
-**belief distribution over prior strength that is updated trial by trial** from
-the feedback direction revealed at the end of each trial (a predict/correct
-filter with a volatility/forgetting knob `λ`). The switch weight is then the
-reliability ratio evaluated under the *current* belief.
-
-This isolates the *learning* ingredient: it is still a selection model, but the
-prior strengths are now **emergent, not fitted**, so it has fewer parameters (6)
-than the static model (9). Its signature is a **within-block learning transient**
-in how often the prior is chosen. Full generative spec:
-[`docs/generative-model.md`](docs/generative-model.md).
-
-### 3. Asymptote + transient — a bridge model
-
-A hybrid pointed to by the empirical learning curve. It keeps the static model's
-flexible **per-block prior levels** (four asymptotes) *and* adds the online
-model's **within-block transient** toward them: the effective prior strength
-relaxes exponentially across a block,
-
-```
-k_eff(t) = k_asym[block] + (k_start − k_asym[block]) · exp(−t / τ)
-```
-
-with an asymmetric time constant (tightening vs loosening). It is still a switch
-model; turning the transient off recovers the static observer exactly (it *nests*
-model 1). 11 parameters. Details:
-[`docs/asymptote_transient.md`](docs/asymptote_transient.md).
-
-### 4. Hierarchical Bayesian integration — the abstract's proposal
-
-The model the abstract actually proposes, and the one that imposes **no switch**.
-It puts a **mixed hyper-prior** on the true direction — a peaked von Mises at the
-prior mean plus a uniform floor,
-
-```
-p(θ | κ, α) = α · V(θ; 225°, κ)  +  (1 − α) · (1/360)
-```
-
-— and simply reads out the MAP of the ordinary Bayesian posterior (evidence
-likelihood × this prior). Bimodality falls out **for free**: a measurement near
-225° is best explained by the von Mises component and gets pulled toward the
-prior; a measurement far from 225° is best explained by the uniform floor and
-sits at the sensory evidence. The "switch" is a *derived responsibility* — which
-mixture component explains the measurement — not a hand-coded competition. The
-prior precision `κ` is learned online exactly as in model 2. 7 parameters.
-Details: [`docs/hb_integration.md`](docs/hb_integration.md).
-
----
-
-## How they contrast — and the falsifiable test
-
-Placed on the 2×2 (learning × read-out):
-
-|                       | **Selection read-out (switch)** | **Integration read-out (no switch)** |
-|-----------------------|--------------------------------|--------------------------------------|
-| **Prior fixed per block** | Switching observer (1) · Asymptote+transient (3, levels + transient) | — |
-| **Prior learned online**  | Online switching observer (2) | HB integration (4) |
-
-The switch family (1–3) and the integration model (4) *both* produce
-bimodality, so a raw bimodality count cannot separate them. The discriminating
-prediction the abstract names is about **where the two peaks come from**:
-
-- A **switch** predicts two peaks *within individual trials* — the observer
-  genuinely lands at the prior on some trials and at the evidence on others,
-  regardless of the stimulus's distance from the prior.
-- **Integration + online learning** predicts each *trial* is unimodal, and
-  bimodality appears only when trials are **pooled across a block's learning
-  transient**: early in a block the believed prior is weak (mass at the
-  stimulus), late in a block it has sharpened (mass at the prior). A second,
-  finer discriminator: under integration, reliance on the prior should **fall as
-  the stimulus moves away from 225°** (a far measurement is poorly explained by
-  the von Mises component), whereas the switch's prior weight is flat across
-  direction at fixed reliability.
-
-That is the crux of the project: models 2 and 3 exist so the comparison can
-attribute any difference to *selection vs integration* rather than to *whether
-the prior was learned*, holding the other ingredient fixed.
-
----
+Model equations and derivations:
+[`experiments/rachel/03_model_equations/`](experiments/rachel/03_model_equations/).
 
 ## Repository layout
 
@@ -165,62 +111,149 @@ hierarchical/
 ├── README.md                     ← you are here
 ├── pyproject.toml                makes `observers` a pip-installable package
 ├── requirements.txt
-├── data/                         experimental trial data (motion-direction task)
-├── docs/                         abstract, task list, model specs, source paper
-├── notebooks/                    Colab notebooks (thin — they import observers)
+│
+├── observers/                    THE PACKAGE — all model logic
+│   ├── api.py                    one curated surface for notebooks (see `help(api)`)
+│   ├── models/                   one file per observer
+│   ├── fitting/                  per-model maximum-likelihood fitters
+│   ├── verification/             self-checks that each model matches its spec
+│   ├── analysis/                 behavioural analyses & comparison plots
+│   ├── helpers/                  shared math, data loading, path constants
+│   └── comparison/               the model-comparison pipeline (see below)
+│
 ├── results/
-│   ├── figures/                  generated .png figures
-│   └── fits/                     fitted-parameter JSON (one file per model family)
-└── observers/                    the importable Python package
-    ├── api.py                    ← one curated surface for notebooks
-    ├── models/                   ← the four observer models, one file each
-    ├── helpers/                  shared math + data loading + path constants
-    ├── fitting/                  parameter estimation, recovery, human fits
-    ├── verification/             self-checks that each model behaves as specified
-    └── analysis/                 comparison plots and behavioural analyses
+│   ├── fits/
+│   │   ├── comparison/<model>/subject<N>.json       point fits (one per model×subject)
+│   │   ├── comparison_cv/<model>/subject<N>_cv.json block-fold cross-validation
+│   │   ├── run_manifest.json                        provenance of the latest run
+│   │   └── manifests/                               immutable per-run archive
+│   ├── figures/                  generated comparison figures
+│   └── logs/                     run logs (git-ignored; audit trail only)
+│
+├── experiments/<name>/           one folder per teammate; inside, numbered
+│                                 self-contained exploration folders (e.g.
+│                                 experiments/rachel/01_model_review …);
+│                                 see each experiments/<name>/README.md for its index
+│
+├── docs/                         abstract, source paper, Anirban scaffold, model notes
+├── data/                         the motion-direction trial data
+└── notebooks/                    Colab notebooks (thin — they import observers)
 ```
 
+**Shared vs. experiment-specific.** Top-level directories hold only *shared,
+reusable* resources: the `observers/` code, the `results/fits/` parameter
+database, `docs/`, `data/`, `notebooks/`. Anything exploratory — one-off
+analyses, per-experiment figures and reports — belongs in a numbered folder
+inside your own `experiments/<name>/` space (see below).
+
 `observers/helpers/` holds everything the models lean on but that is not itself a
-model: `circular.py` (von Mises / circular-distance math), `bayes_lookup.py` (the
-Girshick MAP posterior look-up), `belief_grid.py` (the trial-by-trial belief
-update over prior strength), `dataset.py` (load a subject's trials or simulate
-synthetic ones), and `paths.py` (every data/results file location in one place).
+model: circular / von Mises math, the Girshick MAP posterior look-up, the
+trial-by-trial belief-grid update, data loading, and `paths.py` (every
+data/results location in one place).
+
+---
+
+## Adding your own experiments
+
+Each teammate gets a top-level space under `experiments/<name>/` (so far only
+`experiments/rachel/` exists — Anirban, Salma, Romi, and Valeria: make yours).
+Keep exploratory work there, not at the repo root, so the shared directories
+stay clean. The convention, mirroring `experiments/rachel/`:
+
+1. **Make your space** the first time: `experiments/<yourname>/`, with a short
+   `README.md` that indexes your folders (copy the structure of
+   [`experiments/rachel/README.md`](experiments/rachel/README.md)).
+2. **One folder per piece of work**, numbered and named:
+   `experiments/<yourname>/01_short_description/`. Each folder is
+   **self-contained** — it holds *all* of its own output (figures, tables,
+   reports, notebooks) and any experiment-specific derived fits in a local
+   `results/` subfolder.
+3. **Give each folder a `README.md`** with a one-line summary and a `Tags:` line
+   (facets `type:`, `claim:` — see `experiments/rachel/README.md` for the
+   vocabulary), so the work is discoverable without opening it.
+4. **Read shared resources, don't copy them.** From inside an experiment folder
+   the shared code and data are two levels up: `../../observers/`,
+   `../../results/fits/comparison/<model>/subject<N>.json`, `../../data/`,
+   `../../docs/`. The shared fitted-parameter database is expensive to
+   regenerate — read it, don't duplicate it.
+5. **Never edit another person's `experiments/<name>/` folder.** Model code and
+   the fit database are shared and edited together; each person's `experiments/`
+   space is theirs alone.
+
+New models still go in `observers/` + the registry (see the top of this README),
+not in an experiment folder — an experiment *uses* the shared models, it doesn't
+redefine them.
+
+---
+
+## The comparison pipeline (`observers/comparison/`)
+
+The registry-driven pipeline that produces the AIC/BIC/CV comparison. Every
+stage iterates the registry, so all registered models flow through automatically.
+
+| Module | What it does | Output |
+|---|---|---|
+| `registry.py` | defines every model as a `ModelSpec` (fit, NLL, simulate) | — |
+| `fit_batch.py` | maximum-likelihood point fit, per model × subject (resumable) | `results/fits/comparison/<model>/subject<N>.json` |
+| `cross_validate.py` | 5-fold **block** CV — holds out whole prior-width blocks | `results/fits/comparison_cv/<model>/subject<N>_cv.json` |
+| `shape_analysis.py` | response-distribution shape / bimodality metrics | — |
+| `recovery.py` | parameter-recovery / model-recovery checks | — |
+| `make_table.py` | AIC/BIC/CV leaderboard | `results/fits/model_comparison_table.{md,csv}` |
+| `make_figure.py` | the multi-panel comparison figure | `results/figures/` |
+| `bimodality_test.py` | conditioned bimodality test | — |
+| `run_all.py` | serial end-to-end orchestrator | all of the above |
+| `run_parallel.py` | parallel driver (subjects across workers) + provenance manifest | all of the above |
+| `fit_monitor.py` | live health/stall dashboard for long fit jobs | `results/logs/monitor/` |
+
+**Fit data currently in the repo:** point fits for all six committed models ×
+12 subjects; block-fold CV for `switch`, `basic_bayes`, `hb_adaptive`, and
+`hb_rachel` × 12 subjects.
+
+**Reproduce the whole comparison** (resumable — skips any model×subject whose
+JSON already exists; delete a JSON or pass `--force` to refit):
+
+```bash
+# from this directory, with the package installed (see Setup):
+PYTHONPATH="$(pwd)" python -m observers.comparison.run_parallel --workers 3
+```
+
+`run_parallel` writes an immutable manifest per run under `results/fits/manifests/`
+(git commit, library versions, config, grids) plus `run_manifest.json` as the
+"latest" pointer — so a Methods section or a reproducer can always read exactly
+what produced a given batch.
 
 ---
 
 ## Notebooks (Google Colab)
 
-The `notebooks/` folder is how less-technical group members use the models — no
-command line needed. **Open a notebook in Colab and run it top to bottom.** Start
-with `00_start_here.ipynb`; then `01_explore_data.ipynb` and
-`02_model_comparison.ipynb`.
+`notebooks/` is the no-setup way to use the models — everything runs in the
+browser, no command line or local install needed. **Open a notebook in Colab and
+run it top to bottom**, starting with
+`00_start_here.ipynb`, then `01_explore_data.ipynb`, `02_model_comparison.ipynb`,
+`03_validate_models.ipynb`, and `04_switching_matches_paper.ipynb`.
 
-The one rule that keeps this from rotting: **notebooks contain no model logic.**
-Every notebook's first cell pulls the latest code and installs the package; after
-that, cells just call `observers.api`:
+The rule that keeps this from rotting: **notebooks contain no model logic.** The
+first cell pulls the latest code and installs the package; every later cell just
+calls `observers.api`:
 
 ```python
 from observers import api
-api.verify_all()               # confirm every model behaves correctly
+api.verify_all()               # confirm every model behaves as specified
 api.subjects_with_data()       # which subjects are in the dataset
 trials = api.load_subject(1)   # one subject's trials (a DataFrame)
-api.comparison_table()         # fair AIC per model per subject
-api.plot_model_comparison()    # the 3-panel comparison figure (renders inline)
-api.plot_switch_curve()        # within-block switch learning curve
+api.results_table()            # AIC/BIC/CV leaderboard
+api.plot_model_comparison()    # the comparison figure (renders inline)
 ```
 
-Because the logic lives in `observers/` and the notebooks only import it,
-"syncing" a notebook to newer code is just re-running the setup cell (it does a
-`git pull`). There is exactly one copy of every model, so no one can accidentally
-run a stale one. `observers/api.py` is the whole surface — read it or run
-`help(api)` to see what's available.
-
-Fits run inside Colab are **not** saved back to GitHub (Colab's filesystem is
-temporary) — download them or push from a local checkout to keep them.
+Because the logic lives in `observers/` and notebooks only import it, "syncing"
+is just re-running the setup cell. There is exactly one copy of every model, so
+no one can accidentally run a stale one. Read `observers/api.py` or run
+`help(api)` for the full surface. Fits run inside Colab are **not** saved back to
+GitHub (Colab's filesystem is temporary) — push from a local checkout to keep them.
 
 ---
 
-## Setup (local, for command-line use)
+## Setup (local / command line)
 
 ```bash
 cd hierarchical
@@ -228,58 +261,31 @@ python3 -m venv .venv && source .venv/bin/activate
 pip install -e .          # installs deps and makes `import observers` work anywhere
 ```
 
-(or `uv venv && uv pip install -e .`.) `pip install -r requirements.txt` still
-works if you only want the dependencies without installing the package.
-
-## Running (command line)
+(or `uv venv && uv pip install -e .`.) `pip install -r requirements.txt` installs
+the dependencies without the package.
 
 Scripts are modules of the `observers` package, so **run them from this project
-root with `python -m`** (not `python path/to/file.py`). Paths to data and results
-are resolved absolutely, so results always land in `results/`.
+root with `python -m`** (not `python path/to/file.py`); data and results paths
+resolve absolutely, so outputs always land under `results/`.
 
 ```bash
 # Verify each model behaves as its spec requires (fast, no fitting):
 python -m observers.verification.verify_switching
-python -m observers.verification.verify_online
-python -m observers.verification.verify_hb_integration
+python -m observers.verification.verify_hb_rachel
+python -m observers.verification.verify_basic_bayesian
 
-# Inspect existing fits and regenerate the comparison figure:
-python -m observers.fitting.online_fit_human --summary   # static + online AIC table
-python -m observers.fitting.fair_refit table             # fair 4-model AIC table
-python -m observers.analysis.plot_model_comparison       # writes results/figures/model_comparison.png
+# Fit one model for one subject (writes to results/fits/comparison/…):
+python -m observers.comparison.fit_batch --models hb_adaptive --subjects 1
 
-# Fit a subject (writes to results/fits/…):
-python -m observers.fitting.hb_integration_fit human 1
-python -m observers.fitting.asymptote_transient_fit human 1
+# Rebuild the leaderboard and figures from existing fits:
+python -m observers.comparison.make_table
+python -m observers.comparison.make_figure
 ```
 
 ---
 
-## Extension models (Anirban's spec) — experimental
+## Reference
 
-Beyond the four core models above, four further observers implement the
-alternatives laid out in `anirban-modelling/Hypotheses_critique_and_alternatives.md`.
-They are **built and verified but not yet in the fair all-12-subject comparison**
-(a full multi-start batch is deferred). Full detail:
-[`docs/new_models_manifest.md`](docs/new_models_manifest.md) (paths, params) and
-[`docs/new_models_build_report.md`](docs/new_models_build_report.md) (verification
-+ smoke-fits).
-
-| Model | File (`observers/models/`) | What it adds | Params |
-|---|---|---|---|
-| **Causal-inference mixture** | `causal_inference_mixture.py` | mixing weight = per-measurement posterior responsibility `p(z=peaked\|m)` → switch rate depends on displayed direction (a falsifiable signature the switch lacks) | 7 |
-| **Logistic-covariate mixture** | `logistic_mixture.py` | weight = fitted logistic of prior_std, coherence, interaction, recent error, cumulative prior reliance → can be non-monotonic in prior width + carry history/hysteresis | 11 |
-| **Bimodal-likelihood control** | `bimodal_likelihood.py` | bimodal sensory likelihood (two lobes 180° apart), ordinary Bayesian integration, **no switch** — the Chetverikov & Jehee (2023) competitor | 10 |
-| **Finite-sample readout** | `finite_sample.py` | report the mean of `n` posterior samples; `n=1` ≈ switch, `n→∞` = Basic Bayes — a resource-rational nest with `n` fitted | 10 |
-
-```bash
-# Verify each extension model (fast, no fitting):
-python -m observers.verification.verify_causal_inference
-python -m observers.verification.verify_logistic_mixture
-python -m observers.verification.verify_bimodal_likelihood
-python -m observers.verification.verify_finite_sample
-```
-
-Each nests a known baseline (verified to machine precision): causal-inference →
-fixed-ratio mixture / switch; bimodal-likelihood `g=1` → Girshick Basic Bayes;
-finite-sample `n=1` → the static Switching observer, `n→∞` → the posterior mean.
+Laquitaine, S. & Gardner, J. L. (2018). *A Switching Observer for Human
+Perceptual Estimation.* **Neuron** 97(2), 462–474. PDF in
+[`docs/`](docs/Laquitaine_Gardner_2018_switching_observer.pdf).
