@@ -3,7 +3,8 @@ fit_batch.py — resumable batch fit of all registered models x subjects
 =======================================================================
 
 Fits every model in the registry to every requested subject, writing **one JSON
-per model x subject** under ``results/fits/comparison/``. Resumable: an existing
+per model x subject** under ``results/fits/comparison/<model>/subject<N>.json``.
+Resumable: an existing
 (non-empty) result file is skipped unless ``--force``, so an interrupted run
 picks up where it left off and a single slow cell never loses finished work.
 
@@ -37,7 +38,7 @@ OUT_DIR = FITS_DIR / "comparison"
 
 
 def _result_path(model: str, sid: int) -> Path:
-    return OUT_DIR / f"{model}_subject{sid}.json"
+    return OUT_DIR / model / f"subject{sid}.json"
 
 
 def _observer_params(obs) -> dict:
@@ -118,6 +119,7 @@ def run(models=None, subjects=None, maxiter=400, force=False):
                 print(f"refit {name:12s} subject {sid} "
                       f"(stale maxiter={prev} < {maxiter})", flush=True)
             row = fit_one(reg[name], data, int(sid), maxiter)
+            path.parent.mkdir(parents=True, exist_ok=True)
             json.dump(row, open(path, "w"), indent=2)
             done.append(path.name)
             print(f"done  {name:12s} subject {sid}  NLL={row['nll']:.1f} "

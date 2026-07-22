@@ -6,11 +6,11 @@ Each folder is one self-contained piece of work, holding **all of its own output
 
 - **Experiment-specific** output lives inside its experiment folder (including derived fits like cross-validation, shape, and recovery output under `<experiment>/results/`).
 - **Shared, reusable resources stay at the top level:**
-  - `../observers/` — the live pipeline code (registry, fitters, analysis, figure/table builders)
-  - `../results/fits/comparison/` — the shared fitted-parameter database (50 per-subject JSONs), read by several experiments; expensive to regenerate, so kept in one place
-  - `../results/logs/` — pipeline run logs (execution history)
-  - `../docs/` — reference material (Laquitaine & Gardner 2018 paper, the submitted abstract, the Anirban scaffold)
-  - `../data/` — the dataset; `../notebooks/` — shared onboarding/tutorial notebooks
+  - `../../observers/` — the live pipeline code (registry, fitters, analysis, figure/table builders)
+  - `../../results/fits/comparison/<model>/subject<N>.json` — the shared fitted-parameter database (per-subject JSONs, one folder per model), read by several experiments; expensive to regenerate, so kept in one place
+  - `../../results/logs/` — pipeline run logs (execution history)
+  - `../../docs/` — reference material (Laquitaine & Gardner 2018 paper, the submitted abstract, the Anirban scaffold)
+  - `../../data/` — the dataset; `../../notebooks/` — shared onboarding/tutorial notebooks
 
 ## Tags
 

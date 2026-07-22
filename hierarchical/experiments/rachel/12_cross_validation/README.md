@@ -4,7 +4,7 @@
 
 *Tags: type:validation | claim:switching-vs-integration | status:supporting | presentation:backup*
 
-Block-fold cross-validation: held-out NLL results, all-12 and interim CSVs, verdict figure, switch-family CV code, and the per-subject held-out fit JSONs in results/comparison_cv/.
+Block-fold cross-validation: held-out NLL results, all-12 and interim CSVs, verdict figure, and switch-family CV code. The canonical per-subject CV fit JSONs live under `results/fits/comparison_cv/<model>/subject<N>_cv.json` (written by `observers/comparison/cross_validate.py`).
 
 ## Files
 

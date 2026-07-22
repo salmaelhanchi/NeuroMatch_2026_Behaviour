@@ -18,7 +18,7 @@ available on every trial regardless of the mask, so the belief still 'sees'
 held-out feedback. This tests predictive fit of the RESPONSES with order
 intact, not a strictly causal forecast.
 
-Writes one JSON per model x subject under results/fits/comparison_cv/.
+Writes one JSON per model x subject under results/fits/comparison_cv/<model>/subject<N>_cv.json.
 Resumable (skip existing unless --force).
 
 Usage:
@@ -41,7 +41,7 @@ OUT_DIR = FITS_DIR / "comparison_cv"
 
 
 def _result_path(model: str, sid: int) -> Path:
-    return OUT_DIR / f"{model}_subject{sid}_cv.json"
+    return OUT_DIR / model / f"subject{sid}_cv.json"
 
 
 def _block_folds(prior_std: np.ndarray, K: int) -> list:
@@ -104,6 +104,7 @@ def run(models=None, subjects=None, folds=5, maxiter=400, force=False):
                 print(f"skip  {name:12s} subject {sid} (exists)", flush=True)
                 continue
             row = cv_one(reg[name], data, int(sid), folds, maxiter)
+            path.parent.mkdir(parents=True, exist_ok=True)
             json.dump(row, open(path, "w"), indent=2)
             done.append(path.name)
             print(f"done  {name:12s} subject {sid}  CV-NLL={row['cv_nll']:.1f} "

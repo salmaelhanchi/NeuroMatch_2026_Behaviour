@@ -17,10 +17,3 @@ dist/
 # (results/fits/**, experiments/*/results/**) and environment/git SHA in run_manifest.json.
 # Kept locally for debugging; not version-controlled.
 results/logs/
-
-# Experimental / non-abstract models kept out of the shared repo.
-# WARNING: the package imports through this folder via __path__ (e.g.
-# dataset.py -> observers.models.online_switching_observer), so a clone that
-# lacks it cannot `import observers.api`. Only safe once those load-bearing
-# modules are moved back into observers/ proper.
-other models/

@@ -81,9 +81,28 @@ def write_manifest(args, subjects, out_dir):
                  "behaviour is characterised by its 7-param twin HB-Rachel.",
     }
     out_dir = Path(out_dir); out_dir.mkdir(parents=True, exist_ok=True)
-    path = out_dir / "run_manifest.json"
-    path.write_text(json.dumps(man, indent=2))
-    print(f"[run_parallel] manifest -> {path}", flush=True)
+    payload = json.dumps(man, indent=2)
+
+    # Archive: one immutable manifest per run, never overwritten. The filename
+    # carries the identifying fields (which models, what budget, when) so the
+    # run is recognisable without opening the file. A CV-only run (empty
+    # fit_models) is named by its cv_models instead.
+    stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    run_models = args.fit_models or args.cv_models or ["none"]
+    models_slug = "-".join(run_models)
+    archive_dir = out_dir / "manifests"
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    archive_path = archive_dir / f"fit_{models_slug}_maxiter{args.maxiter}_{stamp}.json"
+    archive_path.write_text(payload)
+
+    # Latest pointer: refresh the canonical name so anything that reads the
+    # fixed path still works. This is the ONLY manifest that is overwritten,
+    # and it is always a copy of the newest archive entry.
+    latest_path = out_dir / "run_manifest.json"
+    latest_path.write_text(payload)
+
+    print(f"[run_parallel] manifest -> {archive_path}", flush=True)
+    print(f"[run_parallel] latest   -> {latest_path}", flush=True)
     return man
 
 
