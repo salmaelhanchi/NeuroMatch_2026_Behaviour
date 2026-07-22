@@ -1,0 +1,297 @@
+{
+  "kind": "per_model_validation",
+  "model": "switch",
+  "timestamp_utc": "2026-07-22T10:51:38.394277+00:00",
+  "git": {
+    "commit": "cea2ae4fdb62994667c067a719fbe569f92e8d0c",
+    "dirty": true
+  },
+  "subjects": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12
+  ],
+  "folds": 5,
+  "checks": {
+    "0_verify": {
+      "status": "PASS",
+      "detail": {
+        "passed": 5,
+        "total": 5
+      }
+    },
+    "1_fit_table": {
+      "n_subjects": 12,
+      "single_start_suspect": false,
+      "rows": [
+        {
+          "subject": 1,
+          "present": true,
+          "nll": 38529.116523581055,
+          "aic": 77076.23304716211,
+          "bic": 77139.72884894245,
+          "k": 9,
+          "n_trials": 8562,
+          "start_spread": 340.5607717557941,
+          "maxiter": 400,
+          "seconds": 1169.0,
+          "converged": false,
+          "hit_maxiter": true
+        },
+        {
+          "subject": 2,
+          "present": true,
+          "nll": 36254.23017869692,
+          "aic": 72526.46035739384,
+          "bic": 72589.20567899117,
+          "k": 9,
+          "n_trials": 7877,
+          "start_spread": 11.341580679691106,
+          "maxiter": 400,
+          "seconds": 340.1,
+          "converged": true,
+          "hit_maxiter": false
+        },
+        {
+          "subject": 3,
+          "present": true,
+          "nll": 41738.7494936135,
+          "aic": 83495.498987227,
+          "bic": 83559.84665397562,
+          "k": 9,
+          "n_trials": 9412,
+          "start_spread": 330.9011034318173,
+          "maxiter": 400,
+          "seconds": 1228.7,
+          "converged": false,
+          "hit_maxiter": true
+        },
+        {
+          "subject": 4,
+          "present": true,
+          "nll": 23075.954669694554,
+          "aic": 46169.90933938911,
+          "bic": 46228.198554965886,
+          "k": 9,
+          "n_trials": 4801,
+          "start_spread": 51.097078030685225,
+          "maxiter": 400,
+          "seconds": 710.0,
+          "converged": false,
+          "hit_maxiter": true
+        },
+        {
+          "subject": 5,
+          "present": true,
+          "nll": 30981.474020595335,
+          "aic": 61980.94804119067,
+          "bic": 62040.92147478738,
+          "k": 9,
+          "n_trials": 5789,
+          "start_spread": 676.7971384462217,
+          "maxiter": 400,
+          "seconds": 699.1,
+          "converged": false,
+          "hit_maxiter": true
+        },
+        {
+          "subject": 6,
+          "present": true,
+          "nll": 37585.464808292345,
+          "aic": 75188.92961658469,
+          "bic": 75251.29691761351,
+          "k": 9,
+          "n_trials": 7553,
+          "start_spread": 438.07247095492494,
+          "maxiter": 400,
+          "seconds": 799.7,
+          "converged": false,
+          "hit_maxiter": true
+        },
+        {
+          "subject": 7,
+          "present": true,
+          "nll": 27092.199590530716,
+          "aic": 54202.39918106143,
+          "bic": 54262.38504345349,
+          "k": 9,
+          "n_trials": 5797,
+          "start_spread": 131.0531605319993,
+          "maxiter": 400,
+          "seconds": 282.3,
+          "converged": false,
+          "hit_maxiter": true
+        },
+        {
+          "subject": 8,
+          "present": true,
+          "nll": 30950.165277777753,
+          "aic": 61918.330555555505,
+          "bic": 61978.316417947564,
+          "k": 9,
+          "n_trials": 5797,
+          "start_spread": 19.757370171624643,
+          "maxiter": 400,
+          "seconds": 325.8,
+          "converged": false,
+          "hit_maxiter": true
+        },
+        {
+          "subject": 9,
+          "present": true,
+          "nll": 42237.86167366924,
+          "aic": 84493.72334733848,
+          "bic": 84557.29243090092,
+          "k": 9,
+          "n_trials": 8632,
+          "start_spread": 193.0452678471338,
+          "maxiter": 400,
+          "seconds": 416.4,
+          "converged": false,
+          "hit_maxiter": true
+        },
+        {
+          "subject": 10,
+          "present": true,
+          "nll": 30889.538550093544,
+          "aic": 61797.07710018709,
+          "bic": 61857.43998105453,
+          "k": 9,
+          "n_trials": 6045,
+          "start_spread": 235.70956301681144,
+          "maxiter": 400,
+          "seconds": 329.2,
+          "converged": false,
+          "hit_maxiter": true
+        },
+        {
+          "subject": 11,
+          "present": true,
+          "nll": 31297.166875168015,
+          "aic": 62612.33375033603,
+          "bic": 62673.313695246405,
+          "k": 9,
+          "n_trials": 6474,
+          "start_spread": 104.73594896526629,
+          "maxiter": 400,
+          "seconds": 335.6,
+          "converged": true,
+          "hit_maxiter": false
+        },
+        {
+          "subject": 12,
+          "present": true,
+          "nll": 32580.85741730872,
+          "aic": 65179.71483461744,
+          "bic": 65240.69477952782,
+          "k": 9,
+          "n_trials": 6474,
+          "start_spread": 93.57610005436072,
+          "maxiter": 400,
+          "seconds": 334.2,
+          "converged": false,
+          "hit_maxiter": true
+        }
+      ]
+    },
+    "2_fit_convergence": {
+      "status": "PASS",
+      "detail": {
+        "switch": {
+          "k": 9,
+          "n_fits": 12,
+          "med_spread": 162.05,
+          "max_spread": 676.8,
+          "flagged_nonconv": 10,
+          "warn": false
+        }
+      },
+      "note": "start_spread/convergence are diagnostics; large spread on ill-conditioned high-k models is expected, reported as warn"
+    },
+    "3_aic_bic": {
+      "status": "PASS",
+      "detail": {
+        "n_checked": 12,
+        "mismatches": []
+      }
+    },
+    "5_shape": {
+      "status": "PASS",
+      "detail": {
+        "n_subjects": 12,
+        "subjects": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12"
+        ],
+        "note": "shape summary present; TV/far-band/valley metrics available for the figure"
+      }
+    },
+    "4_cv_validity": {
+      "status": "FAIL",
+      "detail": {
+        "summary": {
+          "pass": 11,
+          "fail": 1,
+          "pending": 0
+        },
+        "failures": [
+          {
+            "model": "switch",
+            "subject": 5,
+            "failed": [
+              "S4_per_trial_finite_sane",
+              "G1_beats_uniform",
+              "G2_gap_in_band"
+            ],
+            "detail": {
+              "foldsum": 36282.541158,
+              "cover": 5789,
+              "k": 9,
+              "folds": 5,
+              "n_folds_detail": 5,
+              "per_trial_range": [
+                5.239,
+                9.463
+              ],
+              "cv_per_trial": 6.2675,
+              "uniform": 5.8861,
+              "insample_per_trial": 5.3518,
+              "gap": 0.9157
+            }
+          }
+        ],
+        "models_without_cv": [],
+        "uniform_per_trial": 5.886,
+        "gap_band": [
+          -0.05,
+          0.6
+        ]
+      }
+    }
+  },
+  "summary": {
+    "fail": 1,
+    "pass": 4,
+    "skip": 0,
+    "verdict": "FAIL"
+  }
+}
