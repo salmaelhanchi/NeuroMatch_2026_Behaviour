@@ -9,7 +9,7 @@
   "k": 9,
   "learns": false,
   "grid_deg": 360,
-  "start_spread": 153.94868088860676,
+  "start_spread": 153.86762969948904,
   "params": {
     "k_motor": 12.5637707465683,
     "p_random": 0.056232788017553915,
@@ -28,12 +28,12 @@
   "theta": null,
   "convergence": {
     "converged": true,
-    "n_iter": 275,
-    "n_feval": 520,
+    "n_iter": 277,
+    "n_feval": 532,
     "hit_maxiter": false,
     "status": 0,
     "message": "Optimization terminated successfully."
   },
-  "maxiter": 400,
-  "seconds": 521.2
+  "maxiter": 800,
+  "seconds": 596.6
 }

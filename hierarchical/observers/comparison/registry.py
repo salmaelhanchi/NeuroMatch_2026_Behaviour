@@ -58,6 +58,15 @@ class FitResult:
 # to disable (e.g. quick smoke runs).
 N_STARTS = 10   # matches Laquitaine & Gardner's ~10 initial starting points
 
+# Nelder-Mead function/parameter tolerance for the paper-standard fit. Laquitaine
+# & Gardner fit ALL observers to "very strict function and parameter tolerances
+# of 1e-4" (Methods, "Model Fit Convergence"); "more relaxed tolerance worsened
+# the fit." The three headline models (switch, basic_bayes, hb_adaptive) are all
+# fit at this tolerance so their AIC/BIC/CV comparison is on equal footing and
+# matches the paper. (The earlier house default was a looser 1e-2, which fit the
+# competitors below the paper's bar and biased in-sample selection toward switch.)
+PAPER_TOL = 1e-4
+
 
 def _starts_for(mask):
     """Multi-start the REPORTED point fit (mask is None); use a single start
@@ -176,10 +185,17 @@ def _hb_adaptive_spec() -> ModelSpec:
     from observers.models.hb_adaptive_confidence import HBAdaptiveConfidenceObserver
 
     def _fit(data, maxiter, mask):
-        if mask is None:
-            obs, nll, x, spread = F.fit_multistart(data, maxiter=maxiter)
-        else:
-            obs, nll, x = F.fit(data, maxiter=maxiter, mask=mask); spread = 0.0
+        # Paper parity: fit through the SAME registry multistart() as switch and
+        # basic_bayes — N_STARTS (10) jittered starts for the reported point fit,
+        # 1 inside a CV fold — at the paper tolerance PAPER_TOL (1e-4). Previously
+        # this used F.fit_multistart's bespoke 3-start scheme at the looser 1e-2,
+        # which left HB-Adaptive under-searched relative to its competitors.
+        def fit_one(x0):
+            obs, nll, x = F.fit(data, x0=x0, maxiter=maxiter, mask=mask, tol=PAPER_TOL)
+            return obs, float(nll), x, getattr(obs, "_fit_info", None)
+
+        base_x0 = F.pack({0.06: 1.0, 0.12: 3.0, 0.24: 8.0}, 30.0, 0.05, 0.05)
+        obs, nll, x, info, spread = multistart(fit_one, base_x0, n_starts=_starts_for(mask))
         return FitResult(obs, nll, x, F.N_PARAMS, spread)
 
     def _rebuild(params):
@@ -233,8 +249,10 @@ def _switch_spec() -> ModelSpec:
         from observers.fitting.online_recovery import (
             fit_static, fit_static_cmaes, pack_static, conv_info)
         # Two paper-standard knobs for the ill-conditioned k=9 switch:
-        #  SWITCH_FIT_TOL   — Nelder-Mead tolerance. Default 1e-2 (house value);
-        #                     the paper used a "very strict" 1e-4.
+        #  SWITCH_FIT_TOL   — Nelder-Mead tolerance. Default PAPER_TOL (1e-4, the
+        #                     paper's "very strict" value, now shared by all three
+        #                     headline models); override to 1e-2 only to reproduce
+        #                     the old looser fits.
         #  SWITCH_OPTIMIZER — "nm" (default, Nelder-Mead) or "cmaes". The paper
         #                     fit the Switch model with BOTH NM and CMA-ES
         #                     (Hansen & Kern 2004) and reported they agree; CMA-ES
@@ -242,7 +260,7 @@ def _switch_spec() -> ModelSpec:
         #                     ill-conditioned" surface with "many local maxima".
         # Both default to the unchanged house behaviour, so the normal pipeline
         # is bit-identical and no other fit_static caller is affected.
-        tol = float(os.environ.get("SWITCH_FIT_TOL", "1e-2"))
+        tol = float(os.environ.get("SWITCH_FIT_TOL", str(PAPER_TOL)))
         optimizer = os.environ.get("SWITCH_OPTIMIZER", "nm").lower()
         sub = (data if mask is None else
                {k: (np.asarray(v)[mask] if hasattr(v, "__len__") else v)
@@ -532,7 +550,7 @@ def _basic_bayes_spec() -> ModelSpec:
                 for k, v in data.items()})
 
         def fit_one(x0):
-            obs, nll, aic, bic = F.fit(sub, x0=x0, maxiter=maxiter)
+            obs, nll, aic, bic = F.fit(sub, x0=x0, maxiter=maxiter, tol=PAPER_TOL)
             # basic fitter attaches obs._fit_info; return theta via obs? use x0-space
             return obs, float(nll), None, getattr(obs, "_fit_info", None)
 

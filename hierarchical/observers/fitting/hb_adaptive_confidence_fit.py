@@ -84,18 +84,27 @@ def nll_masked(obs, data, mask=None):
     return -float(ll.sum() if mask is None else ll[mask].sum())
 
 
-def fit(data, x0=None, maxiter=400, mask=None):
-    """Fit the six params to one subject (Nelder-Mead). Returns (obs, nll, x)."""
+def fit(data, x0=None, maxiter=400, mask=None, tol=1e-2):
+    """Fit the six params to one subject (Nelder-Mead). Returns (obs, nll, x).
+
+    ``tol`` sets both the Nelder-Mead function and parameter tolerances
+    (xatol/fatol). Default 1e-2 is the house value (unchanged for any existing
+    caller); the comparison registry passes the paper-standard 1e-4 so this
+    model is fit to the same tolerance Laquitaine & Gardner held ALL observers
+    to.
+    """
+    from observers.fitting import fit_heartbeat as _hb
     def obj(theta):
         try:
             v = nll_masked(unpack(theta), data, mask)
             return v if np.isfinite(v) else 1e12
         except Exception:
             return 1e12
+    obj = _hb.wrap(obj, maxiter)   # intra-fit progress beat (no-op unless configured)
     if x0 is None:
         x0 = pack({0.06: 1.0, 0.12: 3.0, 0.24: 8.0}, 30.0, 0.05, 0.05)
     res = minimize(obj, x0, method="Nelder-Mead",
-                   options={"maxiter": maxiter, "xatol": 1e-2, "fatol": 1e-2})
+                   options={"maxiter": maxiter, "xatol": tol, "fatol": tol})
     obs = unpack(res.x)
     nll = float(res.fun)
     obs._fit_info = _conv_info(res, maxiter)   # convergence diagnostics

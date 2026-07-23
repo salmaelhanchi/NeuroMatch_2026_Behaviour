@@ -76,9 +76,19 @@ def _theta_list(x):
 
 
 def fit_one(spec, data, sid: int, maxiter: int) -> dict:
+    from observers.fitting import fit_heartbeat as _hb
+    from observers.comparison.registry import N_STARTS
     n = int(data["estimates"].size)
     t0 = time.time()
-    fr = spec.fit(data, maxiter=maxiter)
+    # Configure the intra-fit heartbeat for this (model, subject). Interval is
+    # read from env FIT_HB_INTERVAL (0/unset => no-op), so ordinary callers are
+    # unaffected; the monitored-refit launcher sets it. n_starts labels each
+    # start k/N in the beat (point fits use the registry's N_STARTS multistart).
+    _hb.configure(tag=f"{spec.name} s{sid}", n_starts=N_STARTS)
+    try:
+        fr = spec.fit(data, maxiter=maxiter)
+    finally:
+        _hb.reset()
     aic = 2 * fr.n_params + 2 * fr.nll
     bic = fr.n_params * float(np.log(n)) + 2 * fr.nll
     return {

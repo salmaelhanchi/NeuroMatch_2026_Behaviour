@@ -9,7 +9,7 @@
   "k": 9,
   "learns": false,
   "grid_deg": 360,
-  "start_spread": 95.35433350092353,
+  "start_spread": 95.35432190456777,
   "params": {
     "k_motor": 25.63013944602976,
     "p_random": 0.010855725500413315,
@@ -34,6 +34,6 @@
     "status": 0,
     "message": "Optimization terminated successfully."
   },
-  "maxiter": 400,
-  "seconds": 360.3
+  "maxiter": 800,
+  "seconds": 422.6
 }

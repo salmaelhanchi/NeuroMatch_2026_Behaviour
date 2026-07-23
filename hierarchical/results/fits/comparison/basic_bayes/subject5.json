@@ -3,37 +3,37 @@
   "label": "Basic-Bayes",
   "subject": 5,
   "n_trials": 5789,
-  "nll": 30981.54175904012,
-  "aic": 61981.08351808024,
-  "bic": 62041.05695167695,
+  "nll": 30981.474020583093,
+  "aic": 61980.948041166186,
+  "bic": 62040.921474762894,
   "k": 9,
   "learns": false,
   "grid_deg": 360,
-  "start_spread": 852.779556060068,
+  "start_spread": 852.8254386202898,
   "params": {
-    "k_motor": 4.961761698866589,
-    "p_random": 0.12723472259515425,
+    "k_motor": 4.914698260426344,
+    "p_random": 0.1283898774534902,
     "k_like": {
-      "0.06": 1.3256111923884075,
-      "0.12": 8.028774475065735e+165,
-      "0.24": 8.495361129921925e+39
+      "0.06": 1.3323963072294462,
+      "0.12": 5.527460577332032e+169,
+      "0.24": 3.4593573928821794e+40
     },
     "k_prior": {
-      "80": 2.0488422064777505e-14,
-      "40": 1.2160965853865108e-95,
-      "20": 3.2889357075468505e-44,
+      "80": 9.261007583727877e-15,
+      "40": 1.1942071671452296e-97,
+      "20": 3.5097889518470395e-45,
       "10": 0.0
     }
   },
   "theta": null,
   "convergence": {
-    "converged": false,
-    "n_iter": 400,
-    "n_feval": 571,
-    "hit_maxiter": true,
-    "status": 2,
-    "message": "Maximum number of iterations has been exceeded."
+    "converged": true,
+    "n_iter": 593,
+    "n_feval": 963,
+    "hit_maxiter": false,
+    "status": 0,
+    "message": "Optimization terminated successfully."
   },
-  "maxiter": 400,
-  "seconds": 1079.7
+  "maxiter": 800,
+  "seconds": 794.9
 }
