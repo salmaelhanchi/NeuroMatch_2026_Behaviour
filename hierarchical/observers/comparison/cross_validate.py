@@ -210,10 +210,23 @@ def run(models=None, subjects=None, folds=5, maxiter=400, force=False,
         data = load_subject(int(sid))
         for name in models:
             path = _result_path(name, int(sid))
+            # Resume-skip only a CV file computed at >= the requested budget.
+            # A stale lower-maxiter file (e.g. an old 400-iter / looser-tolerance
+            # CV) must be recomputed, or a parity refit silently keeps the old
+            # fits. Mirrors fit_batch's stale-maxiter resume. (Tolerance is set by
+            # the registry, so bumping maxiter also picks up the new PAPER_TOL.)
             if path.exists() and path.stat().st_size > 0 and not force:
-                skipped.append(path.name)
-                print(f"skip  {name:12s} subject {sid} (exists)", flush=True)
-                continue
+                try:
+                    prev = json.load(open(path)).get("maxiter", 0)
+                except Exception:
+                    prev = -1
+                if prev >= maxiter:
+                    skipped.append(path.name)
+                    print(f"skip  {name:12s} subject {sid} "
+                          f"(exists, maxiter={prev})", flush=True)
+                    continue
+                print(f"refit {name:12s} subject {sid} "
+                      f"(stale maxiter={prev} < {maxiter})", flush=True)
             row = cv_one(reg[name], data, int(sid), folds, maxiter,
                          ticker_interval=ticker_interval)
             path.parent.mkdir(parents=True, exist_ok=True)
