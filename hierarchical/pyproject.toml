@@ -6,12 +6,29 @@ build-backend = "setuptools.build_meta"
 name = "observers"
 version = "0.1.0"
 description = "Observer models of prior-guided motion-direction estimation (NeuroMatch 2026, Behaviour & Theory)."
-requires-python = ">=3.10"
+# scipy>=1.16 requires Python >=3.11, so >=3.10 was never actually satisfiable.
+requires-python = ">=3.11"
 dependencies = [
     "numpy>=2.2",
     "scipy>=1.16",
     "pandas>=2.2",
     "matplotlib>=3.9",
+    # CMA-ES backend for observers.fitting.online_recovery (lazy import, but
+    # required by any fit that selects the cmaes optimiser).
+    "cma>=3.3",
+    # OLS / ANOVA in the per-person slide notebooks.
+    "statsmodels>=0.14",
+]
+
+[dependency-groups]
+# Tooling needed to run the notebooks; synced by default via `uv sync`.
+dev = [
+    "jupyterlab>=4.2",
+    "ipykernel>=6.29",
+    "nbformat>=5.10",
+    # Some notebooks still carry a `!pip install -q -e .` cell; uv-created
+    # venvs have no pip unless it is installed explicitly.
+    "pip>=24.0",
 ]
 
 [tool.setuptools.packages.find]

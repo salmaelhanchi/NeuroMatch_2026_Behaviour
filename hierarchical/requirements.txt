@@ -1,18 +1,28 @@
-# Runtime dependencies for the hierarchical online switching-observer models.
-# These are the only third-party imports across the .py files in this folder;
-# everything else used is the Python standard library.
+# Secondary/fallback dependency list. pyproject.toml is the source of truth --
+# keep the two in sync when adding a package.
 #
-# Setup (with uv):
-#     uv venv
-#     uv pip install -r requirements.txt
-#     source .venv/bin/activate
-# Or with plain pip:
+# Preferred setup (uv, resolves from pyproject.toml + uv.lock and installs the
+# `observers` package itself in editable mode):
+#
+#     cd hierarchical && uv sync
+#
+# Fallback for a plain pip environment (note the trailing `-e .`, which the
+# uv route does for you -- without it `import observers` will not resolve):
+#
 #     python3 -m venv .venv && source .venv/bin/activate
-#     pip install -r requirements.txt
+#     pip install -r requirements.txt && pip install -e .
 #
+# Requires Python >=3.11 (scipy>=1.16 does not build for 3.10).
 # Lower bounds are the versions this code has been verified against; newer is fine.
 
 numpy>=2.2
 scipy>=1.16
 pandas>=2.2
 matplotlib>=3.9
+cma>=3.3            # CMA-ES backend in observers/fitting/online_recovery.py
+statsmodels>=0.14   # OLS / ANOVA in the per-person slide notebooks
+
+# Notebook tooling (the `dev` dependency-group in pyproject.toml).
+jupyterlab>=4.2
+ipykernel>=6.29
+nbformat>=5.10
