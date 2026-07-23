@@ -1,0 +1,39 @@
+{
+  "model": "basic_bayes",
+  "label": "Basic-Bayes",
+  "subject": 12,
+  "n_trials": 6474,
+  "nll": 32804.883279098016,
+  "aic": 65627.76655819603,
+  "bic": 65688.7465031064,
+  "k": 9,
+  "learns": false,
+  "grid_deg": 360,
+  "start_spread": 198.4423259282048,
+  "params": {
+    "k_motor": 12.982138891205787,
+    "p_random": 0.08261976597257965,
+    "k_like": {
+      "0.06": 0.8225570693321543,
+      "0.12": 2.0308478256418807,
+      "0.24": 11.645492754300031
+    },
+    "k_prior": {
+      "80": 0.1835288986119936,
+      "40": 0.7319806303168265,
+      "20": 5.114590304176614,
+      "10": 47.78531352810037
+    }
+  },
+  "theta": null,
+  "convergence": {
+    "converged": true,
+    "n_iter": 318,
+    "n_feval": 585,
+    "hit_maxiter": false,
+    "status": 0,
+    "message": "Optimization terminated successfully."
+  },
+  "maxiter": 800,
+  "seconds": 565.6
+}

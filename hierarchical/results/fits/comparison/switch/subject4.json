@@ -1,0 +1,39 @@
+{
+  "model": "switch",
+  "label": "Switch",
+  "subject": 4,
+  "n_trials": 4801,
+  "nll": 23074.870787066524,
+  "aic": 46167.74157413305,
+  "bic": 46226.030789709825,
+  "k": 9,
+  "learns": false,
+  "grid_deg": 360,
+  "start_spread": 23.482549423832097,
+  "params": {
+    "k_motor": 14.501982756410028,
+    "p_random": 0.02798401853919227,
+    "k_like": {
+      "0.06": 1.4874861195394053,
+      "0.12": 5.4523237311462225,
+      "0.24": 50.09394397789549
+    },
+    "k_prior": {
+      "80": 0.6315297630488671,
+      "40": 1.35742451522987,
+      "20": 14.024276423594491,
+      "10": 112.4277653575318
+    }
+  },
+  "theta": null,
+  "convergence": {
+    "converged": false,
+    "n_iter": 800,
+    "n_feval": 1161,
+    "hit_maxiter": true,
+    "status": 2,
+    "message": "Maximum number of iterations has been exceeded."
+  },
+  "maxiter": 800,
+  "seconds": 446.6
+}

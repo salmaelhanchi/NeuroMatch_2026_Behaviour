@@ -1,19 +1,4 @@
-# Python / notebook caches
 __pycache__/
+*.py[cod]
 .ipynb_checkpoints/
-.pytest_cache/
-.mypy_cache/
-
-# Local package/cache folders
-.uv-cache/
-
-# Large raw data and rendered scratch outputs
-mat_data/
-tmp/
-
-# Generated outputs from scaffold/model runs
-bayseain modeling new path/outputs/
-
-# Archive exports
-*.rar
-*.zip
+.DS_Store

@@ -1,0 +1,25 @@
+{
+  "model": "switch",
+  "label": "Switch (CMA-ES)",
+  "subject": 2,
+  "n_trials": 7877,
+  "k": 9,
+  "nll": 36254.19788801182,
+  "aic": 72526.39577602364,
+  "bic": 72589.14109762097,
+  "start_spread": 1.5098339645192027e-07,
+  "optimizer": "cma-es",
+  "maxiter": 800,
+  "seconds": 239.0879909992218,
+  "convergence": {
+    "optimizer": "cma-es",
+    "converged": true,
+    "n_feval": 1810,
+    "n_iter": 181,
+    "hit_maxfevals": false,
+    "sigma0": 0.5,
+    "stop": {
+      "tolfun": "0.0001"
+    }
+  }
+}

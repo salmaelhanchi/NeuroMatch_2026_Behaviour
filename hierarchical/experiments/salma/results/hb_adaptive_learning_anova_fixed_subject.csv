@@ -1,0 +1,7 @@
+measure,model,effect,df_effect,df_error,F,p
+mean_believed_alpha,subject_fixed + coherence + prior_std,coherence,2,127,0.0023698177393606298,0.9976330321768373
+mean_believed_alpha,subject_fixed + coherence + prior_std,prior_std,3,127,489.96631049678075,0.0
+mean_believed_alpha,subject_fixed + coherence * prior_std,coherence:prior_std,6,121,0.004625218005419487,0.9999995374997395
+mean_believed_sd,subject_fixed + coherence + prior_std,coherence,2,127,0.008730030532190666,0.9913085603703137
+mean_believed_sd,subject_fixed + coherence + prior_std,prior_std,3,127,1413.7241658261303,0.0
+mean_believed_sd,subject_fixed + coherence * prior_std,coherence:prior_std,6,121,0.03190793630460654,0.9998575931423372

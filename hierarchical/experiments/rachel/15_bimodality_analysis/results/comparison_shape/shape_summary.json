@@ -1,0 +1,230 @@
+{
+  "1": {
+    "mean_tv": {
+      "switch": 0.31400613509541353,
+      "basic_bayes": 0.3131305890868479,
+      "hb_adaptive": 0.31595380415226343
+    },
+    "far_band": {
+      "observed": 0.08396946564885496,
+      "switch": 0.09717252849278449,
+      "basic_bayes": 0.027674382241182575,
+      "hb_adaptive": 0.05717182347781526
+    },
+    "valley_depth": {
+      "observed": 0.857,
+      "switch": 0.738,
+      "basic_bayes": 0.182,
+      "hb_adaptive": 0.212
+    }
+  },
+  "2": {
+    "mean_tv": {
+      "switch": 0.7901633207996607,
+      "basic_bayes": 0.7880921758711118,
+      "hb_adaptive": 0.7918374352081025
+    },
+    "far_band": {
+      "observed": 0.3619047619047619,
+      "switch": 0.44312571538525025,
+      "basic_bayes": 0.10941200676466353,
+      "hb_adaptive": 0.2698242786896974
+    },
+    "valley_depth": {
+      "observed": 0.895,
+      "switch": 0.473,
+      "basic_bayes": 0.154,
+      "hb_adaptive": 0.192
+    }
+  },
+  "3": {
+    "mean_tv": {
+      "switch": 0.5387207508972599,
+      "basic_bayes": 0.538623758884366,
+      "hb_adaptive": 0.5385771055119665
+    },
+    "far_band": {
+      "observed": 0.08383233532934134,
+      "switch": 0.13016885782047055,
+      "basic_bayes": 0.023257050651118938,
+      "hb_adaptive": 0.06595579679494622
+    },
+    "valley_depth": {
+      "observed": 0.81,
+      "switch": 0.771,
+      "basic_bayes": 0.182,
+      "hb_adaptive": 0.259
+    }
+  },
+  "4": {
+    "mean_tv": {
+      "switch": 0.790436562113262,
+      "basic_bayes": 0.7897912358433467,
+      "hb_adaptive": 0.7913380368067734
+    },
+    "far_band": {
+      "observed": 0.1484375,
+      "switch": 0.18180018385446217,
+      "basic_bayes": 0.06870737817256274,
+      "hb_adaptive": 0.1314500298723035
+    },
+    "valley_depth": {
+      "observed": 0.889,
+      "switch": 0.592,
+      "basic_bayes": 0.14,
+      "hb_adaptive": 0.257
+    }
+  },
+  "5": {
+    "mean_tv": {
+      "switch": 0.5078508066560994,
+      "basic_bayes": 0.507827063579947,
+      "hb_adaptive": 0.5199539235455032
+    },
+    "far_band": {
+      "observed": 0.017825311942959002,
+      "switch": 0.039218140482277467,
+      "basic_bayes": 0.03918869984322176,
+      "hb_adaptive": 0.10494618525563068
+    },
+    "valley_depth": {
+      "observed": 0.429,
+      "switch": 0.096,
+      "basic_bayes": 0.095,
+      "hb_adaptive": 0.131
+    }
+  },
+  "6": {
+    "mean_tv": {
+      "switch": 0.2730483615637845,
+      "basic_bayes": 0.2673677381040805,
+      "hb_adaptive": 0.2794769074593052
+    },
+    "far_band": {
+      "observed": 0.03826530612244899,
+      "switch": 0.0465005989693752,
+      "basic_bayes": 0.032930758357651795,
+      "hb_adaptive": 0.10173269681074634
+    },
+    "valley_depth": {
+      "observed": 0.56,
+      "switch": 0.159,
+      "basic_bayes": 0.12,
+      "hb_adaptive": 0.266
+    }
+  },
+  "7": {
+    "mean_tv": {
+      "switch": 0.43541211937528285,
+      "basic_bayes": 0.43705225003997006,
+      "hb_adaptive": 0.43870214558568804
+    },
+    "far_band": {
+      "observed": 0.0606060606060606,
+      "switch": 0.09180205678736218,
+      "basic_bayes": 0.04019801996831095,
+      "hb_adaptive": 0.11975479315876499
+    },
+    "valley_depth": {
+      "observed": 0.762,
+      "switch": 0.533,
+      "basic_bayes": 0.15,
+      "hb_adaptive": 0.416
+    }
+  },
+  "8": {
+    "mean_tv": {
+      "switch": 0.4853251484816426,
+      "basic_bayes": 0.48673098852578617,
+      "hb_adaptive": 0.4830879787655329
+    },
+    "far_band": {
+      "observed": 0.12655971479500894,
+      "switch": 0.16411547860813047,
+      "basic_bayes": 0.08625963787072978,
+      "hb_adaptive": 0.15284475664451577
+    },
+    "valley_depth": {
+      "observed": 0.857,
+      "switch": 0.366,
+      "basic_bayes": 0.093,
+      "hb_adaptive": 0.192
+    }
+  },
+  "9": {
+    "mean_tv": {
+      "switch": 0.29147930658740356,
+      "basic_bayes": 0.29440355475514773,
+      "hb_adaptive": 0.28935137737831007
+    },
+    "far_band": {
+      "observed": 0.08258928571428568,
+      "switch": 0.13844903097674802,
+      "basic_bayes": 0.041789402841559624,
+      "hb_adaptive": 0.09558380345902469
+    },
+    "valley_depth": {
+      "observed": 0.8,
+      "switch": 0.564,
+      "basic_bayes": 0.143,
+      "hb_adaptive": 0.318
+    }
+  },
+  "10": {
+    "mean_tv": {
+      "switch": 0.3031198423478773,
+      "basic_bayes": 0.3152502993872418,
+      "hb_adaptive": 0.3201484032325332
+    },
+    "far_band": {
+      "observed": 0.05681818181818182,
+      "switch": 0.08191717910157183,
+      "basic_bayes": 0.05946199622639745,
+      "hb_adaptive": 0.14302133331163824
+    },
+    "valley_depth": {
+      "observed": 0.6,
+      "switch": 0.163,
+      "basic_bayes": 0.072,
+      "hb_adaptive": 0.328
+    }
+  },
+  "11": {
+    "mean_tv": {
+      "switch": 0.28684986155084535,
+      "basic_bayes": 0.2966212685495521,
+      "hb_adaptive": 0.2927315040760989
+    },
+    "far_band": {
+      "observed": 0.11160714285714284,
+      "switch": 0.11328721429284888,
+      "basic_bayes": 0.02835270967385807,
+      "hb_adaptive": 0.10962051088788936
+    },
+    "valley_depth": {
+      "observed": 0.88,
+      "switch": 0.537,
+      "basic_bayes": 0.116,
+      "hb_adaptive": 0.395
+    }
+  },
+  "12": {
+    "mean_tv": {
+      "switch": 0.2939619988069461,
+      "basic_bayes": 0.3119685268554038,
+      "hb_adaptive": 0.2990648566064199
+    },
+    "far_band": {
+      "observed": 0.14880952380952384,
+      "switch": 0.15920611625050649,
+      "basic_bayes": 0.061128241232576416,
+      "hb_adaptive": 0.16440081633087514
+    },
+    "valley_depth": {
+      "observed": 0.88,
+      "switch": 0.501,
+      "basic_bayes": 0.086,
+      "hb_adaptive": 0.348
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "model": "hb_salma",
+  "label": "HB-Salma",
+  "subject": 5,
+  "n_trials": 5789,
+  "nll": 31387.464411594796,
+  "aic": 62786.92882318959,
+  "bic": 62826.91111225406,
+  "k": 6,
+  "learns": true,
+  "grid_deg": 360,
+  "start_spread": 862.5274194254125,
+  "params": {
+    "rho": 0.0007047720680202026,
+    "motor_kappa": 3.344950143967952,
+    "lapse": 0.25104033093188205,
+    "sensory_kappas": [
+      31.123066804833062,
+      120.37228343923645,
+      362.2340414915198
+    ]
+  },
+  "theta": [
+    -7.25693109466339,
+    3.4379492421678286,
+    4.790589302380662,
+    5.892290526376755,
+    1.2074517888257539,
+    -1.0930715284689594
+  ],
+  "convergence": {
+    "converged": false,
+    "n_iter": 400,
+    "n_feval": 632,
+    "hit_maxiter": true,
+    "status": 2,
+    "message": "Maximum number of iterations has been exceeded."
+  },
+  "maxiter": 400,
+  "seconds": 4802.9
+}

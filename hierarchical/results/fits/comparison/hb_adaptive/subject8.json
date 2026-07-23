@@ -1,0 +1,41 @@
+{
+  "model": "hb_adaptive",
+  "label": "HB-Adaptive",
+  "subject": 8,
+  "n_trials": 5797,
+  "nll": 30953.150329263954,
+  "aic": 61918.30065852791,
+  "bic": 61958.291233455944,
+  "k": 6,
+  "learns": true,
+  "grid_deg": 360,
+  "start_spread": 56.1588959176006,
+  "params": {
+    "k_motor": 6.593662151212291,
+    "p_random": 0.16071290352921547,
+    "lam": 0.6774268174531684,
+    "k_like": {
+      "0.06": 0.896723198453495,
+      "0.12": 2.265672342268511,
+      "0.24": 150.8335104306232
+    }
+  },
+  "theta": [
+    -0.10900805043930464,
+    0.817871554740412,
+    5.01617664859686,
+    1.8861089075486932,
+    -1.652933271530932,
+    0.7419714952815099
+  ],
+  "convergence": {
+    "converged": true,
+    "n_iter": 283,
+    "n_feval": 505,
+    "hit_maxiter": false,
+    "status": 0,
+    "message": "Optimization terminated successfully."
+  },
+  "maxiter": 800,
+  "seconds": 4756.2
+}

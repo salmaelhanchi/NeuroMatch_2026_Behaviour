@@ -1,0 +1,760 @@
+{
+  "subject": 1,
+  "far_dirs": [
+    5,
+    55,
+    65,
+    75,
+    85,
+    95,
+    105,
+    115,
+    125,
+    135,
+    145,
+    155,
+    165,
+    285,
+    295,
+    305,
+    315,
+    325,
+    335,
+    345,
+    355
+  ],
+  "matched_params": {
+    "k_like": {
+      "0.06": 1.0,
+      "0.12": 3.0,
+      "0.24": 8.0
+    },
+    "k_motor": 40.0,
+    "p_random": 0.02,
+    "lam": 0.1
+  },
+  "per_dir": [
+    {
+      "stim": 5,
+      "n": 18,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.389,
+      "observed_mass_prior": 0.056,
+      "models": {
+        "switch": {
+          "valley": 0.849,
+          "mass_stim": 0.173,
+          "mass_prior": 0.257
+        },
+        "hb_adaptive": {
+          "valley": 0.65,
+          "mass_stim": 0.176,
+          "mass_prior": 0.169
+        },
+        "hb_rachel": {
+          "valley": 0.651,
+          "mass_stim": 0.169,
+          "mass_prior": 0.183
+        },
+        "recombined": {
+          "valley": 0.865,
+          "mass_stim": 0.179,
+          "mass_prior": 0.241
+        },
+        "hb_salma": {
+          "valley": 0.199,
+          "mass_stim": 0.165,
+          "mass_prior": 0.048
+        }
+      }
+    },
+    {
+      "stim": 55,
+      "n": 22,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.273,
+      "observed_mass_prior": 0.136,
+      "models": {
+        "switch": {
+          "valley": 0.889,
+          "mass_stim": 0.163,
+          "mass_prior": 0.265
+        },
+        "hb_adaptive": {
+          "valley": 0.759,
+          "mass_stim": 0.159,
+          "mass_prior": 0.144
+        },
+        "hb_rachel": {
+          "valley": 0.774,
+          "mass_stim": 0.17,
+          "mass_prior": 0.176
+        },
+        "recombined": {
+          "valley": 0.921,
+          "mass_stim": 0.186,
+          "mass_prior": 0.225
+        },
+        "hb_salma": {
+          "valley": 0.359,
+          "mass_stim": 0.129,
+          "mass_prior": 0.086
+        }
+      }
+    },
+    {
+      "stim": 65,
+      "n": 32,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.469,
+      "observed_mass_prior": 0.156,
+      "models": {
+        "switch": {
+          "valley": 0.922,
+          "mass_stim": 0.2,
+          "mass_prior": 0.223
+        },
+        "hb_adaptive": {
+          "valley": 0.681,
+          "mass_stim": 0.205,
+          "mass_prior": 0.109
+        },
+        "hb_rachel": {
+          "valley": 0.791,
+          "mass_stim": 0.208,
+          "mass_prior": 0.135
+        },
+        "recombined": {
+          "valley": 0.919,
+          "mass_stim": 0.221,
+          "mass_prior": 0.173
+        },
+        "hb_salma": {
+          "valley": 0.094,
+          "mass_stim": 0.181,
+          "mass_prior": 0.062
+        }
+      }
+    },
+    {
+      "stim": 75,
+      "n": 32,
+      "observed_valley": 0.0,
+      "observed_mass_stim": 0.625,
+      "observed_mass_prior": 0.0,
+      "models": {
+        "switch": {
+          "valley": 0.909,
+          "mass_stim": 0.2,
+          "mass_prior": 0.224
+        },
+        "hb_adaptive": {
+          "valley": 0.44,
+          "mass_stim": 0.193,
+          "mass_prior": 0.097
+        },
+        "hb_rachel": {
+          "valley": 0.635,
+          "mass_stim": 0.209,
+          "mass_prior": 0.11
+        },
+        "recombined": {
+          "valley": 0.89,
+          "mass_stim": 0.231,
+          "mass_prior": 0.136
+        },
+        "hb_salma": {
+          "valley": 0.088,
+          "mass_stim": 0.179,
+          "mass_prior": 0.035
+        }
+      }
+    },
+    {
+      "stim": 85,
+      "n": 38,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.526,
+      "observed_mass_prior": 0.026,
+      "models": {
+        "switch": {
+          "valley": 0.873,
+          "mass_stim": 0.187,
+          "mass_prior": 0.241
+        },
+        "hb_adaptive": {
+          "valley": 0.653,
+          "mass_stim": 0.186,
+          "mass_prior": 0.147
+        },
+        "hb_rachel": {
+          "valley": 0.711,
+          "mass_stim": 0.177,
+          "mass_prior": 0.196
+        },
+        "recombined": {
+          "valley": 0.902,
+          "mass_stim": 0.186,
+          "mass_prior": 0.286
+        },
+        "hb_salma": {
+          "valley": 0.128,
+          "mass_stim": 0.169,
+          "mass_prior": 0.073
+        }
+      }
+    },
+    {
+      "stim": 95,
+      "n": 38,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.5,
+      "observed_mass_prior": 0.079,
+      "models": {
+        "switch": {
+          "valley": 0.846,
+          "mass_stim": 0.187,
+          "mass_prior": 0.243
+        },
+        "hb_adaptive": {
+          "valley": 0.506,
+          "mass_stim": 0.182,
+          "mass_prior": 0.136
+        },
+        "hb_rachel": {
+          "valley": 0.598,
+          "mass_stim": 0.18,
+          "mass_prior": 0.159
+        },
+        "recombined": {
+          "valley": 0.81,
+          "mass_stim": 0.195,
+          "mass_prior": 0.213
+        },
+        "hb_salma": {
+          "valley": 0.122,
+          "mass_stim": 0.178,
+          "mass_prior": 0.047
+        }
+      }
+    },
+    {
+      "stim": 105,
+      "n": 48,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.333,
+      "observed_mass_prior": 0.083,
+      "models": {
+        "switch": {
+          "valley": 0.78,
+          "mass_stim": 0.173,
+          "mass_prior": 0.262
+        },
+        "hb_adaptive": {
+          "valley": 0.338,
+          "mass_stim": 0.154,
+          "mass_prior": 0.173
+        },
+        "hb_rachel": {
+          "valley": 0.406,
+          "mass_stim": 0.159,
+          "mass_prior": 0.182
+        },
+        "recombined": {
+          "valley": 0.699,
+          "mass_stim": 0.168,
+          "mass_prior": 0.257
+        },
+        "hb_salma": {
+          "valley": 0.129,
+          "mass_stim": 0.146,
+          "mass_prior": 0.09
+        }
+      }
+    },
+    {
+      "stim": 115,
+      "n": 58,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.276,
+      "observed_mass_prior": 0.103,
+      "models": {
+        "switch": {
+          "valley": 0.773,
+          "mass_stim": 0.191,
+          "mass_prior": 0.244
+        },
+        "hb_adaptive": {
+          "valley": 0.245,
+          "mass_stim": 0.175,
+          "mass_prior": 0.141
+        },
+        "hb_rachel": {
+          "valley": 0.364,
+          "mass_stim": 0.175,
+          "mass_prior": 0.163
+        },
+        "recombined": {
+          "valley": 0.597,
+          "mass_stim": 0.181,
+          "mass_prior": 0.221
+        },
+        "hb_salma": {
+          "valley": 0.169,
+          "mass_stim": 0.161,
+          "mass_prior": 0.088
+        }
+      }
+    },
+    {
+      "stim": 125,
+      "n": 74,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.257,
+      "observed_mass_prior": 0.081,
+      "models": {
+        "switch": {
+          "valley": 0.706,
+          "mass_stim": 0.189,
+          "mass_prior": 0.252
+        },
+        "hb_adaptive": {
+          "valley": 0.163,
+          "mass_stim": 0.171,
+          "mass_prior": 0.172
+        },
+        "hb_rachel": {
+          "valley": 0.236,
+          "mass_stim": 0.166,
+          "mass_prior": 0.192
+        },
+        "recombined": {
+          "valley": 0.636,
+          "mass_stim": 0.172,
+          "mass_prior": 0.279
+        },
+        "hb_salma": {
+          "valley": 0.16,
+          "mass_stim": 0.172,
+          "mass_prior": 0.081
+        }
+      }
+    },
+    {
+      "stim": 135,
+      "n": 80,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.375,
+      "observed_mass_prior": 0.062,
+      "models": {
+        "switch": {
+          "valley": 0.612,
+          "mass_stim": 0.184,
+          "mass_prior": 0.266
+        },
+        "hb_adaptive": {
+          "valley": 0.035,
+          "mass_stim": 0.172,
+          "mass_prior": 0.18
+        },
+        "hb_rachel": {
+          "valley": 0.02,
+          "mass_stim": 0.161,
+          "mass_prior": 0.2
+        },
+        "recombined": {
+          "valley": 0.393,
+          "mass_stim": 0.162,
+          "mass_prior": 0.291
+        },
+        "hb_salma": {
+          "valley": 0.167,
+          "mass_stim": 0.18,
+          "mass_prior": 0.104
+        }
+      }
+    },
+    {
+      "stim": 145,
+      "n": 80,
+      "observed_valley": 0.0,
+      "observed_mass_stim": 0.475,
+      "observed_mass_prior": 0.05,
+      "models": {
+        "switch": {
+          "valley": 0.51,
+          "mass_stim": 0.184,
+          "mass_prior": 0.275
+        },
+        "hb_adaptive": {
+          "valley": 0.027,
+          "mass_stim": 0.166,
+          "mass_prior": 0.21
+        },
+        "hb_rachel": {
+          "valley": 0.041,
+          "mass_stim": 0.153,
+          "mass_prior": 0.239
+        },
+        "recombined": {
+          "valley": 0.216,
+          "mass_stim": 0.145,
+          "mass_prior": 0.352
+        },
+        "hb_salma": {
+          "valley": 0.177,
+          "mass_stim": 0.176,
+          "mass_prior": 0.142
+        }
+      }
+    },
+    {
+      "stim": 155,
+      "n": 100,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.47,
+      "observed_mass_prior": 0.09,
+      "models": {
+        "switch": {
+          "valley": 0.398,
+          "mass_stim": 0.187,
+          "mass_prior": 0.285
+        },
+        "hb_adaptive": {
+          "valley": 0.067,
+          "mass_stim": 0.171,
+          "mass_prior": 0.231
+        },
+        "hb_rachel": {
+          "valley": 0.08,
+          "mass_stim": 0.158,
+          "mass_prior": 0.255
+        },
+        "recombined": {
+          "valley": 0.01,
+          "mass_stim": 0.134,
+          "mass_prior": 0.388
+        },
+        "hb_salma": {
+          "valley": 0.163,
+          "mass_stim": 0.199,
+          "mass_prior": 0.154
+        }
+      }
+    },
+    {
+      "stim": 165,
+      "n": 112,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.509,
+      "observed_mass_prior": 0.098,
+      "models": {
+        "switch": {
+          "valley": 0.266,
+          "mass_stim": 0.188,
+          "mass_prior": 0.3
+        },
+        "hb_adaptive": {
+          "valley": 0.096,
+          "mass_stim": 0.178,
+          "mass_prior": 0.261
+        },
+        "hb_rachel": {
+          "valley": 0.09,
+          "mass_stim": 0.167,
+          "mass_prior": 0.281
+        },
+        "recombined": {
+          "valley": 0.023,
+          "mass_stim": 0.125,
+          "mass_prior": 0.416
+        },
+        "hb_salma": {
+          "valley": 0.163,
+          "mass_stim": 0.224,
+          "mass_prior": 0.192
+        }
+      }
+    },
+    {
+      "stim": 285,
+      "n": 112,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.464,
+      "observed_mass_prior": 0.143,
+      "models": {
+        "switch": {
+          "valley": 0.266,
+          "mass_stim": 0.188,
+          "mass_prior": 0.3
+        },
+        "hb_adaptive": {
+          "valley": 0.075,
+          "mass_stim": 0.187,
+          "mass_prior": 0.254
+        },
+        "hb_rachel": {
+          "valley": 0.073,
+          "mass_stim": 0.176,
+          "mass_prior": 0.279
+        },
+        "recombined": {
+          "valley": 0.034,
+          "mass_stim": 0.138,
+          "mass_prior": 0.419
+        },
+        "hb_salma": {
+          "valley": 0.265,
+          "mass_stim": 0.23,
+          "mass_prior": 0.187
+        }
+      }
+    },
+    {
+      "stim": 295,
+      "n": 100,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.46,
+      "observed_mass_prior": 0.08,
+      "models": {
+        "switch": {
+          "valley": 0.398,
+          "mass_stim": 0.187,
+          "mass_prior": 0.285
+        },
+        "hb_adaptive": {
+          "valley": 0.061,
+          "mass_stim": 0.168,
+          "mass_prior": 0.231
+        },
+        "hb_rachel": {
+          "valley": 0.071,
+          "mass_stim": 0.152,
+          "mass_prior": 0.255
+        },
+        "recombined": {
+          "valley": 0.006,
+          "mass_stim": 0.132,
+          "mass_prior": 0.381
+        },
+        "hb_salma": {
+          "valley": 0.29,
+          "mass_stim": 0.2,
+          "mass_prior": 0.154
+        }
+      }
+    },
+    {
+      "stim": 305,
+      "n": 80,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.475,
+      "observed_mass_prior": 0.062,
+      "models": {
+        "switch": {
+          "valley": 0.51,
+          "mass_stim": 0.184,
+          "mass_prior": 0.275
+        },
+        "hb_adaptive": {
+          "valley": 0.028,
+          "mass_stim": 0.167,
+          "mass_prior": 0.203
+        },
+        "hb_rachel": {
+          "valley": 0.042,
+          "mass_stim": 0.155,
+          "mass_prior": 0.226
+        },
+        "recombined": {
+          "valley": 0.201,
+          "mass_stim": 0.144,
+          "mass_prior": 0.343
+        },
+        "hb_salma": {
+          "valley": 0.3,
+          "mass_stim": 0.183,
+          "mass_prior": 0.127
+        }
+      }
+    },
+    {
+      "stim": 315,
+      "n": 80,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.388,
+      "observed_mass_prior": 0.062,
+      "models": {
+        "switch": {
+          "valley": 0.612,
+          "mass_stim": 0.184,
+          "mass_prior": 0.266
+        },
+        "hb_adaptive": {
+          "valley": 0.012,
+          "mass_stim": 0.168,
+          "mass_prior": 0.174
+        },
+        "hb_rachel": {
+          "valley": 0.001,
+          "mass_stim": 0.156,
+          "mass_prior": 0.201
+        },
+        "recombined": {
+          "valley": 0.363,
+          "mass_stim": 0.155,
+          "mass_prior": 0.294
+        },
+        "hb_salma": {
+          "valley": 0.297,
+          "mass_stim": 0.171,
+          "mass_prior": 0.109
+        }
+      }
+    },
+    {
+      "stim": 325,
+      "n": 74,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.446,
+      "observed_mass_prior": 0.027,
+      "models": {
+        "switch": {
+          "valley": 0.706,
+          "mass_stim": 0.189,
+          "mass_prior": 0.252
+        },
+        "hb_adaptive": {
+          "valley": 0.115,
+          "mass_stim": 0.168,
+          "mass_prior": 0.159
+        },
+        "hb_rachel": {
+          "valley": 0.197,
+          "mass_stim": 0.163,
+          "mass_prior": 0.184
+        },
+        "recombined": {
+          "valley": 0.492,
+          "mass_stim": 0.169,
+          "mass_prior": 0.256
+        },
+        "hb_salma": {
+          "valley": 0.305,
+          "mass_stim": 0.166,
+          "mass_prior": 0.091
+        }
+      }
+    },
+    {
+      "stim": 335,
+      "n": 58,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.328,
+      "observed_mass_prior": 0.103,
+      "models": {
+        "switch": {
+          "valley": 0.773,
+          "mass_stim": 0.191,
+          "mass_prior": 0.244
+        },
+        "hb_adaptive": {
+          "valley": 0.352,
+          "mass_stim": 0.185,
+          "mass_prior": 0.143
+        },
+        "hb_rachel": {
+          "valley": 0.385,
+          "mass_stim": 0.179,
+          "mass_prior": 0.166
+        },
+        "recombined": {
+          "valley": 0.659,
+          "mass_stim": 0.184,
+          "mass_prior": 0.237
+        },
+        "hb_salma": {
+          "valley": 0.176,
+          "mass_stim": 0.18,
+          "mass_prior": 0.076
+        }
+      }
+    },
+    {
+      "stim": 345,
+      "n": 48,
+      "observed_valley": 0.0,
+      "observed_mass_stim": 0.271,
+      "observed_mass_prior": 0.042,
+      "models": {
+        "switch": {
+          "valley": 0.78,
+          "mass_stim": 0.173,
+          "mass_prior": 0.262
+        },
+        "hb_adaptive": {
+          "valley": 0.356,
+          "mass_stim": 0.158,
+          "mass_prior": 0.168
+        },
+        "hb_rachel": {
+          "valley": 0.41,
+          "mass_stim": 0.155,
+          "mass_prior": 0.187
+        },
+        "recombined": {
+          "valley": 0.693,
+          "mass_stim": 0.162,
+          "mass_prior": 0.267
+        },
+        "hb_salma": {
+          "valley": 0.292,
+          "mass_stim": 0.152,
+          "mass_prior": 0.078
+        }
+      }
+    },
+    {
+      "stim": 355,
+      "n": 38,
+      "observed_valley": 1.0,
+      "observed_mass_stim": 0.289,
+      "observed_mass_prior": 0.158,
+      "models": {
+        "switch": {
+          "valley": 0.846,
+          "mass_stim": 0.187,
+          "mass_prior": 0.243
+        },
+        "hb_adaptive": {
+          "valley": 0.473,
+          "mass_stim": 0.174,
+          "mass_prior": 0.136
+        },
+        "hb_rachel": {
+          "valley": 0.583,
+          "mass_stim": 0.176,
+          "mass_prior": 0.161
+        },
+        "recombined": {
+          "valley": 0.786,
+          "mass_stim": 0.19,
+          "mass_prior": 0.227
+        },
+        "hb_salma": {
+          "valley": 0.255,
+          "mass_stim": 0.159,
+          "mass_prior": 0.059
+        }
+      }
+    }
+  ],
+  "mean_valley": {
+    "switch": 0.677,
+    "hb_adaptive": 0.292,
+    "hb_rachel": 0.341,
+    "recombined": 0.529,
+    "hb_salma": 0.205
+  },
+  "observed_mean_valley": 0.857
+}

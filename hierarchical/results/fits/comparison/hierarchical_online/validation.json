@@ -1,0 +1,126 @@
+{
+  "kind": "per_model_validation",
+  "model": "hierarchical_online",
+  "timestamp_utc": "2026-07-22T10:51:56.843221+00:00",
+  "git": {
+    "commit": "cea2ae4fdb62994667c067a719fbe569f92e8d0c",
+    "dirty": true
+  },
+  "subjects": [
+    2,
+    5,
+    8
+  ],
+  "folds": 5,
+  "checks": {
+    "0_verify": {
+      "status": "PASS",
+      "detail": {
+        "passed": 6,
+        "total": 6
+      }
+    },
+    "1_fit_table": {
+      "n_subjects": 3,
+      "single_start_suspect": false,
+      "rows": [
+        {
+          "subject": 2,
+          "present": true,
+          "nll": 36785.839955010975,
+          "aic": 73587.67991002195,
+          "bic": 73643.45352921958,
+          "k": 8,
+          "n_trials": 7877,
+          "start_spread": 875.8232267650019,
+          "maxiter": 1500,
+          "seconds": 6916.3,
+          "converged": null,
+          "hit_maxiter": null
+        },
+        {
+          "subject": 5,
+          "present": true,
+          "nll": 30885.12392492785,
+          "aic": 61786.2478498557,
+          "bic": 61839.55756860833,
+          "k": 8,
+          "n_trials": 5789,
+          "start_spread": 443.0153312863622,
+          "maxiter": 400,
+          "seconds": 8391.2,
+          "converged": null,
+          "hit_maxiter": null
+        },
+        {
+          "subject": 8,
+          "present": true,
+          "nll": 30961.507340421565,
+          "aic": 61939.01468084313,
+          "bic": 61992.33544741385,
+          "k": 8,
+          "n_trials": 5797,
+          "start_spread": 58.6853551012282,
+          "maxiter": 400,
+          "seconds": 7453.3,
+          "converged": null,
+          "hit_maxiter": null
+        }
+      ]
+    },
+    "2_fit_convergence": {
+      "status": "PASS",
+      "detail": {
+        "hierarchical_online": {
+          "k": 8,
+          "n_fits": 3,
+          "med_spread": 443.02,
+          "max_spread": 875.82,
+          "flagged_nonconv": 0,
+          "warn": false
+        }
+      },
+      "note": "start_spread/convergence are diagnostics; large spread on ill-conditioned high-k models is expected, reported as warn"
+    },
+    "3_aic_bic": {
+      "status": "PASS",
+      "detail": {
+        "n_checked": 3,
+        "mismatches": []
+      }
+    },
+    "5_shape": {
+      "status": "PASS",
+      "detail": {
+        "n_subjects": 12,
+        "subjects": [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12"
+        ],
+        "note": "shape summary present; TV/far-band/valley metrics available for the figure"
+      }
+    },
+    "4_cv_validity": {
+      "status": "SKIP",
+      "detail": {
+        "note": "fit-only model (--no-cv); no CV expected"
+      }
+    }
+  },
+  "summary": {
+    "fail": 0,
+    "pass": 4,
+    "skip": 1,
+    "verdict": "PASS"
+  }
+}

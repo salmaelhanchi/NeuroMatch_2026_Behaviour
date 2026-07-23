@@ -1,0 +1,44 @@
+{
+  "model": "switch",
+  "label": "Switch",
+  "subject": 2,
+  "n_trials": 7877,
+  "k": 9,
+  "folds": 5,
+  "cv_nll": 36288.05822584247,
+  "cv_per_trial": 4.606837403306141,
+  "fold_detail": [
+    {
+      "fold": 1,
+      "n_test": 1493,
+      "held_out_nll": 6703.530823195068,
+      "per_trial": 4.489973759675196
+    },
+    {
+      "fold": 2,
+      "n_test": 1702,
+      "held_out_nll": 8235.350202169036,
+      "per_trial": 4.838631141109892
+    },
+    {
+      "fold": 3,
+      "n_test": 1487,
+      "held_out_nll": 6633.282443275956,
+      "per_trial": 4.46084898673568
+    },
+    {
+      "fold": 4,
+      "n_test": 1923,
+      "held_out_nll": 8789.554658426889,
+      "per_trial": 4.570751252432079
+    },
+    {
+      "fold": 5,
+      "n_test": 1272,
+      "held_out_nll": 5926.340098775521,
+      "per_trial": 4.659072404697737
+    }
+  ],
+  "maxiter": 800,
+  "seconds": 266.4
+}
