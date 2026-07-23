@@ -30,3 +30,16 @@ Interpretation from generated summaries:
 - Page 4 checks possible block shift/alignment.
 - The analysis uses already fitted `hb_adaptive` parameters, then performs post-fit diagnostics; it does not refit a separate regression model with coherence and prior_std as learning parameters.
 - The hidden learning update depends on feedback directions. Coherence changes sensory likelihood and response predictions, so coherence-stratified hidden-learning plots show where coherence trials fall on the same learned trajectory.
+
+
+Interpretation
+
+For this analysis, we used the current HB-Adaptive model from the model-verification branch. This model does not just fit a fixed prior. Instead, it learns two hidden quantities over trials: the believed width of the prior, and the confidence that the informed prior should be used instead of a uniform prior.
+
+We replayed the fitted model across all participants and asked whether prior learning changes across the four prior contexts: 10, 20, 40, and 80 degrees, and whether this pattern depends on motion coherence: 6, 12, or 24 percent.
+
+The main result is that learned prior values clearly track prior width. Narrow priors, like 10 degrees, lead to stronger learned prior confidence and smaller believed prior SD. Broad priors, like 80 degrees, lead to weaker confidence and larger believed prior SD. This means the model is capturing the block-level prior structure.
+
+In contrast, coherence had very little effect on the hidden prior-learning variables. That makes sense because in this model, prior learning is updated from feedback directions, while coherence affects the sensory likelihood and response prediction.
+
+So the takeaway is: the model learns the prior context across blocks, and this learning is mainly driven by prior width rather than coherence.
