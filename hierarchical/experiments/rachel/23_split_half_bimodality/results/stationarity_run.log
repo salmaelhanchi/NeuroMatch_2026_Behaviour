@@ -1,0 +1,25 @@
+paper stationarity check (switch): first vs last half, 12 subjects (serial)
+  subject 1: AIC first=38471 last=39284 (34.5s)
+  subject 2: AIC first=36309 last=36190 (33.3s)
+  subject 3: AIC first=41462 last=42600 (36.0s)
+/Users/vestige/code/NeuroMatch_2026_Behaviour/hierarchical/observers/helpers/dataset.py:80: RuntimeWarning: invalid value encountered in cast
+  df["estimate_dir"] = np.round(ang).astype(int).clip(1, 360)
+  subject 4: AIC first=23949 last=22191 (27.0s)
+  subject 5: AIC first=30492 last=31504 (28.1s)
+  subject 6: AIC first=38663 last=36511 (32.4s)
+  subject 7: AIC first=27108 last=27311 (29.7s)
+  subject 8: AIC first=29782 last=31759 (30.2s)
+  subject 9: AIC first=42772 last=41847 (35.0s)
+/Users/vestige/code/NeuroMatch_2026_Behaviour/hierarchical/observers/helpers/dataset.py:80: RuntimeWarning: invalid value encountered in cast
+  df["estimate_dir"] = np.round(ang).astype(int).clip(1, 360)
+  subject 10: AIC first=32230 last=29211 (30.9s)
+  subject 11: AIC first=31832 last=30616 (30.4s)
+  subject 12: AIC first=32881 last=32208 (33.3s)
+
+Wilcoxon signed-rank, first vs last half (ours vs paper):
+  AIC           : ours W=29, p=0.47, n=12  [n.s. (stable)]   paper W~32, p=0.62
+  k_prior[80]   : ours W=34, p=0.73, n=12  [n.s. (stable)]   paper W~37, p=0.9
+  k_prior[40]   : ours W=26, p=0.34, n=12  [n.s. (stable)]   paper W~25, p=0.3
+  k_prior[20]   : ours W=19, p=0.13, n=12  [n.s. (stable)]   paper W~23, p=0.23
+
+done -> /Users/vestige/code/NeuroMatch_2026_Behaviour/hierarchical/experiments/rachel/23_split_half_bimodality/results

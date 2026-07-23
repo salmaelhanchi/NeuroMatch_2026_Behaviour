@@ -1,0 +1,6 @@
+component,lapse,max_abs_diff
+Girshick MAP engine (shared),n/a,0.0
+Switch full distribution,prod,2.0816681711721685e-17
+Basic-Bayes full distribution,prod,2.0816681711721685e-17
+Switch full distribution,paper,3.250636926425965e-05
+Basic-Bayes full distribution,paper,3.2732234894888856e-05

@@ -1,0 +1,22 @@
+split-half bimodality: 12 subjects x 2 models x 2 directions (serial)
+  subject 1 done (97.5s)
+  subject 2 done (82.0s)
+  subject 3 done (102.1s)
+/Users/vestige/code/NeuroMatch_2026_Behaviour/hierarchical/observers/helpers/dataset.py:80: RuntimeWarning: invalid value encountered in cast
+  df["estimate_dir"] = np.round(ang).astype(int).clip(1, 360)
+  subject 4 done (83.4s)
+/Users/vestige/code/NeuroMatch_2026_Behaviour/hierarchical/observers/fitting/online_recovery.py:55: RuntimeWarning: overflow encountered in exp
+  k_like = {0.06: np.exp(theta[0]), 0.12: np.exp(theta[1]), 0.24: np.exp(theta[2])}
+/Users/vestige/code/NeuroMatch_2026_Behaviour/hierarchical/observers/models/switching_observer.py:221: RuntimeWarning: invalid value encountered in scalar divide
+  w_evidence = k_e / (k_p + k_e)
+  subject 5 done (94.9s)
+  subject 6 done (100.8s)
+  subject 7 done (97.5s)
+  subject 8 done (80.7s)
+  subject 9 done (106.1s)
+/Users/vestige/code/NeuroMatch_2026_Behaviour/hierarchical/observers/helpers/dataset.py:80: RuntimeWarning: invalid value encountered in cast
+  df["estimate_dir"] = np.round(ang).astype(int).clip(1, 360)
+  subject 10 done (102.0s)
+  subject 11 done (106.9s)
+  subject 12 done (98.4s)
+done -> /Users/vestige/code/NeuroMatch_2026_Behaviour/hierarchical/experiments/rachel/23_split_half_bimodality/results
